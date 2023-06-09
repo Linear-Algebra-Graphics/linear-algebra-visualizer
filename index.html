@@ -1,1 +1,25 @@
+<!DOCTYPE html>
 
+<html>
+    <head>
+        <script src="graph.js" defer></script>
+        <script src="script.js" defer></script>
+    </head>
+    <body>
+        <title>TEST</title>
+        <div>
+            <canvas id="graph" width="0" height="0" style="border:1px solid #000000;"></canvas>
+        </div>
+        
+        <div>
+            <input id="x" size="5px" class="arrow-togglable" type="text"/>
+            <input id="y" size="5px" class="arrow-togglable" type="text"/>
+            <select id="vector colors" default="black">
+                <option value="black">black</option>
+                <option value="green">green</option>
+                <option value="blue">blue</option>
+            </select>
+            <button id="graphButton" marginLeft="10px">graph!</button>
+        </div>
+    </body>
+</html>
