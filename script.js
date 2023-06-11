@@ -25,3 +25,5 @@ graphButton.addEventListener("click", function() {
     let color = vectorColors.value
     test_graph.drawVector([x, y], color)
 })
+
+test_graph.draw();
