@@ -236,3 +236,31 @@ function matrixVectorMultiplication (matrix, vector) {
     //console.log(returnVector)
     return returnVector
 }
+
+function matrixMultiplication(leftMatrix, rightMatrix) {
+    
+    let returnMatrix = new Array(rightMatrix.length)
+
+    for (let i=0; i<returnMatrix.length; i++) {
+        returnMatrix[i] = new Array(leftMatrix[0].length).fill(0);
+    }
+
+    for (let i=0; i<rightMatrix.length; i++) {
+        for (let m=0; m<leftMatrix[0].length; m++) {
+
+            let value = 0;
+
+            for (let n=0; n<leftMatrix.length; n++) {
+                returnMatrix[i][m] = returnMatrix[i][m] + leftMatrix[m][n] * rightMatrix[i][n]
+            }
+
+        }
+    }
+
+    //console.log(returnVector)
+    return returnMatrix
+}
+
+matrix1=[[1,0,0],[0,1,0],[0,0,1]]
+matrix2=[[1,2,3]]
+matrixMultiplication(matrix1,matrix2)
