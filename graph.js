@@ -24,7 +24,7 @@ class Graph {
         this.height = canvas.height
         this.width = canvas.width
         this.ctx = canvas.getContext("2d")
-        
+        this.ctx.lineWidth = 3
         this.graphCenterX = this.canvas.width/2
         this.graphCenterY = this.canvas.height/2
         
@@ -35,10 +35,13 @@ class Graph {
         this.numOfGraphUnitsEdgeToEdge = 20;
         this.backgroundColor           = "white"
         // I matrix is default
-        this.basis                     = [[1,0,0],[0,1,0],[0,0,1]]
-        this.showAxis                  = true
+        //this.basis                     = [[1,0,0],[0,1,0],[0,0,1]]
+        this.basis                     = [[Math.cos(Math.PI/4),Math.sin(Math.PI/4),0],[-1*Math.sin(Math.PI/4),Math.cos(Math.PI/4),0],[0,0,1]]
+        
         this.graphAxis                 = new Axis(this)
         this.graphGrid                 = new Grid(this)
+        this.showAxis                  = true
+        this.showGrid                  = true
     }
 
     addObject(object) {
@@ -60,12 +63,12 @@ class Graph {
         this.ctx.fillStyle = this.backgroundColor
         this.ctx.fillRect(0,0, this.canvas.width, this.canvas.height);
         
-        if (this.showAxis == true) {
-            this.graphAxis.draw()
-        }
-
         if (this.showGrid == true) {
             this.graphGrid.draw()
+        }
+        
+        if (this.showAxis == true) {
+            this.graphAxis.draw()
         }
         
         // Draw all objects
@@ -95,6 +98,17 @@ class Axis {
         this._xAxisNeg = new Vector(this.graph, [-10,0,0], "blue", false)
         this._yAxisNeg = new Vector(this.graph, [0,-10,0], "red", false)
         this._zAxisNeg = new Vector(this.graph, [0,0,-10], "green", false)
+
+        //for infinite axis
+        const infLen = this.graph.width*this.graph.numOfGraphUnitsEdgeToEdge
+        
+        this._infxAxis = new Vector(this.graph, [infLen,0,0], "blue", false)
+        this._infyAxis = new Vector(this.graph, [0,infLen,0], "red", false)
+        this._infzAxis = new Vector(this.graph, [0,0,infLen], "green", false)
+        
+        this._infxAxisNeg = new Vector(this.graph, [-1*infLen,0,0], "blue", false)
+        this._infyAxisNeg = new Vector(this.graph, [0,-1*infLen,0], "red", false)
+        this._infzAxisNeg = new Vector(this.graph, [0,0,-1*infLen], "green", false)
     
         // Default
         this.fullAxis     = true
@@ -106,10 +120,6 @@ class Axis {
      * draws x, y, z axis
      */
     draw() {
-        if (this.zeroZeroDot) {
-            this.graph.ctx.fillRect(this.graph.centerX, this.graph.centerY, 1, 1);
-        }
-
         if(this.infiniteAxis == false) {
             //console.log("trying to draw successful")
             if (this.fullAxis) {
@@ -122,8 +132,28 @@ class Axis {
             this._zAxis.draw()
 
        } else {
+            if (this.fullAxis) {
+                this._infxAxisNeg.draw()
+                this._infyAxisNeg.draw()
+                this._infzAxisNeg.draw()
+            }
+            this._infxAxis.draw()
+            this._infyAxis.draw()
+            this._infzAxis.draw()
             //remember to set back matrixMultiplcation matix if changed to finite axis
        }
+       if (this.zeroZeroDot) {
+            //this.graph.ctx.fillRect(this.graph.centerX, this.graph.centerY, 700, 500);
+            
+            this.graph.ctx.fillStyle = "black"
+            this.graph.ctx.strokeStyle = "black"
+            this.graph.ctx.beginPath();
+                this.graph.ctx.arc(this.graph.graphCenterX, this.graph.graphCenterY, 3, 0, 2 * Math.PI);
+                this.graph.ctx.fill();
+            this.graph.ctx.stroke();
+
+        }
+
     }
     
     
@@ -146,7 +176,7 @@ class Axis {
 
         this._xAxisNeg.arrow = arrow
         this._yAxisNeg.arrow = arrow
-        this._zAxisNeg.arrow = arrow   
+        this._zAxisNeg.arrow = arrow
     }
 }
 
@@ -197,19 +227,74 @@ class Vector {
             // Draw the arrow
         }
     }
-
-
 }
 
 class Grid {
-    constructor(){
-        
+    constructor(graph){
+        this.graph = graph
     }
 
     draw() {
         
+        let xBasis = matrixVectorMultiplication(this.graph.basis, [1,0,0]);
+        let yBasis = matrixVectorMultiplication(this.graph.basis, [0,1,0]);
+
+        let xAngle = Math.atan(xBasis[1]/xBasis[0])
+        let yAngle = Math.atan(yBasis[1]/yBasis[0])
+        
+        const scale = this.graph.canvas.width / this.graph.numOfGraphUnitsEdgeToEdge
+        this.graph.ctx.lineWidth = 1
+        this.graph.ctx.strokeStyle = "grey"
+
+        
+        //loop through x axis intervals
+        let x = this.graph.graphCenterX
+        let y = this.graph.graphCenterY
+        let x_neg = this.graph.graphCenterX
+        let y_neg = this.graph.graphCenterY
+        
+        while (0 <= x && x <= this.graph.canvas.width && 0 <= y && y <= this.graph.canvas.width) { //check for in canvas bounds
+            this._drawOrthoLine(x, y, yBasis)
+            this._drawOrthoLine(x_neg, y_neg, yBasis)
+            x += scale*xBasis[0]
+            y -= scale*xBasis[1]
+            x_neg -= scale*xBasis[0]
+            y_neg += scale*xBasis[1]     
+        }
+        
+        //loop through y axis intervals
+        x = this.graph.graphCenterX
+        y = this.graph.graphCenterY
+        x_neg = this.graph.graphCenterX
+        y_neg = this.graph.graphCenterY
+        
+        while (0 <= x && x <= this.graph.canvas.width && 0 <= y && y <= this.graph.canvas.width) { //check for in canvas bounds
+            this._drawOrthoLine(x, y, xBasis)
+            this._drawOrthoLine(x_neg, y_neg, xBasis)
+            x += scale*yBasis[0]
+            y -= scale*yBasis[1]
+            x_neg -= scale*yBasis[0]
+            y_neg += scale*yBasis[1]     
+        }
     }
+
+    _drawOrthoLine(x, y, orthogonalBasis) {
+        let width_scale = this.graph.canvas.width
+
+        let finalX  = x + width_scale * orthogonalBasis[0]
+        // Flipped because Y axis is zero at the top
+        let finalY  = y - width_scale * orthogonalBasis[1]
+        let startX  = x - width_scale * orthogonalBasis[0]
+        // Flipped because Y axis is zero at the top
+        let startY  = y + width_scale * orthogonalBasis[1]
+        this.graph.ctx.beginPath()
+            this.graph.ctx.moveTo(startX, startY)
+            this.graph.ctx.lineTo(finalX, finalY)
+        this.graph.ctx.stroke()
+    }
+
 }
+
 
 
 
@@ -220,47 +305,43 @@ class Grid {
  * @returns vector Ax = b
  */
 function matrixVectorMultiplication (matrix, vector) {
-    //console.log(matrix)
-    //console.log("vector " + vector)
+
     let returnVector= new Array(vector.length)
-    //console.log("help1")
     for (let i=0; i<returnVector.length; i++) {
         returnVector[i] = 0
     }
-    //console.log("help2")
+
     for (let i = 0; i < matrix.length; i++) {
         for (let j = 0; j < matrix[i].length; j++) {
             returnVector[i] = returnVector[i] + matrix[i][j]*vector[j];
         }
     }
-    //console.log(returnVector)
+
     return returnVector
 }
 
-function matrixMultiplication(leftMatrix, rightMatrix) {
-    
-    let returnMatrix = new Array(rightMatrix.length)
 
+/**
+ * multiplies two rightMatrix by leftMatrix
+ * @param {*} leftMatrix 
+ * @param {*} rightMatrix 
+ * @returns leftMatrix*rightMatrix
+ */
+function matrixMultiplication(leftMatrix, rightMatrix) {
+    let returnMatrix = new Array(rightMatrix.length)
     for (let i=0; i<returnMatrix.length; i++) {
         returnMatrix[i] = new Array(leftMatrix[0].length).fill(0);
     }
-
     for (let i=0; i<rightMatrix.length; i++) {
+        
         for (let m=0; m<leftMatrix[0].length; m++) {
-
-            let value = 0;
 
             for (let n=0; n<leftMatrix.length; n++) {
                 returnMatrix[i][m] = returnMatrix[i][m] + leftMatrix[m][n] * rightMatrix[i][n]
             }
 
         }
+        
     }
-
-    //console.log(returnVector)
     return returnMatrix
 }
-
-matrix1=[[1,0,0],[0,1,0],[0,0,1]]
-matrix2=[[1,2,3]]
-matrixMultiplication(matrix1,matrix2)

@@ -1,0 +1,10 @@
+Short term:
+
+Add transformations
+Add arrows
+Make sure 3d roatations work
+BRING MOUSE SUPPORT / CANVAS UPDATING
+
+Long term:
+Fix janky way of doing infinate for axis
+Fix janky way of doing grid lines
