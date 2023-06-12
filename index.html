@@ -4,13 +4,49 @@
     <head>
         <script src="graph.js" defer></script>
         <script src="script.js" defer></script>
+        <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <title>TEST</title>
-        <div>
-            <canvas id="graph" width="0" height="0" style="border:1px solid #000000;"></canvas>
+        <title>Change of basis Example</title>
+        <div id="graph-container">
+            <canvas id="graph" style="border:1px solid #000000;"></canvas>
         </div>
-        
+        <div id="slider-container">
+            <input type="range" min="0" max="3" value="0" id="slider">
+        </div>
+
+        <div id="matrixs-container">
+            <table class="matrix-table">
+                <tr>
+                    <td><input type="text"/></td>
+                    <td><input type="text"/></td>
+                </tr>
+                <tr>
+                    <td><input type="text"/></td>
+                    <td><input type="text"/></td>
+                </tr>
+            </table>
+            <table class="matrix-table">
+                <tr>
+                    <td><input type="text"/></td>
+                    <td><input type="text"/></td>
+                </tr>
+                <tr>
+                    <td><input type="text"/></td>
+                    <td><input type="text"/></td>
+                </tr>
+            </table>
+            <table class="matrix-table">
+                <tr>
+                    <td><input type="text"/></td>
+                    <td><input type="text"/></td>
+                </tr>
+                <tr>
+                    <td><input type="text"/></td>
+                    <td><input type="text"/></td>
+                </tr>
+            </table>
+        </div>
         <div>
             <input id="x" size="5px" class="arrow-togglable" type="text"/>
             <input id="y" size="5px" class="arrow-togglable" type="text"/>
@@ -21,7 +57,6 @@
             </select>
             <button id="graphButton" marginLeft="10px">graph!</button>
             <button id="showGrid" marginLeft="10px">show grid!</button>
-            <button id="" marginLeft="10px">graph!</button>
         </div>
     </body>
 </html>

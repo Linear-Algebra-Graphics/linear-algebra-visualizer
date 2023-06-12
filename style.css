@@ -1,1 +1,65 @@
+body {
+    margin: 0;
+    background-color: white;
+    margin-left: auto;
+}
 
+#graph-container{
+    margin-left: 20px;
+    margin-top: 20px;
+}
+
+canvas {
+    border-radius: 15px;
+}
+
+#matrix-container {
+    position: relative;
+}
+
+.matrix-table {
+    display: inline-block;
+    position: relative;
+    margin-left: 20px;
+    margin-top: 20px;
+}
+.matrix-table:before, .matrix-table:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    border: 1px solid black;
+    width: 6px;
+    height: 100%;
+}
+.matrix-table:before {
+    left: -6px;
+    border-right: 0;
+}
+.matrix-table:after {
+    right: -6px;
+    border-left: 0;
+}
+
+th, td {
+    padding: 5px;
+}
+
+#slider-container {
+    width:800px;
+    margin-top: 20px;
+    margin-left: 20px
+    
+}
+
+
+input[type="text"] {
+    font-size: 30px;
+    min-width: 50px;
+    max-width: 100px;
+    min-height: 12px;
+    text-align: center;
+}
+
+input[type="range"] {
+    width: 100%;
+ }

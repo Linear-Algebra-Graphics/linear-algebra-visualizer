@@ -24,7 +24,6 @@ class Graph {
         this.height = canvas.height
         this.width = canvas.width
         this.ctx = canvas.getContext("2d")
-        this.ctx.lineWidth = 3
         this.graphCenterX = this.canvas.width/2
         this.graphCenterY = this.canvas.height/2
         
@@ -35,8 +34,8 @@ class Graph {
         this.numOfGraphUnitsEdgeToEdge = 20;
         this.backgroundColor           = "white"
         // I matrix is default
-        //this.basis                     = [[1,0,0],[0,1,0],[0,0,1]]
-        this.basis                     = [[Math.cos(Math.PI/4),Math.sin(Math.PI/4),0],[-1*Math.sin(Math.PI/4),Math.cos(Math.PI/4),0],[0,0,1]]
+        this.basis                     = [[1,0,0],[0,1,0],[0,0,1]]
+        //this.basis                     = [[Math.cos(Math.PI/4),Math.sin(Math.PI/4),0],[-1*Math.sin(Math.PI/4),Math.cos(Math.PI/4),0],[0,0,1]]
         
         this.graphAxis                 = new Axis(this)
         this.graphGrid                 = new Grid(this)
@@ -112,7 +111,7 @@ class Axis {
     
         // Default
         this.fullAxis     = true
-        this.infiniteAxis = false
+        this.infiniteAxis = true
         this.zeroZeroDot  = true
     }
     
@@ -148,7 +147,7 @@ class Axis {
             this.graph.ctx.fillStyle = "black"
             this.graph.ctx.strokeStyle = "black"
             this.graph.ctx.beginPath();
-                this.graph.ctx.arc(this.graph.graphCenterX, this.graph.graphCenterY, 3, 0, 2 * Math.PI);
+                this.graph.ctx.arc(this.graph.graphCenterX, this.graph.graphCenterY, 5, 0, 2 * Math.PI);
                 this.graph.ctx.fill();
             this.graph.ctx.stroke();
 
@@ -203,7 +202,8 @@ class Vector {
      */
     draw() {
         this.graph.ctx.strokeStyle = this.color
-        
+        this.graph.ctx.lineWidth = 3
+
         const scale = this.graph.canvas.width / this.graph.numOfGraphUnitsEdgeToEdge
         
         let centerX = this.graph.graphCenterX

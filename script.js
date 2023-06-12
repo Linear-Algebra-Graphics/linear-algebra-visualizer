@@ -5,7 +5,7 @@ let yInput = document.getElementById("y")
 let graphButton = document.getElementById("graphButton")
 let vectorColors = document.getElementById("vector colors")
 
-displayWidth  = 600
+displayWidth  = 800
 displayHeight = 600
 
 canvas.style.width = displayWidth + "px"
