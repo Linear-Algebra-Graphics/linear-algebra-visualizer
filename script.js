@@ -47,6 +47,7 @@ document.getElementById("slider").addEventListener("change", function() {
     switch(parseInt(document.getElementById("slider").value)) {
         case 0:
             test_graph.basis = [[1,0,0],[0,1,0],[0,0,1]]
+            test_graph.draw();
             break;
         case 1:
             matrix_a = getMatrixFromTable("matrix-A")
@@ -55,6 +56,8 @@ document.getElementById("slider").addEventListener("change", function() {
                 alert("Invalid Matrix")
             } else {
                 test_graph.basis = matrix_a
+                console.log(test_graph.basis)
+                test_graph.draw()
             }
             break;
             // code block
@@ -66,6 +69,9 @@ document.getElementById("slider").addEventListener("change", function() {
                 alert("Invalid Matrix")
             } else {
                 test_graph.basis = matrixMultiplication(matrix_b, matrix_a)
+                console.log(matrix_a)
+                console.log(matrix_b)
+                test_graph.draw()
             }
             break;
         case 3:
@@ -77,6 +83,8 @@ document.getElementById("slider").addEventListener("change", function() {
                 alert("Invalid Matrix")
             } else {
                 test_graph.basis = matrixMultiplication(matrix_c, matrixMultiplication(matrix_b, matrix_a))
+                console.log(test_graph.basis)
+                test_graph.draw()
             }
             // code block
             break;
@@ -91,7 +99,7 @@ function getMatrixFromTable(id) {
 
     inputArray = table.getElementsByTagName("input")
     
-    matrix = [[inputArray[0].value, inputArray[2].value],[inputArray[1].value, inputArray[3].value]]
+    matrix = [[parseFloat(inputArray[0].value), parseFloat(inputArray[2].value), 0],[parseFloat(inputArray[1].value), parseFloat(inputArray[3].value), 0], [0,0,1]]
 
     for (let i=0; i<inputArray.length; i++) {
         if (inputArray[i].value == "") {
