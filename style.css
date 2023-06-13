@@ -65,3 +65,7 @@ input[type="text"] {
 input[type="range"] {
     width: 100%;
  }
+
+#vector-input {
+    margin-left: 20px;
+}

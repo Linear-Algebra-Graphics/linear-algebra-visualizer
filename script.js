@@ -40,3 +40,64 @@ document.getElementById("showGrid").addEventListener("click", function() {
     test_graph.showGrid = !test_graph.showGrid
     test_graph.draw()
 })
+
+document.getElementById("slider").addEventListener("change", function() {
+    //alert(document.getElementById("slider").value);
+    //do matrix multy stuff with document.getElementById("slider").value
+    switch(parseInt(document.getElementById("slider").value)) {
+        case 0:
+            test_graph.basis = [[1,0,0],[0,1,0],[0,0,1]]
+            break;
+        case 1:
+            matrix_a = getMatrixFromTable("matrix-A")
+            
+            if (matrix_a === null) {
+                alert("Invalid Matrix")
+            } else {
+                test_graph.basis = matrix_a
+            }
+            break;
+            // code block
+        case 2:
+            matrix_a = getMatrixFromTable("matrix-A")
+            matrix_b = getMatrixFromTable("matrix-B")
+
+            if (matrix_a === null || matrix_b === null) {
+                alert("Invalid Matrix")
+            } else {
+                test_graph.basis = matrixMultiplication(matrix_b, matrix_a)
+            }
+            break;
+        case 3:
+            matrix_a = getMatrixFromTable("matrix-A")
+            matrix_b = getMatrixFromTable("matrix-B")
+            matrix_c = getMatrixFromTable("matrix-C")
+
+            if (matrix_a === null || matrix_b === null || matrix_c === null) {
+                alert("Invalid Matrix")
+            } else {
+                test_graph.basis = matrixMultiplication(matrix_c, matrixMultiplication(matrix_b, matrix_a))
+            }
+            // code block
+            break;
+        default:
+            //nothing happens woohoo
+            break;
+    }
+}, false);
+
+function getMatrixFromTable(id) {
+    let table = document.getElementById(id);
+
+    inputArray = table.getElementsByTagName("input")
+    
+    matrix = [[inputArray[0].value, inputArray[2].value],[inputArray[1].value, inputArray[3].value]]
+
+    for (let i=0; i<inputArray.length; i++) {
+        if (inputArray[i].value == "") {
+            return null;
+        }
+    }
+
+    return matrix
+}
