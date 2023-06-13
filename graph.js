@@ -40,7 +40,7 @@ class Graph {
         this.graphAxis                 = new Axis(this)
         this.graphGrid                 = new Grid(this)
         this.showAxis                  = true
-        this.showGrid                  = true
+        this.showGrid                  = false
     }
 
     addObject(object) {

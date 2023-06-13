@@ -1,7 +1,6 @@
 body {
     margin: 0;
     background-color: white;
-    margin-left: auto;
 }
 
 #graph-container{
@@ -44,11 +43,14 @@ th, td {
     padding: 5px;
 }
 
+#slider {
+    direction: rtl
+}
+
 #slider-container {
     width:800px;
     margin-top: 20px;
     margin-left: 20px
-    
 }
 
 
