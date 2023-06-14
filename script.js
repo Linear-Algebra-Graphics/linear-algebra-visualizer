@@ -32,14 +32,15 @@ document.getElementById("graphButton").addEventListener("click", function() {
 })
 
 document.getElementById("infiniteAxis").addEventListener("click", function() {
-    test_graph.infiniteAxis = !test_graph.infiniteAxis
+    test_graph.infiniteAxis = document.getElementById("infiniteAxis").checked
     test_graph.draw()
 })
 
 document.getElementById("showGrid").addEventListener("click", function() {
-    test_graph.showGrid = !test_graph.showGrid
+    test_graph.showGrid = document.getElementById("showGrid").checked
     test_graph.draw()
 })
+
 
 document.getElementById("slider").addEventListener("change", function() {
     //alert(document.getElementById("slider").value);
@@ -94,6 +95,15 @@ document.getElementById("slider").addEventListener("change", function() {
     }
 }, false);
 
+
+/**
+ * gets the array of input values in from matrix with id:id
+ * @requires {*} that the id is from a table, and that the table holds inputs for a 2x2 matrix
+ * @param {*} id value of id tag of the table made matrix
+ * @returns null if there is an unfilled input, else returns a matrix such that
+ *             [[a,c],[b,d]] = |a b|
+ *                             |c d|
+ */
 function getMatrixFromTable(id) {
     let table = document.getElementById(id);
 
@@ -101,7 +111,7 @@ function getMatrixFromTable(id) {
     
     matrix = [[parseFloat(inputArray[0].value), parseFloat(inputArray[2].value), 0],[parseFloat(inputArray[1].value), parseFloat(inputArray[3].value), 0], [0,0,1]]
 
-    for (let i=0; i<inputArray.length; i++) {
+    for (let i = 0; i < inputArray.length; i++) {
         if (inputArray[i].value == "") {
             return null;
         }

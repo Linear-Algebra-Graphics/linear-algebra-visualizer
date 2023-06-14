@@ -40,16 +40,16 @@ class Graph {
         this.graphAxis                 = new Axis(this)
         this.graphGrid                 = new Grid(this)
         this.showAxis                  = true
-        this.showGrid                  = false
+        this.showGrid                  = true
+        this.infiniteAxis              = true
     }
 
+    /**
+     * adds new object to be displayed on the graph
+     * @param {*} object can be a vector/grid/square/
+     */
     addObject(object) {
         this.drawnObjects.push(object)
-    }
-
-    /** */
-    changeBasis(matrix) {
-
     }
 
     /** */
@@ -111,7 +111,6 @@ class Axis {
     
         // Default
         this.fullAxis     = true
-        this.infiniteAxis = true
         this.zeroZeroDot  = true
     }
     
@@ -119,7 +118,7 @@ class Axis {
      * draws x, y, z axis
      */
     draw() {
-        if(this.infiniteAxis == false) {
+        if(this.graph.infiniteAxis === false) {
             //console.log("trying to draw successful")
             if (this.fullAxis) {
                 this._xAxisNeg.draw()
@@ -239,8 +238,8 @@ class Grid {
         let xBasis = matrixVectorMultiplication(this.graph.basis, [1,0,0]);
         let yBasis = matrixVectorMultiplication(this.graph.basis, [0,1,0]);
 
-        let xAngle = Math.atan(xBasis[1]/xBasis[0])
-        let yAngle = Math.atan(yBasis[1]/yBasis[0])
+        let xAngle = Math.atan(xBasis[1] / xBasis[0])
+        let yAngle = Math.atan(yBasis[1] / yBasis[0])
         
         const scale = this.graph.canvas.width / this.graph.numOfGraphUnitsEdgeToEdge
         this.graph.ctx.lineWidth = 1
@@ -256,10 +255,10 @@ class Grid {
         while (0 <= x && x <= this.graph.canvas.width && 0 <= y && y <= this.graph.canvas.width) { //check for in canvas bounds
             this._drawOrthoLine(x, y, yBasis)
             this._drawOrthoLine(x_neg, y_neg, yBasis)
-            x += scale*xBasis[0]
-            y -= scale*xBasis[1]
-            x_neg -= scale*xBasis[0]
-            y_neg += scale*xBasis[1]     
+            x += scale * xBasis[0]
+            y -= scale * xBasis[1]
+            x_neg -= scale * xBasis[0]
+            y_neg += scale * xBasis[1]     
         }
         
         //loop through y axis intervals
@@ -271,10 +270,10 @@ class Grid {
         while (0 <= x && x <= this.graph.canvas.width && 0 <= y && y <= this.graph.canvas.width) { //check for in canvas bounds
             this._drawOrthoLine(x, y, xBasis)
             this._drawOrthoLine(x_neg, y_neg, xBasis)
-            x += scale*yBasis[0]
-            y -= scale*yBasis[1]
-            x_neg -= scale*yBasis[0]
-            y_neg += scale*yBasis[1]     
+            x += scale * yBasis[0]
+            y -= scale * yBasis[1]
+            x_neg -= scale * yBasis[0]
+            y_neg += scale * yBasis[1]     
         }
     }
 
@@ -293,55 +292,4 @@ class Grid {
         this.graph.ctx.stroke()
     }
 
-}
-
-
-
-
-/**
- * does Ax = b multiplication 
- * @param {*} matrix matrix A
- * @param {*} vector vector x
- * @returns vector Ax = b
- */
-function matrixVectorMultiplication (matrix, vector) {
-
-    let returnVector= new Array(vector.length)
-    for (let i=0; i<returnVector.length; i++) {
-        returnVector[i] = 0
-    }
-
-    for (let i = 0; i < matrix.length; i++) {
-        for (let j = 0; j < matrix[i].length; j++) {
-            returnVector[i] = returnVector[i] + matrix[i][j]*vector[j];
-        }
-    }
-
-    return returnVector
-}
-
-
-/**
- * multiplies two rightMatrix by leftMatrix
- * @param {*} leftMatrix 
- * @param {*} rightMatrix 
- * @returns leftMatrix*rightMatrix
- */
-function matrixMultiplication(leftMatrix, rightMatrix) {
-    let returnMatrix = new Array(rightMatrix.length)
-    for (let i=0; i<returnMatrix.length; i++) {
-        returnMatrix[i] = new Array(leftMatrix[0].length).fill(0);
-    }
-    for (let i=0; i<rightMatrix.length; i++) {
-        
-        for (let m=0; m<leftMatrix[0].length; m++) {
-
-            for (let n=0; n<leftMatrix.length; n++) {
-                returnMatrix[i][m] = returnMatrix[i][m] + leftMatrix[m][n] * rightMatrix[i][n]
-            }
-
-        }
-        
-    }
-    return returnMatrix
 }
