@@ -39,14 +39,15 @@
             </table>
             <table id="matrix-A" class="matrix-table">
                 <tr>
-                    <td><input type="text"/></td>
-                    <td><input type="text"/></td>
+                    <td><input type="text" value=""/></td>
+                    <td><input type="text" value=""/></td>
                 </tr>
                 <tr>
-                    <td><input type="text"/></td>
-                    <td><input type="text"/></td>
+                    <td><input type="text" value=""/></td>
+                    <td><input type="text" value=""/></td>
                 </tr>
             </table>
+            
         </div>
         <div id="vector-input">
             <input id="x" size="5px" class="arrow-togglable" type="text"/>
@@ -62,6 +63,10 @@
             <input type="checkbox" id="infiniteAxis" checked=""></input>
             <label>Show Grid</label>
             <input type="checkbox" id="showGrid" checked=""></input>
+            <label> zoom: </label>
+            <button id="zoomIn" marginLeft="10px">+</button>
+            <button id="zoomOut" marginLeft="10px"> - </button>
+            <button id="defaultZoom" marginLeft="10px"> default zoom </button>
         </div>
     </body>
 </html>

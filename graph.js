@@ -31,10 +31,12 @@ class Graph {
 
         // This is the number of graph units from edge to edge. E.g if the canvas is 600x600px we want
         // the length of 20 units to be 600 px.
-        this.numOfGraphUnitsEdgeToEdge = 20;
+        this.numOfGraphUnitsEdgeToEdge = this.canvas.width / 80;
         this.backgroundColor           = "white"
         // I matrix is default
         this.basis                     = [[1,0,0],[0,1,0],[0,0,1]]
+        this.currentZoom               = 1
+        this.zoomIncrement             = .1
         //this.basis                     = [[Math.cos(Math.PI/4),Math.sin(Math.PI/4),0],[-1*Math.sin(Math.PI/4),Math.cos(Math.PI/4),0],[0,0,1]]
         
         this.graphAxis                 = new Axis(this)
@@ -42,6 +44,32 @@ class Graph {
         this.showAxis                  = true
         this.showGrid                  = true
         this.infiniteAxis              = true
+    }
+
+    zoomIn() {
+        let xBasis = this.changeBasisAndZoom([1,0,0]);
+        //change to use multiplcation later
+        this.currentZoom = this.currentZoom * 1.1
+        console.log(xBasis)
+    }
+
+    zoomOut() {
+        let xBasis = this.changeBasisAndZoom([1,0,0]);
+        //change to use multiplcation later
+        //if (this.currentZoom >= this.zoomIncrement) {
+            this.currentZoom = this.currentZoom / 1.1
+        //}
+        console.log(xBasis)
+        let axisLength = Math.abs( Math.sqrt( Math.pow(xBasis[0], 2) + Math.pow(xBasis[1], 2)) )
+        console.log(Math.round(1/axisLength))
+        console.log("")
+        
+
+    }
+
+    setDefaultZoom() {
+        //should be animation back to default zoom
+        this.currentZoom = 1
     }
 
     /**
@@ -62,52 +90,80 @@ class Graph {
         this.ctx.fillStyle = this.backgroundColor
         this.ctx.fillRect(0,0, this.canvas.width, this.canvas.height);
         
-        if (this.showGrid == true) {
+        if (this.showGrid) {
             this.graphGrid.draw()
         }
         
-        if (this.showAxis == true) {
+        if (this.showAxis) {
             this.graphAxis.draw()
         }
         
         // Draw all objects
-
         for(let i = 0; i < this.drawnObjects.length; i++) {
             this.drawnObjects[i].draw();
         }
     }
+    
+    /**
+     * draws line from point1 to point2 on the graph canvas
+     * @param {*} point1 endpoint 1
+     * @param {*} point2 endpoint 2
+     * @param {*} color color of line
+     * @param {*} lineWidth width of line
+     */
+    drawLine(point1, point2, color, lineWidth) {
+        
+        this.ctx.lineWidth = lineWidth
+        this.ctx.strokeStyle = color
 
+        this.ctx.beginPath()
+            this.ctx.moveTo(point1[0], point1[1])
+            this.ctx.lineTo(point2[0], point2[1])
+        this.ctx.stroke()
+    }
+
+    /**
+     * updates vector to be in the current basis and zoom of the graph 
+     * @param {*} vector vector to operate on
+     * @returns vector in terms of current 
+     *          basis and zoom of the graph relative to the canvas
+     */
+    changeBasisAndZoom(vector) {
+        let updatedVector = matrixVectorMultiplication(this.basis, vector)
+        updatedVector     = matrixVectorMultiplication([[this.currentZoom, 0, 0],[0, this.currentZoom, 0],[0, 0, this.currentZoom]], updatedVector)
+        return updatedVector
+    }
 
 }
 
 //me
 class Axis {
-    
     /**
      * creates an instance of an Axis
      * @param {*} graph the graph on which the axis are drawn
      */
     constructor(graph) {
         this.graph = graph
+        const lineWidth = 6
         
-        this._xAxis = new Vector(this.graph, [10,0,0], "blue", false)
-        this._yAxis = new Vector(this.graph, [0,10,0], "red", false)
-        this._zAxis = new Vector(this.graph, [0,0,10], "green", false)
+        this._xAxis = new Vector(this.graph, [10,0,0], "blue", lineWidth, false)
+        this._yAxis = new Vector(this.graph, [0,10,0], "red", lineWidth, false)
+        this._zAxis = new Vector(this.graph, [0,0,10], "green", lineWidth, false)
         
-        this._xAxisNeg = new Vector(this.graph, [-10,0,0], "blue", false)
-        this._yAxisNeg = new Vector(this.graph, [0,-10,0], "red", false)
-        this._zAxisNeg = new Vector(this.graph, [0,0,-10], "green", false)
+        this._xAxisNeg = new Vector(this.graph, [-10,0,0], "blue", lineWidth, false)
+        this._yAxisNeg = new Vector(this.graph, [0,-10,0], "red", lineWidth, false)
+        this._zAxisNeg = new Vector(this.graph, [0,0,-10], "green", lineWidth, false)
 
         //for infinite axis
         const infLen = this.graph.width*this.graph.numOfGraphUnitsEdgeToEdge
         
-        this._infxAxis = new Vector(this.graph, [infLen,0,0], "blue", false)
-        this._infyAxis = new Vector(this.graph, [0,infLen,0], "red", false)
-        this._infzAxis = new Vector(this.graph, [0,0,infLen], "green", false)
+        this._infxAxis = new Vector(this.graph, [infLen,0,0], "blue", lineWidth, false)
+        this._infyAxis = new Vector(this.graph, [0,infLen,0], "red", lineWidth, false)
+        this._infzAxis = new Vector(this.graph, [0,0,infLen], "green", lineWidth, false)
         
-        this._infxAxisNeg = new Vector(this.graph, [-1*infLen,0,0], "blue", false)
-        this._infyAxisNeg = new Vector(this.graph, [0,-1*infLen,0], "red", false)
-        this._infzAxisNeg = new Vector(this.graph, [0,0,-1*infLen], "green", false)
+        this._infxAxisNeg = new Vector(this.graph, [-1*infLen,0,0], "blue", lineWidth, false)
+        this._infyAxisNeg = new Vector(this.graph, [0,-1*infLen,0], "red", lineWidth, false)
+        this._infzAxisNeg = new Vector(this.graph, [0,0,-1*infLen], "green", lineWidth, false)
     
         // Default
         this.fullAxis     = true
@@ -154,9 +210,12 @@ class Axis {
 
     }
     
-    
+    /**
+     * for finite axis case leave for now
+     * @param {*} size 
+     * @param {*} arrow 
+     */
     setAxis(size, arrow) {
-
         // Update the cords
         this._xAxis.cords = [size, 0, 0]
         this._xAxis.cords = [0, size, 0]
@@ -189,27 +248,26 @@ class Vector {
      * @param {*} color color of vector
      * @param {*} arrow true if vector has arrow at the end
      */
-    constructor(graph, cords, color, arrow){
-        this.graph         = graph
-        this.cords         = cords
-        this.color         = color
-        this.arrow         = arrow
+    constructor(graph, cords, color, lineWidth, arrow){
+        this.graph    = graph
+        this.cords    = cords
+        this.color    = color
+        this.lineWidth = lineWidth
+        this.arrow    = arrow
     }
 
     /**
      * draws the vector on the graph
      */
     draw() {
-        this.graph.ctx.strokeStyle = this.color
-        this.graph.ctx.lineWidth = 3
-
         const scale = this.graph.canvas.width / this.graph.numOfGraphUnitsEdgeToEdge
         
         let centerX = this.graph.graphCenterX
         let centerY = this.graph.graphCenterY
         
         // First apply the basis, then the applied matrix. Not sure if this is the correct order for all situations...
-        let updatedCords = matrixVectorMultiplication(this.graph.basis, this.cords)
+        let updatedCords = this.graph.changeBasisAndZoom(this.cords)
+
         //console.log(updatedCords)
 
         let finalX  = centerX + scale * updatedCords[0]
@@ -217,10 +275,8 @@ class Vector {
         let finalY  = centerY - scale * updatedCords[1]
         // console.log("finalX: " + finalX)
         // console.log("finalY: " + finalY)
-        this.graph.ctx.beginPath()
-            this.graph.ctx.moveTo(centerX, centerY)
-            this.graph.ctx.lineTo(finalX, finalY)
-        this.graph.ctx.stroke()
+
+        this.graph.drawLine([centerX, centerY],[finalX, finalY], this.color, this.lineWidth)
 
         if(this.arrow == true) {
             // Draw the arrow
@@ -233,63 +289,192 @@ class Grid {
         this.graph = graph
     }
 
+    /**
+     * 
+     */
     draw() {
-        
-        let xBasis = matrixVectorMultiplication(this.graph.basis, [1,0,0]);
-        let yBasis = matrixVectorMultiplication(this.graph.basis, [0,1,0]);
+        let xBasis = this.graph.changeBasisAndZoom([1,0,0]);
+        let yBasis = this.graph.changeBasisAndZoom([0,1,0]);
 
-        let xAngle = Math.atan(xBasis[1] / xBasis[0])
-        let yAngle = Math.atan(yBasis[1] / yBasis[0])
+        let neg_xBasis = this.graph.changeBasisAndZoom([-1,0,0]);
+        let neg_yBasis = this.graph.changeBasisAndZoom([0,-1,0]);
         
-        const scale = this.graph.canvas.width / this.graph.numOfGraphUnitsEdgeToEdge
-        this.graph.ctx.lineWidth = 1
-        this.graph.ctx.strokeStyle = "grey"
+        // Point slope formula
+            // y+y1 = m(x-x1)
+            // y = m(x-x1)+y1
+            // y = mx-mx1+y1
+            // y = mx + (y1-mx1)
+            // y = mx + b
+            // b = (y1-mx1)
+            
+        //looping over x axis
+        this.drawHalfAxisGrid(xBasis,yBasis)
+        this.drawHalfAxisGrid(neg_xBasis,yBasis)
 
+        this.drawHalfAxisGrid(yBasis, xBasis)
+        this.drawHalfAxisGrid(neg_yBasis, xBasis)
         
-        //loop through x axis intervals
+        
+    }
+    
+    /**
+     * draws grid lines along half of an axis, in the direction of the vector axis
+     * each grid line is defined by the vector gridVector
+     * @param {*} axis xBasis originally 
+     * @param {*} gridVector vector defining grid lines
+     */
+    drawHalfAxisGrid(axis, gridVector) {
         let x = this.graph.graphCenterX
         let y = this.graph.graphCenterY
-        let x_neg = this.graph.graphCenterX
-        let y_neg = this.graph.graphCenterY
+
+        let keepGoing = true
+        let lineCount = 0
         
-        while (0 <= x && x <= this.graph.canvas.width && 0 <= y && y <= this.graph.canvas.width) { //check for in canvas bounds
-            this._drawOrthoLine(x, y, yBasis)
-            this._drawOrthoLine(x_neg, y_neg, yBasis)
-            x += scale * xBasis[0]
-            y -= scale * xBasis[1]
-            x_neg -= scale * xBasis[0]
-            y_neg += scale * xBasis[1]     
-        }
+        let scale = this.graph.canvas.width / this.graph.numOfGraphUnitsEdgeToEdge
         
-        //loop through y axis intervals
-        x = this.graph.graphCenterX
-        y = this.graph.graphCenterY
-        x_neg = this.graph.graphCenterX
-        y_neg = this.graph.graphCenterY
-        
-        while (0 <= x && x <= this.graph.canvas.width && 0 <= y && y <= this.graph.canvas.width) { //check for in canvas bounds
-            this._drawOrthoLine(x, y, xBasis)
-            this._drawOrthoLine(x_neg, y_neg, xBasis)
-            x += scale * yBasis[0]
-            y -= scale * yBasis[1]
-            x_neg -= scale * yBasis[0]
-            y_neg += scale * yBasis[1]     
+        while (keepGoing) {
+            let startX, startY, endX, endY //points to draw from and to
+
+
+            // First check if the lines are paralel to get rid of the edge case.
+            if (gridVector[0] === 0) {
+                //parrallel with y axis case
+                startX = x
+                startY = this.graph.canvas.height
+                endX   = x
+                endY   = 0
+            } else if (gridVector[1]  === 0) {
+                //parrallel with x axis case
+                startX = 0
+                startY = y
+                endX   = this.graph.canvas.width
+                endY   = y
+            } else {
+                // IF WE ARE HERE THERE 4 POINTS
+                //calculate and compare 4 points THERE IS NO NULL POINT
+
+                //case ensures that line will always intersect with all 
+                //four lines defining boundaries of mxn canvas
+                //console.log("3")
+                
+                //y - y1 = m(x - x1)
+                //
+                let x1 = x + gridVector[0]
+                let y1 = y - gridVector[1]
+
+                let m  = (-1*gridVector[1]) / (gridVector[0])
+                let b  = y1 - (m * x1)
+                // console.log("m: " + m)
+                // console.log("y: " + yBasis[1] + " x: " + yBasis[0])
+                
+                let point1 = [0, this._getYIntersept(0, m, b)]
+                let point2 = [this.graph.canvas.width, this._getYIntersept(this.graph.canvas.width, m, b)]
+
+                let point3 = [this._getXIntersept(0, m, b), 0]
+                let point4 = [this._getXIntersept(this.graph.canvas.height, m, b), this.graph.canvas.height]
+
+                let dis_point1 = [this._distToGraphCenter(point1), point1]
+                let dis_point2 = [this._distToGraphCenter(point2), point2]
+                let dis_point3 = [this._distToGraphCenter(point3), point3]
+                let dis_point4 = [this._distToGraphCenter(point4), point4]
+
+                // Either is empty or two points.
+                let pointsOnCanvas = this._findTwoClosesPoints([dis_point1, dis_point2, dis_point3, dis_point4])
+                
+                // If there are no points on canvas end the loop.
+                startX = pointsOnCanvas[0][0]
+                startY = pointsOnCanvas[0][1]
+                endX   = pointsOnCanvas[1][0]
+                endY   = pointsOnCanvas[1][1]
+            }
+            
+            // Biggest grid spacing should be the default number we start with
+            // Smallest grid spacing should be 2 times the default
+
+
+            // This means the two minimum points are outside the canvas. This means that we do not need to draw the lines anymore so we break the loop.
+            if (!this._outSideCanvas([startX, startY]) || !this._outSideCanvas([endX, endY])) {
+                // Make every fith line dark
+                if (lineCount % 5 == 0) {
+                    this.graph.drawLine([startX, startY],[endX, endY], "green", 3+4);
+                } else {
+                    this.graph.drawLine([startX, startY],[endX, endY], "grey", 1+3);
+                }
+                
+                //box max size before splitting => scale * 5
+                //box min size before merging with neighbors => scale * 2.5
+                // scale is orignal scale
+                //
+                // 
+                // let maxBoxSize = scale*5
+                // let minBoxSize = scale*2.5
+
+                let axisLength = Math.abs( Math.sqrt( Math.pow(axis[0], 2) + Math.pow(axis[1], 2)) )
+                let secondScale = 1
+
+                // if (axisLength <= .5) {
+                //     secondScale = 1 / axisLength
+                // } 1/16, 1/8, 1/2, 1, 2, 4, 8, 16
+
+                let zoom = (1 / axisLength) 
+
+
+                // let zoom = 1/axisLength
+                secondScale = zoom - Math.floor(zoom)
+                
+                // axis[0] * x = secondScale
+                // x = sconndSclae/axis[0]
+                //scale * axis[0]* x = secondScale
+                //x = secondScale/(scale * axis[0]
+
+                // x += scale * axis[0]
+                // y -= scale * axis[1]
+
+
+                x += scale * (1+secondScale) * (zoom) * axis[0]
+                y -= scale * (1+secondScale) * (zoom) * axis[1]
+                
+                console.log("second scale " + (1 + secondScale))
+                // console.log("normalized " + Math.abs( Math.sqrt( Math.pow((zoom) * axis[0], 2) + Math.pow((zoom) * axis[1], 2)) ));
+
+
+            } else {
+                keepGoing = false
+            }
+            lineCount++
         }
     }
 
-    _drawOrthoLine(x, y, orthogonalBasis) {
-        let width_scale = this.graph.canvas.width
+    //returns true if the point (x, y) exists 
+    //outside the boundaries of the this.graph.canvas
+    // @param point (x, y) point
+    // @returns true if outside canvas
+    //
+    _outSideCanvas(point) {
+        return (point[0] < 0 || point[0] > this.graph.canvas.width) || (point[1] < 0 || point[1] > this.graph.canvas.height)
+    }
 
-        let finalX  = x + width_scale * orthogonalBasis[0]
-        // Flipped because Y axis is zero at the top
-        let finalY  = y - width_scale * orthogonalBasis[1]
-        let startX  = x - width_scale * orthogonalBasis[0]
-        // Flipped because Y axis is zero at the top
-        let startY  = y + width_scale * orthogonalBasis[1]
-        this.graph.ctx.beginPath()
-            this.graph.ctx.moveTo(startX, startY)
-            this.graph.ctx.lineTo(finalX, finalY)
-        this.graph.ctx.stroke()
+    _distToGraphCenter(point) {
+        let x = this.graph.graphCenterX
+        let y = this.graph.graphCenterY
+        return Math.abs( Math.sqrt( Math.pow(point[0] - x, 2) + Math.pow(point[1] - y, 2)) )
+    }
+
+    // returns [point1, poin2] if line has at least an endpoint in the canvas
+    // if there are no points returns []
+    _findTwoClosesPoints(dis_points) {
+        let twoClosestPoints = dis_points.sort(function(a, b) {return a[0] - b[0]})
+        return [twoClosestPoints[0][1], twoClosestPoints[1][1]]
+    }
+    
+    // gets y when given x using y = mx+b
+    _getYIntersept(x, m, b) { 
+        return (m * x) + b
+    }
+    
+    // gets x when given y using y = mx+b
+    _getXIntersept(y, m, b) {
+        return (y - b) / m
     }
 
 }

@@ -4,8 +4,8 @@ let xInput = document.getElementById("x")
 let yInput = document.getElementById("y")
 let vectorColors = document.getElementById("vector colors")
 
-displayWidth  = 800
-displayHeight = 600
+displayWidth  = 1600
+displayHeight = 1200
 
 canvas.style.width = displayWidth + "px"
 canvas.style.height = displayHeight + "px"
@@ -27,7 +27,22 @@ document.getElementById("graphButton").addEventListener("click", function() {
     let x = parseInt(xInput.value)
     let y = parseInt(yInput.value)
     let color = vectorColors.value
-    test_graph.addObject(new Vector(test_graph, [x, y, 0], color, false))
+    test_graph.addObject(new Vector(test_graph, [x, y, 0], color, 3, false))
+    test_graph.draw()
+})
+
+document.getElementById("zoomIn").addEventListener("click", function() {
+    test_graph.zoomIn()
+    test_graph.draw()
+})
+
+document.getElementById("zoomOut").addEventListener("click", function() {
+    test_graph.zoomOut()
+    test_graph.draw()
+})
+
+document.getElementById("defaultZoom").addEventListener("click", function() {
+    test_graph.setDefaultZoom()
     test_graph.draw()
 })
 

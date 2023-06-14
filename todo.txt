@@ -4,7 +4,12 @@ Add transformations
 Add arrows
 Make sure 3d roatations work
 BRING MOUSE SUPPORT / CANVAS UPDATING
+set graph size relative to screen size???
 
 Long term:
-Fix janky way of doing infinate for axis
-Fix janky way of doing grid lines
+Fix janky way of doing infinate for axis do same idea as grid lines
+MAKE SCALE NOT CALCULATED EVERY TIME
+Add grid numbers
+
+Add a hard limit to all while loops so it doesn't crash browswer
+Change zoom in and out to multiplication
