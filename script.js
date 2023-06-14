@@ -42,7 +42,7 @@ document.getElementById("showGrid").addEventListener("click", function() {
 })
 
 
-document.getElementById("slider").addEventListener("change", function() {
+document.getElementById("slider").addEventListener("input", function() {
     //alert(document.getElementById("slider").value);
     //do matrix multy stuff with document.getElementById("slider").value
     switch(parseInt(document.getElementById("slider").value)) {
