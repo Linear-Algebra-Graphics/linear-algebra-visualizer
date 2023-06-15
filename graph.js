@@ -36,7 +36,7 @@ class Graph {
         // I matrix is default
         this.basis                     = [[1,0,0],[0,1,0],[0,0,1]]
         this.currentZoom               = 1
-        this.zoomIncrement             = .1
+        this.zoomIncrement             = .01
         //this.basis                     = [[Math.cos(Math.PI/4),Math.sin(Math.PI/4),0],[-1*Math.sin(Math.PI/4),Math.cos(Math.PI/4),0],[0,0,1]]
         
         this.graphAxis                 = new Axis(this)
@@ -49,20 +49,20 @@ class Graph {
     zoomIn() {
         let xBasis = this.changeBasisAndZoom([1,0,0]);
         //change to use multiplcation later
-        this.currentZoom = this.currentZoom * 1.1
-        console.log(xBasis)
+        this.currentZoom = this.currentZoom * 1.01
+        //console.log(xBasis)
     }
 
     zoomOut() {
         let xBasis = this.changeBasisAndZoom([1,0,0]);
         //change to use multiplcation later
         //if (this.currentZoom >= this.zoomIncrement) {
-            this.currentZoom = this.currentZoom / 1.1
+            this.currentZoom =this.currentZoom / 1.01
         //}
         console.log(xBasis)
         let axisLength = Math.abs( Math.sqrt( Math.pow(xBasis[0], 2) + Math.pow(xBasis[1], 2)) )
-        console.log(Math.round(1/axisLength))
-        console.log("")
+        // console.log(Math.round(1/axisLength))
+        // console.log("")
         
 
     }
@@ -306,13 +306,76 @@ class Grid {
             // y = mx + (y1-mx1)
             // y = mx + b
             // b = (y1-mx1)
-            
-        //looping over x axis
-        this.drawHalfAxisGrid(xBasis,yBasis)
-        this.drawHalfAxisGrid(neg_xBasis,yBasis)
+        //BEGIN SPAGHETTI CODE
+        let scale = this.graph.canvas.width / this.graph.numOfGraphUnitsEdgeToEdge
 
-        this.drawHalfAxisGrid(yBasis, xBasis)
-        this.drawHalfAxisGrid(neg_yBasis, xBasis)
+        let axis = xBasis
+        let scaledAxisLength = Math.abs( Math.sqrt( Math.pow(axis[0] * scale, 2) + Math.pow(axis[1]*scale, 2)))
+        let xStep = scale * axis[0]
+        let yStep = scale * axis[1]
+        let iteration_x = 0
+        //when curr 5x5 box is less than smallest allows, want to scale up
+        console.log("x step: " + xStep + " y step: " + yStep)
+        if (5*scaledAxisLength < 2.5*scale) {
+            while (5*scaledAxisLength < 2.5*scale) {
+                scaledAxisLength = scaledAxisLength * 2
+                xStep = xStep * 2
+                yStep = yStep * 2
+
+                iteration_x++
+            }
+        } else if (5*scaledAxisLength > 5*scale) {
+            while (5*scaledAxisLength > 5*scale) {
+                scaledAxisLength = scaledAxisLength / 2
+                xStep = xStep / 2
+                yStep = yStep / 2
+
+                iteration_x++
+            }
+        }
+
+        axis = yBasis
+        scaledAxisLength = Math.abs( Math.sqrt( Math.pow(axis[0] * scale, 2) + Math.pow(axis[1]*scale, 2)))
+        xStep = scale * axis[0]
+        yStep = scale * axis[1]
+        let iteration_y = 0
+        //when curr 5x5 box is less than smallest allows, want to scale up
+        console.log("x step: " + xStep + " y step: " + yStep)
+        if (5*scaledAxisLength < 2.5*scale) {
+            while (5*scaledAxisLength < 2.5*scale) {
+                scaledAxisLength = scaledAxisLength * 2
+                xStep = xStep * 2
+                yStep = yStep * 2
+
+                iteration_y++
+            }
+        } else if (5*scaledAxisLength > 5*scale) {
+            while (5*scaledAxisLength > 5*scale) {
+                scaledAxisLength = scaledAxisLength / 2
+                xStep = xStep / 2
+                yStep = yStep / 2
+                
+                iteration_y++
+            }
+        }
+
+        let iteration_all = iteration_x
+        if (iteration_x > iteration_y) {
+            iteration_all = iteration_y
+        }
+
+        //END SPAGHETTI CODE
+
+    
+        //looping over x axis
+        console.log("+x")
+        this.drawHalfAxisGrid(xBasis,yBasis, iteration_all)
+        console.log("-x")
+        this.drawHalfAxisGrid(neg_xBasis,yBasis, iteration_all)
+        console.log("+y")
+        this.drawHalfAxisGrid(yBasis, xBasis, iteration_all)
+        console.log("-y")
+        this.drawHalfAxisGrid(neg_yBasis, xBasis, iteration_all)
         
         
     }
@@ -323,7 +386,7 @@ class Grid {
      * @param {*} axis xBasis originally 
      * @param {*} gridVector vector defining grid lines
      */
-    drawHalfAxisGrid(axis, gridVector) {
+    drawHalfAxisGrid(axis, gridVector, iterations) {
         let x = this.graph.graphCenterX
         let y = this.graph.graphCenterY
 
@@ -331,7 +394,51 @@ class Grid {
         let lineCount = 0
         
         let scale = this.graph.canvas.width / this.graph.numOfGraphUnitsEdgeToEdge
+
+        //start 
+        let axisLength = Math.abs( Math.sqrt( Math.pow(axis[0], 2) + Math.pow(axis[1], 2)))
         
+        let scaledAxisLength = Math.abs( Math.sqrt( Math.pow(axis[0] * scale, 2) + Math.pow(axis[1]*scale, 2)))
+        let xStep = scale * axis[0]
+        let yStep = scale * axis[1]
+
+        //BEGIN SPAGHETTI CODE 
+        console.log("x step: " + xStep + " y step: " + yStep)
+        if (5*scaledAxisLength < 2.5*scale) {
+            for (let i = 0; i < iterations; i++) {
+                //scaledAxisLength = scaledAxisLength * 2
+                xStep = xStep * 2
+                yStep = yStep * 2
+            }
+        } else if (5*scaledAxisLength > 5*scale) {
+            for (let i = 0; i < iterations; i++) {
+                //scaledAxisLength = scaledAxisLength / 2
+                xStep = xStep / 2
+                yStep = yStep / 2
+            }
+        }
+        //END SPAGHETTI CODE
+
+        //when curr 5x5 box is less than smallest allows, want to scale up
+        // console.log("x step: " + xStep + " y step: " + yStep)
+        // if (5*scaledAxisLength < 2.5*scale) {
+        //     while (5*scaledAxisLength < 2.5*scale) {
+        //         scaledAxisLength = scaledAxisLength * 2
+        //         xStep = xStep * 2
+        //         yStep = yStep * 2
+        //     }
+        // } else if (5*scaledAxisLength > 5*scale) {
+        //     while (5*scaledAxisLength > 5*scale) {
+        //         scaledAxisLength = scaledAxisLength / 2
+        //         xStep = xStep / 2
+        //         yStep = yStep / 2
+        //     }
+        // }
+        //end
+        
+        console.log("x step: " + xStep + " y step: " + yStep)
+        console.log("")
+
         while (keepGoing) {
             let startX, startY, endX, endY //points to draw from and to
 
@@ -396,11 +503,25 @@ class Grid {
             if (!this._outSideCanvas([startX, startY]) || !this._outSideCanvas([endX, endY])) {
                 // Make every fith line dark
                 if (lineCount % 5 == 0) {
-                    this.graph.drawLine([startX, startY],[endX, endY], "green", 3+4);
+                    this.graph.drawLine([startX, startY],[endX, endY], "grey", 3);
                 } else {
-                    this.graph.drawLine([startX, startY],[endX, endY], "grey", 1+3);
+                    this.graph.drawLine([startX, startY],[endX, endY], "#d3d3d3", 1);
                 }
                 
+                //correct code
+                // x += scale * axis[0]
+                // y -= scale * axis[1]
+
+
+                
+
+                
+                x += xStep
+                y -= yStep
+
+
+                //BEGIN BUGGY CODE
+
                 //box max size before splitting => scale * 5
                 //box min size before merging with neighbors => scale * 2.5
                 // scale is orignal scale
@@ -409,34 +530,31 @@ class Grid {
                 // let maxBoxSize = scale*5
                 // let minBoxSize = scale*2.5
 
-                let axisLength = Math.abs( Math.sqrt( Math.pow(axis[0], 2) + Math.pow(axis[1], 2)) )
-                let secondScale = 1
+                // let axisLength = Math.abs( Math.sqrt( Math.pow(axis[0], 2) + Math.pow(axis[1], 2)) )
+                // let secondScale = 1
 
                 // if (axisLength <= .5) {
                 //     secondScale = 1 / axisLength
                 // } 1/16, 1/8, 1/2, 1, 2, 4, 8, 16
 
-                let zoom = (1 / axisLength) 
+                // let zoom = (1 / axisLength) 
 
 
-                // let zoom = 1/axisLength
-                secondScale = zoom - Math.floor(zoom)
+                // // let zoom = 1/axisLength
+                // secondScale = zoom - Math.floor(zoom)
                 
                 // axis[0] * x = secondScale
                 // x = sconndSclae/axis[0]
                 //scale * axis[0]* x = secondScale
                 //x = secondScale/(scale * axis[0]
-
-                // x += scale * axis[0]
-                // y -= scale * axis[1]
-
-
-                x += scale * (1+secondScale) * (zoom) * axis[0]
-                y -= scale * (1+secondScale) * (zoom) * axis[1]
                 
-                console.log("second scale " + (1 + secondScale))
-                // console.log("normalized " + Math.abs( Math.sqrt( Math.pow((zoom) * axis[0], 2) + Math.pow((zoom) * axis[1], 2)) ));
 
+                // x += scale * (1+secondScale) * (zoom) * axis[0]
+                // y -= scale * (1+secondScale) * (zoom) * axis[1]
+
+                
+                //console.log("second scale " + (1 + secondScale))
+                // console.log("normalized " + Math.abs( Math.sqrt( Math.pow((zoom) * axis[0], 2) + Math.pow((zoom) * axis[1], 2)) ));
 
             } else {
                 keepGoing = false

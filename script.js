@@ -4,8 +4,8 @@ let xInput = document.getElementById("x")
 let yInput = document.getElementById("y")
 let vectorColors = document.getElementById("vector colors")
 
-displayWidth  = 1600
-displayHeight = 1200
+displayWidth  = 800
+displayHeight = 800
 
 canvas.style.width = displayWidth + "px"
 canvas.style.height = displayHeight + "px"
@@ -24,8 +24,8 @@ test_graph.draw();
 // //scale needs to change
 // //since with scale = 1 graphed vectors are too small
 document.getElementById("graphButton").addEventListener("click", function() {
-    let x = parseInt(xInput.value)
-    let y = parseInt(yInput.value)
+    let x = parseFloat(xInput.value)
+    let y = parseFloat(yInput.value)
     let color = vectorColors.value
     test_graph.addObject(new Vector(test_graph, [x, y, 0], color, 3, false))
     test_graph.draw()
