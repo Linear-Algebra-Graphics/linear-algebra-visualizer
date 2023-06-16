@@ -94,7 +94,7 @@ document.getElementById("graphButton").addEventListener("click", function() {
     let x = parseFloat(xInput.value)
     let y = parseFloat(yInput.value)
     let color = vectorColors.value
-    test_graph.addObject(new Vector(test_graph, [x, y, 0], color, 3, false))
+    test_graph.addObject(new Vector(test_graph, [x, y, 0], color, 3, true))
     test_graph.draw()
 })
 

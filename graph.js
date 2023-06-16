@@ -24,8 +24,8 @@ class Graph {
         this.height = canvas.height
         this.width = canvas.width
         this.ctx = canvas.getContext("2d")
-        this.graphCenterX = this.canvas.width/2
-        this.graphCenterY = this.canvas.height/2
+        this.centerX = this.canvas.width/2
+        this.centerY = this.canvas.height/2
         
         this.drawnObjects = [];
 
@@ -59,12 +59,10 @@ class Graph {
         //if (this.currentZoom >= this.zoomIncrement) {
         this.currentZoom =this.currentZoom / this.zoomIncrement 
         //}
-        console.log(xBasis)
+        //console.log(xBasis)
         let axisLength = Math.abs( Math.sqrt( Math.pow(xBasis[0], 2) + Math.pow(xBasis[1], 2)) )
         // console.log(Math.round(1/axisLength))
         // console.log("")
-        
-
     }
 
     setDefaultZoom() {
@@ -202,7 +200,7 @@ class Axis {
             this.graph.ctx.fillStyle = "black"
             this.graph.ctx.strokeStyle = "black"
             this.graph.ctx.beginPath();
-                this.graph.ctx.arc(this.graph.graphCenterX, this.graph.graphCenterY, 5, 0, 2 * Math.PI);
+                this.graph.ctx.arc(this.graph.centerX, this.graph.centerY, 5, 0, 2 * Math.PI);
                 this.graph.ctx.fill();
             this.graph.ctx.stroke();
 
@@ -261,8 +259,8 @@ class Vector {
     draw() {
         const scale = this.graph.canvas.width / this.graph.numOfGraphUnitsEdgeToEdge
         
-        let centerX = this.graph.graphCenterX
-        let centerY = this.graph.graphCenterY
+        let centerX = this.graph.centerX
+        let centerY = this.graph.centerY
         
         // First apply the basis, then the applied matrix. Not sure if this is the correct order for all situations...
         let updatedCords = this.graph.changeBasisAndZoom(this.cords)
@@ -277,9 +275,34 @@ class Vector {
 
         this.graph.drawLine([centerX, centerY],[finalX, finalY], this.color, this.lineWidth)
 
-        if(this.arrow == true) {
-            // Draw the arrow
+        if(this.arrow) {
+            let arrowLength = .5
+            let vectorLength = Math.abs( Math.sqrt( Math.pow(updatedCords[0], 2) + Math.pow(updatedCords[1], 2) + Math.pow(updatedCords[2], 2)) )
+            let inverseNormalizedVectorButThenScaledToCorrectLength = [arrowLength * -1 * (1/vectorLength) * updatedCords[0], arrowLength * -1 * (1/vectorLength) * updatedCords[1], arrowLength * -1 * (1/vectorLength) * updatedCords[2]]
+
+            let headAngle = Math.PI/6;
+
+            let rotationMatrix1 = [[Math.cos(headAngle), Math.sin(headAngle), 0], [-1 * Math.sin(headAngle), Math.cos(headAngle), 0], [0, 0, 1]]
+            let rotationMatrix2 = [[Math.cos((2*Math.PI) - headAngle), Math.sin((2*Math.PI) - headAngle), 0], [-1 * Math.sin((2*Math.PI) - headAngle), Math.cos((2*Math.PI) - headAngle), 0], [0, 0, 1]]
+            
+            let arrow1 = matrixVectorMultiplication(rotationMatrix1, inverseNormalizedVectorButThenScaledToCorrectLength)
+            let arrow2 = matrixVectorMultiplication(rotationMatrix2, inverseNormalizedVectorButThenScaledToCorrectLength)
+
+            this.graph.drawLine([finalX, finalY], [finalX + (scale * arrow1[0]), finalY - (scale * arrow1[1])], this.color, this.lineWidth)
+            this.graph.drawLine([finalX, finalY], [finalX + (scale * arrow2[0]), finalY - (scale * arrow2[1])], this.color, this.lineWidth)
+
+            
+
+
         }
+
+        this.graph.ctx.fillStyle = this.color
+        this.graph.ctx.strokeStyle = this.color
+        this.graph.ctx.beginPath();
+            this.graph.ctx.arc(finalX, finalY, 1, 0, 2 * Math.PI);
+            this.graph.ctx.fill();
+        this.graph.ctx.stroke();
+
     }
 }
 
@@ -314,8 +337,6 @@ class Grid {
         this.drawHalfAxisGrid(yBasis, xBasis)
         //console.log("-y")
         this.drawHalfAxisGrid(neg_yBasis, xBasis)
-        
-        
     }
     
     /**
@@ -325,8 +346,8 @@ class Grid {
      * @param {*} gridVector vector defining grid lines
      */
     drawHalfAxisGrid(axis, gridVector) {
-        let x = this.graph.graphCenterX
-        let y = this.graph.graphCenterY
+        let x = this.graph.centerX
+        let y = this.graph.centerY
 
         let keepGoing = true
         let lineCount = 0
@@ -431,8 +452,8 @@ class Grid {
     }
 
     _distToGraphCenter(point) {
-        let x = this.graph.graphCenterX
-        let y = this.graph.graphCenterY
+        let x = this.graph.centerX
+        let y = this.graph.centerY
         return Math.abs( Math.sqrt( Math.pow(point[0] - x, 2) + Math.pow(point[1] - y, 2)) )
     }
 

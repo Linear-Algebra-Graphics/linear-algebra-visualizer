@@ -1,5 +1,6 @@
 Short term:
 
+make a dot function
 Add transformations
 Add arrows
 Make sure 3d roatations work
