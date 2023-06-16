@@ -8,9 +8,9 @@ body {
     margin-top: 20px;
 }
 
-canvas {
+/* canvas {
     border-radius: 15px;
-}
+} */
 
 #matrix-container {
     position: relative;

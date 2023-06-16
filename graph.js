@@ -14,9 +14,8 @@
 //        |c f i|
 //
 class Graph {
-    
     /**
-     * creates an instance of an R3 graph
+     * creates an instance of an R3 graph 
      * @param {*} canvas canvas on which the graph is drawn 
      */
     constructor(canvas) {
@@ -47,22 +46,11 @@ class Graph {
     }
 
     zoomIn() {
-        let xBasis = this.changeBasisAndZoom([1,0,0]);
-        //change to use multiplcation later
         this.currentZoom = this.currentZoom * this.zoomIncrement 
-        //console.log(xBasis)
     }
 
     zoomOut() {
-        let xBasis = this.changeBasisAndZoom([1,0,0]);
-        //change to use multiplcation later
-        //if (this.currentZoom >= this.zoomIncrement) {
         this.currentZoom =this.currentZoom / this.zoomIncrement 
-        //}
-        //console.log(xBasis)
-        let axisLength = Math.abs( Math.sqrt( Math.pow(xBasis[0], 2) + Math.pow(xBasis[1], 2)) )
-        // console.log(Math.round(1/axisLength))
-        // console.log("")
     }
 
     setDefaultZoom() {
@@ -291,9 +279,6 @@ class Vector {
             this.graph.drawLine([finalX, finalY], [finalX + (scale * arrow1[0]), finalY - (scale * arrow1[1])], this.color, this.lineWidth)
             this.graph.drawLine([finalX, finalY], [finalX + (scale * arrow2[0]), finalY - (scale * arrow2[1])], this.color, this.lineWidth)
 
-            
-
-
         }
 
         this.graph.ctx.fillStyle = this.color
@@ -475,3 +460,6 @@ class Grid {
     }
 
 }
+
+
+

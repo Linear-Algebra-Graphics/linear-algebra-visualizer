@@ -19,6 +19,52 @@ let test_graph = new Graph(canvas);
 
 test_graph.draw();
 
+let unlocked = true
+let x = 0;
+let y = 0;
+
+//add mouse support
+canvas.addEventListener('mousemove', function(e) {    // return null
+
+    let delta_x = 0
+    let delta_y = 0
+    const rect = e.getBoundingClientRect()
+    console.log("mouse on canvas!")
+    if (unlocked) {
+      x = delta_x + e.clientX;
+      y = delta_y + e.clientY;
+    } else {
+      delta_x = e.clientX - x
+      delta_y = e.clientY - y
+    }
+
+    console.log("(" + e.clientX + ", " + e.clientY + ")")
+});
+
+
+let mouseIsDown = false
+
+// // Add an event listener for the 'mousedown' event
+// document.addEventListener('mousedown', function(event) {
+//   // Check if the left mouse button is pressed (button code 0)
+//   if (event.button === 0) {
+//     mouseIsDown = true
+//     console.log('Mouse button is down')
+//   }
+// });
+
+// // Add an event listener for the 'mouseup' event
+// document.addEventListener('mouseup', function(event) {
+//   // Check if the left mouse button is released (button code 0)
+//   if (event.button === 0) {
+//     mouseIsDown = false
+//     console.log('Mouse button is up')
+//   }
+// });
+
+
+
+
 
 //add ability to switch betwen vector input fields wiith arrow keys
 xInput.addEventListener("keydown", (event) => {
