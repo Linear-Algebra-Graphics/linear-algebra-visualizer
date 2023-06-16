@@ -20,6 +20,73 @@ let test_graph = new Graph(canvas);
 test_graph.draw();
 
 
+//add ability to switch betwen vector input fields wiith arrow keys
+xInput.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowRight") {
+        yInput.focus()
+    }
+})
+
+yInput.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft") {
+        xInput.focus()
+    }
+})
+
+
+
+//add functionality to switch between matrix input cells using arrow keys
+let inputMatrices = document.getElementsByClassName("matrix-table")
+let matrixToInputs = new Map()
+
+//add event listener for every single table input cell
+for (let i = 0; i < inputMatrices.length; i++) {
+    //iterate over tr's
+    for (let j = 0; j < inputMatrices[i].children.length; j++) {
+        //iterate over td,
+        for (let k = 0; k < inputMatrices[i].children[j].children.length; k++) {
+            //iterate over each input field in td
+            for (let l = 0; l < inputMatrices[i].children[j].children[k].children.length; l++) {
+                let inputField = inputMatrices[i].children[j].children[k].children[l]
+                inputField.addEventListener("keydown", (event) => {
+                    const currentInput = document.activeElement
+                    const currentTd = currentInput.parentNode //td
+                    const currentTr = currentTd.parentNode //tr
+                    const index = Array.from(currentTr.children).indexOf(currentTd);
+                    
+                    switch(event.key) {
+                        case "ArrowLeft":
+                            let prevTd = currentTd.previousElementSibling
+                            if (prevTd !== null) {
+                                prevTd.getElementsByTagName('input')[0].focus()
+                            }
+                            break
+                        case "ArrowRight":
+                            let nextTd = currentTd.nextElementSibling
+                            if (nextTd !== null) {
+                                nextTd.getElementsByTagName('input')[0].focus()
+                            }
+                            break
+                        case "ArrowUp":
+                            let prevTr = currentTr.previousElementSibling
+                            if (prevTr !== null) {
+                                prevTr.children[index].getElementsByTagName('input')[0].focus()
+                            }
+                            break
+                        case "ArrowDown":
+                            let nextTr = currentTr.nextElementSibling
+                            if (nextTr !== null) {
+                                nextTr.children[index].getElementsByTagName('input')[0].focus()
+                            }
+                            break
+                        default:
+                            break
+                    }
+                })
+            }
+        }
+    }
+}
 
 // //scale needs to change
 // //since with scale = 1 graphed vectors are too small

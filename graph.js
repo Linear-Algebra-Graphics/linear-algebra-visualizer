@@ -57,7 +57,7 @@ class Graph {
         let xBasis = this.changeBasisAndZoom([1,0,0]);
         //change to use multiplcation later
         //if (this.currentZoom >= this.zoomIncrement) {
-            this.currentZoom =this.currentZoom / this.zoomIncrement 
+        this.currentZoom =this.currentZoom / this.zoomIncrement 
         //}
         console.log(xBasis)
         let axisLength = Math.abs( Math.sqrt( Math.pow(xBasis[0], 2) + Math.pow(xBasis[1], 2)) )
@@ -240,7 +240,6 @@ class Axis {
 
 
 class Vector {
-
     /**
      * creates an instance of a vector
      * @param {*} graph graph on which vector is drawn
@@ -306,17 +305,14 @@ class Grid {
             // y = mx + (y1-mx1)
             // y = mx + b
             // b = (y1-mx1)
-    
-        
-        
 
-        console.log("+x")
+        //console.log("+x")
         this.drawHalfAxisGrid(xBasis,yBasis)
-        console.log("-x")
+        //console.log("-x")
         this.drawHalfAxisGrid(neg_xBasis,yBasis)
-        console.log("+y")
+        //console.log("+y")
         this.drawHalfAxisGrid(yBasis, xBasis)
-        console.log("-y")
+        //console.log("-y")
         this.drawHalfAxisGrid(neg_yBasis, xBasis)
         
         
