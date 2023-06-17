@@ -21,3 +21,5 @@ to value and then go back to beginning, where value is the increment when drawin
 Change rotation:
     https://www.xarg.org/2021/07/trackball-rotation-using-quaternions/
     https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation
+
+Make so basis is always same size doesn't get scaled (Still gets rotated and stuff)

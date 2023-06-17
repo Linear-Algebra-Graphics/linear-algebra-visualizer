@@ -31,11 +31,11 @@ canvas.addEventListener('mousemove', function(e) {    // return null
     // console.log("mouse on canvas!")
     if (mouseIsDown) {
         // this 20 is the offset of canvas
-        x = -20 - delta_x + e.clientX;
-        y = -20 - delta_y + e.clientY;
+        x = - delta_x + (e.clientX -20);
+        y = - delta_y + (e.clientY -20);
     } else {
-        delta_x = e.clientX - x
-        delta_y = e.clientY - y
+        delta_x = (e.clientX -20) - x
+        delta_y = (e.clientY -20) - y
     }
     // console.log("(" + x + ", " + y + ")")
     // console.log("(" + e.clientX + ", " + e.clientY + ")")
