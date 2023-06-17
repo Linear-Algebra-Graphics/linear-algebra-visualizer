@@ -36,6 +36,11 @@ class Graph {
         this.basis                     = [[1,0,0],[0,1,0],[0,0,1]]
         this.currentZoom               = 1
         this.zoomIncrement             = 1.1
+        
+        this.xRotationMatrix            = [[1,0,0],[0,1,0],[0,0,1]]
+        this.yRotationMatrix            = [[1,0,0],[0,1,0],[0,0,1]]
+        this.zRotationMatrix            = [[1,0,0],[0,1,0],[0,0,1]]
+
         //this.basis                     = [[Math.cos(Math.PI/4),Math.sin(Math.PI/4),0],[-1*Math.sin(Math.PI/4),Math.cos(Math.PI/4),0],[0,0,1]]
         
         this.graphAxis                 = new Axis(this)
@@ -116,9 +121,39 @@ class Graph {
      */
     changeBasisAndZoom(vector) {
         let updatedVector = matrixVectorMultiplication(this.basis, vector)
+        
+        updatedVector     = matrixVectorMultiplication(this.xRotationMatrix, updatedVector)
+        updatedVector     = matrixVectorMultiplication(this.yRotationMatrix, updatedVector)
+        updatedVector     = matrixVectorMultiplication(this.zRotationMatrix, updatedVector)
+
         updatedVector     = matrixVectorMultiplication([[this.currentZoom, 0, 0],[0, this.currentZoom, 0],[0, 0, this.currentZoom]], updatedVector)
         return updatedVector
     }
+
+    rotateZ(theta) {
+        let x_rotation = [Math.cos(theta), Math.sin(theta), 0 ]
+        let y_rotation = [Math.cos(theta+Math.PI/2), Math.sin(theta+Math.PI/2), 0]
+        let z_rotation = [0, 0, 1]
+
+        this.zRotationMatrix = [x_rotation, y_rotation, z_rotation]
+
+    }
+
+    rotateY(theta) {
+        let x_rotation = [Math.cos(theta), 0, -1 * Math.sin(theta)]
+        let y_rotation = [0, 1, 0]
+        let z_rotation = [Math.sin(theta), 0, Math.cos(theta)]
+        
+        this.yRotationMatrix = [x_rotation, y_rotation, z_rotation]
+    } 
+
+    rotateX(theta) {
+        let x_rotation = [1, 0, 0]
+        let y_rotation = [0, Math.cos(theta), Math.sin(theta)]
+        let z_rotation = [0, -1 * Math.sin(theta), Math.cos(theta)]
+
+        this.xRotationMatrix = [x_rotation, y_rotation, z_rotation]
+    } 
 
 }
 

@@ -17,9 +17,8 @@ canvas.height = displayHeight * 2
 
 let test_graph = new Graph(canvas);
 
-test_graph.draw();
+// test_graph.draw();
 
-let unlocked = true
 let x = 0;
 let y = 0;
 
@@ -28,39 +27,36 @@ canvas.addEventListener('mousemove', function(e) {    // return null
 
     let delta_x = 0
     let delta_y = 0
-    const rect = e.getBoundingClientRect()
     console.log("mouse on canvas!")
-    if (unlocked) {
-      x = delta_x + e.clientX;
-      y = delta_y + e.clientY;
+    if (mouseIsDown) {
+        // this 20 is the offset of canvas
+        x = -20 + delta_x + e.clientX;
+        y = -20 + delta_y + e.clientY;
     } else {
-      delta_x = e.clientX - x
-      delta_y = e.clientY - y
+        delta_x = e.clientX - x
+        delta_y = e.clientY - y
     }
-
-    console.log("(" + e.clientX + ", " + e.clientY + ")")
+    console.log("(" + x + ", " + y + ")")
+    // console.log("(" + e.clientX + ", " + e.clientY + ")")
 });
 
 
 let mouseIsDown = false
 
-// // Add an event listener for the 'mousedown' event
-// document.addEventListener('mousedown', function(event) {
-//   // Check if the left mouse button is pressed (button code 0)
-//   if (event.button === 0) {
-//     mouseIsDown = true
-//     console.log('Mouse button is down')
-//   }
-// });
 
-// // Add an event listener for the 'mouseup' event
-// document.addEventListener('mouseup', function(event) {
-//   // Check if the left mouse button is released (button code 0)
-//   if (event.button === 0) {
-//     mouseIsDown = false
-//     console.log('Mouse button is up')
-//   }
-// });
+document.addEventListener('mousedown', function(event) {
+    
+    if (event.button === 0) {
+        mouseIsDown = true
+    }
+});
+
+document.addEventListener('mouseup', function(event) {
+
+    if (event.button === 0) {
+        mouseIsDown = false
+    } 
+});
 
 
 
@@ -141,32 +137,32 @@ document.getElementById("graphButton").addEventListener("click", function() {
     let y = parseFloat(yInput.value)
     let color = vectorColors.value
     test_graph.addObject(new Vector(test_graph, [x, y, 0], color, 3, true))
-    test_graph.draw()
+    //test_graph.draw()
 })
 
 document.getElementById("zoomIn").addEventListener("click", function() {
     test_graph.zoomIn()
-    test_graph.draw()
+    //test_graph.draw()
 })
 
 document.getElementById("zoomOut").addEventListener("click", function() {
     test_graph.zoomOut()
-    test_graph.draw()
+    //test_graph.draw()
 })
 
 document.getElementById("defaultZoom").addEventListener("click", function() {
     test_graph.setDefaultZoom()
-    test_graph.draw()
+    //test_graph.draw()
 })
 
 document.getElementById("infiniteAxis").addEventListener("click", function() {
     test_graph.infiniteAxis = document.getElementById("infiniteAxis").checked
-    test_graph.draw()
+    //test_graph.draw()
 })
 
 document.getElementById("showGrid").addEventListener("click", function() {
     test_graph.showGrid = document.getElementById("showGrid").checked
-    test_graph.draw()
+    //test_graph.draw()
 })
 
 
@@ -176,7 +172,7 @@ document.getElementById("slider").addEventListener("input", function() {
     switch(parseInt(document.getElementById("slider").value)) {
         case 0:
             test_graph.basis = [[1,0,0],[0,1,0],[0,0,1]]
-            test_graph.draw();
+            //test_graph.draw();
             break;
         case 1:
             matrix_a = getMatrixFromTable("matrix-A")
@@ -186,7 +182,7 @@ document.getElementById("slider").addEventListener("input", function() {
             } else {
                 test_graph.basis = matrix_a
                 console.log(test_graph.basis)
-                test_graph.draw()
+                //test_graph.draw()
             }
             break;
             // code block
@@ -200,7 +196,7 @@ document.getElementById("slider").addEventListener("input", function() {
                 test_graph.basis = matrixMultiplication(matrix_b, matrix_a)
                 console.log(matrix_a)
                 console.log(matrix_b)
-                test_graph.draw()
+                //test_graph.draw()
             }
             break;
         case 3:
@@ -213,7 +209,7 @@ document.getElementById("slider").addEventListener("input", function() {
             } else {
                 test_graph.basis = matrixMultiplication(matrix_c, matrixMultiplication(matrix_b, matrix_a))
                 console.log(test_graph.basis)
-                test_graph.draw()
+                //test_graph.draw()
             }
             // code block
             break;
@@ -247,3 +243,12 @@ function getMatrixFromTable(id) {
 
     return matrix
 }
+
+
+
+test_graph.draw()
+
+
+setInterval(function() {
+  test_graph.draw()
+}, 1000/60)
