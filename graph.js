@@ -31,6 +31,7 @@ class Graph {
         // This is the number of graph units from edge to edge. E.g if the canvas is 600x600px we want
         // the length of 20 units to be 600 px.
         this.numOfGraphUnitsEdgeToEdge = this.canvas.width / 80;
+
         this.backgroundColor           = "white"
         // I matrix is default
         this.basis                     = [[1,0,0],[0,1,0],[0,0,1]]
@@ -76,11 +77,12 @@ class Graph {
 
     }
 
+    // Draws all objects in the queue and the grid / axis if they are enabled.
     draw() {
         // Clear screen / add background
         this.ctx.fillStyle = this.backgroundColor
         this.ctx.fillRect(0,0, this.canvas.width, this.canvas.height);
-        
+
         if (this.showGrid) {
             this.graphGrid.draw()
         }
@@ -113,13 +115,46 @@ class Graph {
         this.ctx.stroke()
     }
 
+    drawLineFromVectors(vector1, vector2, color, lineWidth) {
+        const scale = this.canvas.width / this.numOfGraphUnitsEdgeToEdge
+        
+        // First apply the basis, then the applied matrix. Not sure if this is the correct order for all situations...
+        vector1 = this.changeBasisZoomAndRotate(vector1)
+        vector2 = this.changeBasisZoomAndRotate(vector2)
+
+        let vec1X = this.centerX + scale * vector1[0]
+        let vec1Y = this.centerY - scale * vector1[1]
+
+        let vec2X = this.centerX + scale * vector2[0]
+        let vec2Y = this.centerY - scale * vector2[1]
+
+        this.drawLine([vec1X, vec1Y],[vec2X, vec2Y], color, lineWidth)
+    }
+    
+    drawDotFromVector(vector, color, size) {
+        const scale = this.canvas.width / this.numOfGraphUnitsEdgeToEdge
+
+        vector = this.changeBasisZoomAndRotate(vector)
+
+        let vecX = this.centerX + scale * vector[0]
+        let vecY = this.centerY - scale * vector[1]
+
+        // Draw the dot
+        this.ctx.fillStyle = color
+        this.ctx.strokeStyle = color
+        this.ctx.beginPath();
+            this.ctx.arc(vecX, vecY, 1, 0, 2 * Math.PI);
+            this.ctx.fill();
+        this.ctx.stroke();
+    }
+
     /**
-     * updates vector to be in the current basis and zoom of the graph 
+     * Updates the given vectors basis, rotation, and zoom, to match the graph
      * @param {*} vector vector to operate on
      * @returns vector in terms of current 
      *          basis and zoom of the graph relative to the canvas
      */
-    changeBasisAndZoom(vector) {
+    changeBasisZoomAndRotate(vector) {
         let updatedVector = matrixVectorMultiplication(this.basis, vector)
         
         updatedVector     = matrixVectorMultiplication(this.xRotationMatrix, updatedVector)
@@ -129,7 +164,7 @@ class Graph {
         updatedVector     = matrixVectorMultiplication([[this.currentZoom, 0, 0],[0, this.currentZoom, 0],[0, 0, this.currentZoom]], updatedVector)
         return updatedVector
     }
-
+    
     rotateZ(theta) {
         let x_rotation = [Math.cos(theta), Math.sin(theta), 0 ]
         let y_rotation = [Math.cos(theta+Math.PI/2), Math.sin(theta+Math.PI/2), 0]
@@ -157,7 +192,6 @@ class Graph {
 
 }
 
-//me
 class Axis {
     /**
      * creates an instance of an Axis
@@ -195,8 +229,8 @@ class Axis {
      * draws x, y, z axis
      */
     draw() {
+
         if(this.graph.infiniteAxis === false) {
-            //console.log("trying to draw successful")
             if (this.fullAxis) {
                 this._xAxisNeg.draw()
                 this._yAxisNeg.draw()
@@ -215,10 +249,9 @@ class Axis {
             this._infxAxis.draw()
             this._infyAxis.draw()
             this._infzAxis.draw()
-            //remember to set back matrixMultiplcation matix if changed to finite axis
        }
+       
        if (this.zeroZeroDot) {
-            //this.graph.ctx.fillRect(this.graph.centerX, this.graph.centerY, 700, 500);
             
             this.graph.ctx.fillStyle = "black"
             this.graph.ctx.strokeStyle = "black"
@@ -232,7 +265,7 @@ class Axis {
     }
     
     /**
-     * for finite axis case leave for now
+     * Change the size of the axis
      * @param {*} size 
      * @param {*} arrow 
      */
@@ -269,59 +302,41 @@ class Vector {
      * @param {*} arrow true if vector has arrow at the end
      */
     constructor(graph, cords, color, lineWidth, arrow){
-        this.graph    = graph
-        this.cords    = cords
-        this.color    = color
+        this.graph     = graph
+        this.cords     = cords
+        this.color     = color
         this.lineWidth = lineWidth
-        this.arrow    = arrow
+        this.arrow     = arrow
     }
 
     /**
      * draws the vector on the graph
      */
     draw() {
-        const scale = this.graph.canvas.width / this.graph.numOfGraphUnitsEdgeToEdge
-        
-        let centerX = this.graph.centerX
-        let centerY = this.graph.centerY
-        
-        // First apply the basis, then the applied matrix. Not sure if this is the correct order for all situations...
-        let updatedCords = this.graph.changeBasisAndZoom(this.cords)
 
-        //console.log(updatedCords)
-
-        let finalX  = centerX + scale * updatedCords[0]
-        // Flipped because Y axis is zero at the top
-        let finalY  = centerY - scale * updatedCords[1]
-        // console.log("finalX: " + finalX)
-        // console.log("finalY: " + finalY)
-
-        this.graph.drawLine([centerX, centerY],[finalX, finalY], this.color, this.lineWidth)
+        this.graph.drawLineFromVectors([0, 0, 0], this.cords, this.color, this.lineWidth)
 
         if(this.arrow) {
             let arrowLength = .5
-            let vectorLength = Math.abs( Math.sqrt( Math.pow(updatedCords[0], 2) + Math.pow(updatedCords[1], 2) + Math.pow(updatedCords[2], 2)) )
-            let inverseNormalizedVectorButThenScaledToCorrectLength = [arrowLength * -1 * (1/vectorLength) * updatedCords[0], arrowLength * -1 * (1/vectorLength) * updatedCords[1], arrowLength * -1 * (1/vectorLength) * updatedCords[2]]
+
+            let vectorLength = Math.abs( Math.sqrt( Math.pow(this.cords[0], 2) + Math.pow(this.cords[1], 2) + Math.pow(this.cords[2], 2)) )
+            let inverseNormalizedVectorButThenScaledToCorrectLength = [arrowLength * -1 * (1/vectorLength) * this.cords[0], arrowLength * -1 * (1/vectorLength) * this.cords[1], arrowLength * -1 * (1/vectorLength) * this.cords[2]]
 
             let headAngle = Math.PI/6;
 
+            // Both xy rotations with theta=45deg and theta=-45deg
             let rotationMatrix1 = [[Math.cos(headAngle), Math.sin(headAngle), 0], [-1 * Math.sin(headAngle), Math.cos(headAngle), 0], [0, 0, 1]]
             let rotationMatrix2 = [[Math.cos((2*Math.PI) - headAngle), Math.sin((2*Math.PI) - headAngle), 0], [-1 * Math.sin((2*Math.PI) - headAngle), Math.cos((2*Math.PI) - headAngle), 0], [0, 0, 1]]
             
             let arrow1 = matrixVectorMultiplication(rotationMatrix1, inverseNormalizedVectorButThenScaledToCorrectLength)
             let arrow2 = matrixVectorMultiplication(rotationMatrix2, inverseNormalizedVectorButThenScaledToCorrectLength)
 
-            this.graph.drawLine([finalX, finalY], [finalX + (scale * arrow1[0]), finalY - (scale * arrow1[1])], this.color, this.lineWidth)
-            this.graph.drawLine([finalX, finalY], [finalX + (scale * arrow2[0]), finalY - (scale * arrow2[1])], this.color, this.lineWidth)
+            this.graph.drawLineFromVectors(this.cords, [this.cords[0] + arrow1[0], this.cords[1] - arrow1[1], 0], this.color, this.lineWidth)
+            this.graph.drawLineFromVectors(this.cords, [this.cords[0] + arrow2[0], this.cords[1] - arrow2[1], 0], this.color, this.lineWidth)
 
         }
 
-        this.graph.ctx.fillStyle = this.color
-        this.graph.ctx.strokeStyle = this.color
-        this.graph.ctx.beginPath();
-            this.graph.ctx.arc(finalX, finalY, 1, 0, 2 * Math.PI);
-            this.graph.ctx.fill();
-        this.graph.ctx.stroke();
+        this.graph.drawDotFromVector(this.cords, this.color, 1)
 
     }
 }
@@ -335,11 +350,11 @@ class Grid {
      * 
      */
     draw() {
-        let xBasis = this.graph.changeBasisAndZoom([1,0,0]);
-        let yBasis = this.graph.changeBasisAndZoom([0,1,0]);
+        let xBasis = this.graph.changeBasisZoomAndRotate([1,0,0]);
+        let yBasis = this.graph.changeBasisZoomAndRotate([0,1,0]);
 
-        let neg_xBasis = this.graph.changeBasisAndZoom([-1,0,0]);
-        let neg_yBasis = this.graph.changeBasisAndZoom([0,-1,0]);
+        let neg_xBasis = this.graph.changeBasisZoomAndRotate([-1,0,0]);
+        let neg_yBasis = this.graph.changeBasisZoomAndRotate([0,-1,0]);
         
         // Point slope formula
             // y+y1 = m(x-x1)
@@ -349,13 +364,9 @@ class Grid {
             // y = mx + b
             // b = (y1-mx1)
 
-        //console.log("+x")
         this.drawHalfAxisGrid(xBasis,yBasis)
-        //console.log("-x")
         this.drawHalfAxisGrid(neg_xBasis,yBasis)
-        //console.log("+y")
         this.drawHalfAxisGrid(yBasis, xBasis)
-        //console.log("-y")
         this.drawHalfAxisGrid(neg_yBasis, xBasis)
     }
     
