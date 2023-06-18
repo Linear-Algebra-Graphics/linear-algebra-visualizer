@@ -58,6 +58,9 @@ class Graph {
         this.currentZoom =this.currentZoom / this.zoomIncrement 
     }
 
+    /**
+     * returns zoom to default 1x
+     */
     setDefaultZoom() {
         //should be animation back to default zoom
         this.currentZoom = 1
@@ -223,26 +226,16 @@ class Axis {
      */
     constructor(graph) {
         this.graph = graph
-        const lineWidth = 6
+        this.lineWidth = 6
         
-        this._xAxis = new Vector(this.graph, [10,0,0], "blue", lineWidth, false)
-        this._yAxis = new Vector(this.graph, [0,10,0], "red", lineWidth, false)
-        this._zAxis = new Vector(this.graph, [0,0,10], "green", lineWidth, false)
+        //for finite axis
+        this._xAxis = new Vector(this.graph, [10,0,0], "blue", this.lineWidth, false)
+        this._yAxis = new Vector(this.graph, [0,10,0], "red", this.lineWidth, false)
+        this._zAxis = new Vector(this.graph, [0,0,10], "green", this.lineWidth, false)
         
-        this._xAxisNeg = new Vector(this.graph, [-10,0,0], "blue", lineWidth, false)
-        this._yAxisNeg = new Vector(this.graph, [0,-10,0], "red", lineWidth, false)
-        this._zAxisNeg = new Vector(this.graph, [0,0,-10], "green", lineWidth, false)
-
-        //for infinite axis
-        const infLen = this.graph.width*this.graph.numOfGraphUnitsEdgeToEdge
-        
-        this._infxAxis = new Vector(this.graph, [infLen,0,0], "blue", lineWidth, false)
-        this._infyAxis = new Vector(this.graph, [0,infLen,0], "red", lineWidth, false)
-        this._infzAxis = new Vector(this.graph, [0,0,infLen], "green", lineWidth, false)
-        
-        this._infxAxisNeg = new Vector(this.graph, [-1*infLen,0,0], "blue", lineWidth, false)
-        this._infyAxisNeg = new Vector(this.graph, [0,-1*infLen,0], "red", lineWidth, false)
-        this._infzAxisNeg = new Vector(this.graph, [0,0,-1*infLen], "green", lineWidth, false)
+        this._xAxisNeg = new Vector(this.graph, [-10,0,0], "blue", this.lineWidth, false)
+        this._yAxisNeg = new Vector(this.graph, [0,-10,0], "red", this.lineWidth, false)
+        this._zAxisNeg = new Vector(this.graph, [0,0,-10], "green", this.lineWidth, false)
     
         // Default
         this.fullAxis     = true
@@ -265,18 +258,24 @@ class Axis {
             this._zAxis.draw()
 
        } else {
-            if (this.fullAxis) {
-                this._infxAxisNeg.draw()
-                this._infyAxisNeg.draw()
-                this._infzAxisNeg.draw()
-            }
-            this._infxAxis.draw()
-            this._infyAxis.draw()
-            this._infzAxis.draw()
+            let xBasis = this.graph.changeBasisZoomAndRotate([1,0,0]);
+            let yBasis = this.graph.changeBasisZoomAndRotate([0,1,0]);
+
+            let sortedIntersectX = getGraphBoundaryEndpoints(this.graph.centerX, this.graph.centerY, xBasis, this.graph);
+            let sortedIntersectY = getGraphBoundaryEndpoints(this.graph.centerX, this.graph.centerY, yBasis, this.graph);
+
+            let xStart = [sortedIntersectX[0], sortedIntersectX[1]]
+            let xEnd   = [sortedIntersectX[2], sortedIntersectX[3]]
+
+            let yStart = [sortedIntersectY[0], sortedIntersectY[1]]
+            let yEnd   = [sortedIntersectY[2], sortedIntersectY[3]]
+
+            this.graph.drawLine(xStart, xEnd, "blue", this.lineWidth)
+            this.graph.drawLine(yStart, yEnd, "red", this.lineWidth)
        }
        
        if (this.zeroZeroDot) {
-
+            // puts a dot at (0, 0)
             this.graph.ctx.fillStyle = "black"
             this.graph.ctx.strokeStyle = "black"
             this.graph.ctx.beginPath();
@@ -289,6 +288,8 @@ class Axis {
     }
     
     /**
+     * Is this function useless? it probably is, but 
+     * we may keep it as a mascot!
      * Change the size of the axis
      * @param {*} size 
      * @param {*} arrow 
@@ -345,7 +346,8 @@ class Vector {
 
             let vectorLength = Math.abs( Math.sqrt( Math.pow(this.cords[0], 2) + Math.pow(this.cords[1], 2) + Math.pow(this.cords[2], 2)) )
             let inverseNormalizedVectorButThenScaledToCorrectLength = [arrowLength * -1 * (1/vectorLength) * this.cords[0], arrowLength * -1 * (1/vectorLength) * this.cords[1], arrowLength * -1 * (1/vectorLength) * this.cords[2]]
-
+            
+            //angle of the arrow head to line
             let headAngle = Math.PI/6;
 
             // Both xy rotations with theta=45deg and theta=-45deg
@@ -355,6 +357,8 @@ class Vector {
             let arrow1 = matrixVectorMultiplication(rotationMatrix1, inverseNormalizedVectorButThenScaledToCorrectLength)
             let arrow2 = matrixVectorMultiplication(rotationMatrix2, inverseNormalizedVectorButThenScaledToCorrectLength)
 
+            //want to add onto this.cords here because this is still in vector notation, 
+            //so no need to subtract the ys as that is taken care of in drawLine
             this.graph.drawLineFromVectors(this.cords, [this.cords[0] + arrow1[0], this.cords[1] + arrow1[1], 0], this.color, this.lineWidth)
             this.graph.drawLineFromVectors(this.cords, [this.cords[0] + arrow2[0], this.cords[1] + arrow2[1], 0], this.color, this.lineWidth)
 
@@ -374,6 +378,7 @@ class Grid {
      * 
      */
     draw() {
+        // Need to decide if where we want to changeBasis andd zoom, in functions, or outside functions?
         let xBasis = this.graph.changeBasisZoomAndRotate([1,0,0]);
         let yBasis = this.graph.changeBasisZoomAndRotate([0,1,0]);
 
@@ -408,67 +413,19 @@ class Grid {
         let lineCount = 0
 
         while (keepGoing) {
-            let startX, startY, endX, endY //points to draw from and to
 
+            let endPoints = getGraphBoundaryEndpoints(x, y, gridVector, this.graph)
 
-            // First check if the lines are paralel to get rid of the edge case.
-            if (gridVector[0] === 0) {
-                //parrallel with y axis case
-                startX = x
-                startY = this.graph.canvas.height
-                endX   = x
-                endY   = 0
-            } else if (gridVector[1]  === 0) {
-                //parrallel with x axis case
-                startX = 0
-                startY = y
-                endX   = this.graph.canvas.width
-                endY   = y
-            } else {
-                // IF WE ARE HERE THERE 4 POINTS
-                //calculate and compare 4 points THERE IS NO NULL POINT
-
-                //case ensures that line will always intersect with all 
-                //four lines defining boundaries of mxn canvas
-                //console.log("3")
-                
-                //y - y1 = m(x - x1)
-                //
-                let x1 = x + gridVector[0]
-                let y1 = y - gridVector[1]
-
-                let m  = (-1*gridVector[1]) / (gridVector[0])
-                let b  = y1 - (m * x1)
-                // console.log("m: " + m)
-                // console.log("y: " + yBasis[1] + " x: " + yBasis[0])
-                
-                let point1 = [0, this._getYIntersept(0, m, b)]
-                let point2 = [this.graph.canvas.width, this._getYIntersept(this.graph.canvas.width, m, b)]
-
-                let point3 = [this._getXIntersept(0, m, b), 0]
-                let point4 = [this._getXIntersept(this.graph.canvas.height, m, b), this.graph.canvas.height]
-
-                let dis_point1 = [this._distToGraphCenter(point1), point1]
-                let dis_point2 = [this._distToGraphCenter(point2), point2]
-                let dis_point3 = [this._distToGraphCenter(point3), point3]
-                let dis_point4 = [this._distToGraphCenter(point4), point4]
-
-                // Either is empty or two points.
-                let pointsOnCanvas = this._findTwoClosesPoints([dis_point1, dis_point2, dis_point3, dis_point4])
-                
-                // If there are no points on canvas end the loop.
-                startX = pointsOnCanvas[0][0]
-                startY = pointsOnCanvas[0][1]
-                endX   = pointsOnCanvas[1][0]
-                endY   = pointsOnCanvas[1][1]
-            }
-            
+            let startX = endPoints[0]
+            let startY = endPoints[1]
+            let endX = endPoints[2]
+            let endY = endPoints[3]
             // Biggest grid spacing should be the default number we start with
             // Smallest grid spacing should be 2 times the default
 
 
             // This means the two minimum points are outside the canvas. This means that we do not need to draw the lines anymore so we break the loop.
-            if (!this._outSideCanvas([startX, startY]) || !this._outSideCanvas([endX, endY])) {
+            if (!outSideCanvas(this.graph, [startX, startY]) || !outSideCanvas(this.graph, [endX, endY])) {
                 // Make every fith line dark
                 if (lineCount % 5 == 0) {
                     // this.graph.ctx.fillStyle = "black"
@@ -488,45 +445,141 @@ class Grid {
             lineCount++
         }
     }
+}
 
-    //returns true if the point (x, y) exists 
-    //outside the boundaries of the this.graph.canvas
-    // @param point (x, y) point
-    // @returns true if outside canvas
-    //
-    _vectorLength(vector) {
-        return Math.abs( Math.sqrt( Math.pow(vector[0], 2) + Math.pow(vector[1], 2)) )
-    }
+/**
+ * gridVector and x y define a line y = mx + b
+ *  
+ * returns an array [startX, startY, endX, endY] that are the two
+ * end points (startX, startY, endX, endY) of the line y = mx+b that intersect with 
+ * the graph boundary
+ *  
+ * @param {*} x x coordinate of a point on the line
+ * @param {*} y y coordinate of a point on the line
+ * @param {*} gridVector [deltaX, deltaY] defining slope of line
+ * @param {*} graph the graph whose boundaries lines are to intersect with given line
+ * @returns the array [startX, startY, endX, endY]
+ */
+function getGraphBoundaryEndpoints(x, y, gridVector, graph) {
+    let startX, startY, endX, endY //points to draw from and to
+    // First check if the lines are paralel to get rid of the edge case.
+    if (gridVector[0] === 0) {
+        //parrallel with y axis case
+        startX = x
+        startY = graph.canvas.height
+        endX   = x
+        endY   = 0
+    } else if (gridVector[1]  === 0) {
+        //parrallel with x axis case
+        startX = 0
+        startY = y
+        endX   = graph.canvas.width
+        endY   = y
+    } else {
+        // IF WE ARE HERE THERE 4 POINTS
+        //calculate and compare 4 points THERE IS NO NULL POINT
 
-    //returns true if point is outside of the canvas
-    //@params point: point to check if outside canvas
-    _outSideCanvas(point) {
-        return (point[0] < 0 || point[0] > this.graph.canvas.width) || (point[1] < 0 || point[1] > this.graph.canvas.height)
-    }
+        //case ensures that line will always intersect with all 
+        //four lines defining boundaries of mxn canvas
+        //console.log("3")
+        //y - y1 = m(x - x1)
+        //
+        let x1 = x + gridVector[0]
+        let y1 = y - gridVector[1]
 
-    //returns euclidean distance to the center of the graph, 
-    //@param point: array (x, y) to find the distance from the (centerX, centerY)
-    _distToGraphCenter(point) {
-        let x = this.graph.centerX
-        let y = this.graph.centerY
-        return Math.abs( Math.sqrt( Math.pow(point[0] - x, 2) + Math.pow(point[1] - y, 2)) )
-    }
+        //need to deal with vertical line case
+        let m  = (-1*gridVector[1]) / (gridVector[0])
+        let b  = y1 - (m * x1)
+        // console.log("m: " + m)
+        // console.log("y: " + yBasis[1] + " x: " + yBasis[0])
 
-    // returns [point1, poin2] if line has at least an endpoint in the canvas
-    // if there are no points returns []
-    _findTwoClosesPoints(dis_points) {
-        let twoClosestPoints = dis_points.sort(function(a, b) {return a[0] - b[0]})
-        return [twoClosestPoints[0][1], twoClosestPoints[1][1]]
-    }
-    
-    // gets y when given x using y = mx+b
-    _getYIntersept(x, m, b) { 
-        return (m * x) + b
-    }
-    
-    // gets x when given y using y = mx+b
-    _getXIntersept(y, m, b) {
-        return (y - b) / m
-    }
+        let point1 = [0, getYIntersept(0, m, b)]
+        let point2 = [graph.canvas.width, getYIntersept(graph.canvas.width, m, b)]
 
+        let point3 = [getXIntersept(0, m, b), 0]
+        let point4 = [getXIntersept(graph.canvas.height, m, b), graph.canvas.height]
+
+        let dis_point1 = [distToGraphCenter(graph, point1), point1]
+        let dis_point2 = [distToGraphCenter(graph, point2), point2]
+        let dis_point3 = [distToGraphCenter(graph, point3), point3]
+        let dis_point4 = [distToGraphCenter(graph, point4), point4]
+
+        // Either is empty or two points.
+        let pointsOnCanvas = findTwoClosesPoints([dis_point1, dis_point2, dis_point3, dis_point4])
+
+        // If there are no points on canvas end the loop.
+        startX = pointsOnCanvas[0][0]
+        startY = pointsOnCanvas[0][1]
+        endX   = pointsOnCanvas[1][0]
+        endY   = pointsOnCanvas[1][1]
+    }
+    return [startX, startY, endX, endY]
+}
+
+
+/**
+ * returns the length of a vector
+ * @param {*} vector the vector in question
+ * @returns length of vector
+ */
+function vectorLength(vector) {
+    return Math.abs( Math.sqrt( Math.pow(vector[0], 2) + Math.pow(vector[1], 2)) )
+}
+
+/**
+ * finds if point is outside the graph canvas or not
+ * @param {*} graph graph whose canvas the point is evaluated on
+ * @param {*} point point to check for outside canvas
+ * @returns true if outside graph canvas, else false
+ */
+function outSideCanvas(graph, point) {
+    return (point[0] < 0 || point[0] > graph.canvas.width) || (point[1] < 0 || point[1] > graph.canvas.height)
+}
+
+/**
+ * returns the euclidean distance from point to the graph center
+ * @param {*} graph graph in question
+ * @param {*} point point to get distance of
+ * @returns distance of point to graph center
+ */
+function distToGraphCenter(graph, point) {
+    let x = graph.centerX
+    let y = graph.centerY
+    return Math.abs( Math.sqrt( Math.pow(point[0] - x, 2) + Math.pow(point[1] - y, 2)) )
+}
+
+/**
+ * sorts input array in ascending order by first element
+ * @param {*} dis_points an array where the first element is a distance, and the second a point (x, y)
+ * @returns the sorted array
+ */
+function findTwoClosesPoints(dis_points) {
+    let twoClosestPoints = dis_points.sort(function(a, b) {return a[0] - b[0]})
+    return [twoClosestPoints[0][1], twoClosestPoints[1][1]]
+}
+
+
+/**
+ * returns y when given x for y = mx + b
+ * @param {*} x number x value
+ * @param {*} m slope of line
+ * @param {*} b y intersect
+ * @returns y coordinate at x of the line
+ * @requires that m is a valid slope, ie no vertical lines
+ */
+function getYIntersept(x, m, b) { 
+    return (m * x) + b
+}
+
+
+/**
+ * gets x when given y using y = mx+b
+ * @param {*} y number y value
+ * @param {*} m slope of line
+ * @param {*} b y intersect
+ * @returns x coordinate at y of the line
+ * @requires that m is a valid slope, ie no vertical lines
+ */
+function getXIntersept(y, m, b) {
+    return (y - b) / m
 }
