@@ -25,13 +25,12 @@ class Graph {
         this.ctx = canvas.getContext("2d")
         this.centerX = this.canvas.width/2
         this.centerY = this.canvas.height/2
-        
         this.drawnObjects = [];
 
         // This is the number of graph units from edge to edge. E.g if the canvas is 600x600px we want
         // the length of 20 units to be 600 px.
         this.numOfGraphUnitsEdgeToEdge = this.canvas.width / 80;
-
+        this.scale                     = this.canvas.width / this.numOfGraphUnitsEdgeToEdge
         this.backgroundColor           = "white"
         // I matrix is default
         this.basis                     = [[1,0,0],[0,1,0],[0,0,1]]
@@ -115,29 +114,39 @@ class Graph {
         this.ctx.stroke()
     }
 
-    drawLineFromVectors(vector1, vector2, color, lineWidth) {
-        const scale = this.canvas.width / this.numOfGraphUnitsEdgeToEdge
-        
+    /**
+     * draws line from the endpoint of vector 1 to the endpoint of vector 2
+     * where vector = (a, b) has endpoints (a, b)
+     * @param {*} vector1 first endpoint
+     * @param {*} vector2 second endpoint
+     * @param {*} color color of vector
+     * @param {*} lineWidth line width to draw the vector
+     */
+    drawLineFromVectors(vector1, vector2, color, lineWidth) {    
         // First apply the basis, then the applied matrix. Not sure if this is the correct order for all situations...
         vector1 = this.changeBasisZoomAndRotate(vector1)
         vector2 = this.changeBasisZoomAndRotate(vector2)
 
-        let vec1X = this.centerX + scale * vector1[0]
-        let vec1Y = this.centerY - scale * vector1[1]
+        let vec1X = this.centerX + this.scale * vector1[0]
+        let vec1Y = this.centerY - this.scale * vector1[1]
 
-        let vec2X = this.centerX + scale * vector2[0]
-        let vec2Y = this.centerY - scale * vector2[1]
+        let vec2X = this.centerX + this.scale * vector2[0]
+        let vec2Y = this.centerY - this.scale * vector2[1]
 
         this.drawLine([vec1X, vec1Y],[vec2X, vec2Y], color, lineWidth)
     }
     
+    /**
+     * draws a dot at the endpoint of given vector
+     * @param {*} vector vector on which to draw
+     * @param {*} color color of dot
+     * @param {*} size radius of dot
+     */
     drawDotFromVector(vector, color, size) {
-        const scale = this.canvas.width / this.numOfGraphUnitsEdgeToEdge
-
         vector = this.changeBasisZoomAndRotate(vector)
 
-        let vecX = this.centerX + scale * vector[0]
-        let vecY = this.centerY - scale * vector[1]
+        let vecX = this.centerX + this.scale * vector[0]
+        let vecY = this.centerY - this.scale * vector[1]
 
         // Draw the dot
         this.ctx.fillStyle = color
@@ -165,6 +174,10 @@ class Graph {
         return updatedVector
     }
     
+    /**
+     * 
+     * @param {*} theta 
+     */
     rotateZ(theta) {
         let x_rotation = [Math.cos(theta), Math.sin(theta), 0 ]
         let y_rotation = [Math.cos(theta+Math.PI/2), Math.sin(theta+Math.PI/2), 0]
@@ -174,6 +187,10 @@ class Graph {
 
     }
 
+    /**
+     * 
+     * @param {*} theta 
+     */
     rotateY(theta) {
         let x_rotation = [Math.cos(theta), 0, -1 * Math.sin(theta)]
         let y_rotation = [0, 1, 0]
@@ -182,6 +199,10 @@ class Graph {
         this.yRotationMatrix = [x_rotation, y_rotation, z_rotation]
     } 
 
+    /**
+     * 
+     * @param {*} theta 
+     */
     rotateX(theta) {
         let x_rotation = [1, 0, 0]
         let y_rotation = [0, Math.cos(theta), Math.sin(theta)]
@@ -192,6 +213,9 @@ class Graph {
 
 }
 
+/**
+ * returns an instance of a graph axis
+ */
 class Axis {
     /**
      * creates an instance of an Axis
@@ -252,7 +276,7 @@ class Axis {
        }
        
        if (this.zeroZeroDot) {
-            
+
             this.graph.ctx.fillStyle = "black"
             this.graph.ctx.strokeStyle = "black"
             this.graph.ctx.beginPath();
@@ -317,7 +341,7 @@ class Vector {
         this.graph.drawLineFromVectors([0, 0, 0], this.cords, this.color, this.lineWidth)
 
         if(this.arrow) {
-            let arrowLength = .5
+            let arrowLength = .3
 
             let vectorLength = Math.abs( Math.sqrt( Math.pow(this.cords[0], 2) + Math.pow(this.cords[1], 2) + Math.pow(this.cords[2], 2)) )
             let inverseNormalizedVectorButThenScaledToCorrectLength = [arrowLength * -1 * (1/vectorLength) * this.cords[0], arrowLength * -1 * (1/vectorLength) * this.cords[1], arrowLength * -1 * (1/vectorLength) * this.cords[2]]
@@ -331,8 +355,8 @@ class Vector {
             let arrow1 = matrixVectorMultiplication(rotationMatrix1, inverseNormalizedVectorButThenScaledToCorrectLength)
             let arrow2 = matrixVectorMultiplication(rotationMatrix2, inverseNormalizedVectorButThenScaledToCorrectLength)
 
-            this.graph.drawLineFromVectors(this.cords, [this.cords[0] + arrow1[0], this.cords[1] - arrow1[1], 0], this.color, this.lineWidth)
-            this.graph.drawLineFromVectors(this.cords, [this.cords[0] + arrow2[0], this.cords[1] - arrow2[1], 0], this.color, this.lineWidth)
+            this.graph.drawLineFromVectors(this.cords, [this.cords[0] + arrow1[0], this.cords[1] + arrow1[1], 0], this.color, this.lineWidth)
+            this.graph.drawLineFromVectors(this.cords, [this.cords[0] + arrow2[0], this.cords[1] + arrow2[1], 0], this.color, this.lineWidth)
 
         }
 
@@ -382,9 +406,6 @@ class Grid {
 
         let keepGoing = true
         let lineCount = 0
-        const scale = this.graph.canvas.width / this.graph.numOfGraphUnitsEdgeToEdge
-
-
 
         while (keepGoing) {
             let startX, startY, endX, endY //points to draw from and to
@@ -458,8 +479,8 @@ class Grid {
                     this.graph.drawLine([startX, startY],[endX, endY], "gray", 1);
                 }
                 
-                x += scale * axis[0]
-                y -= scale * axis[1]
+                x += this.graph.scale * axis[0]
+                y -= this.graph.scale * axis[1]
 
             } else {
                 keepGoing = false
@@ -473,15 +494,18 @@ class Grid {
     // @param point (x, y) point
     // @returns true if outside canvas
     //
-
     _vectorLength(vector) {
         return Math.abs( Math.sqrt( Math.pow(vector[0], 2) + Math.pow(vector[1], 2)) )
     }
 
+    //returns true if point is outside of the canvas
+    //@params point: point to check if outside canvas
     _outSideCanvas(point) {
         return (point[0] < 0 || point[0] > this.graph.canvas.width) || (point[1] < 0 || point[1] > this.graph.canvas.height)
     }
 
+    //returns euclidean distance to the center of the graph, 
+    //@param point: array (x, y) to find the distance from the (centerX, centerY)
     _distToGraphCenter(point) {
         let x = this.graph.centerX
         let y = this.graph.centerY
