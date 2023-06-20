@@ -37,6 +37,11 @@ class Graph {
         this.currentZoom               = 1
         this.zoomIncrement             = 1.1
         
+        //only rotation...
+        this.animateBasis
+        this.animateAngles
+        this.animateFinalAngles
+        
         this.xRotationMatrix            = [[1,0,0],[0,1,0],[0,0,1]]
         this.yRotationMatrix            = [[1,0,0],[0,1,0],[0,0,1]]
         this.zRotationMatrix            = [[1,0,0],[0,1,0],[0,0,1]]
@@ -48,6 +53,12 @@ class Graph {
         this.showAxis                  = true
         this.showGrid                  = true
         this.infiniteAxis              = true
+    }
+
+    animate() {
+        if (animating) {
+             
+        }
     }
 
     zoomIn() {
@@ -74,11 +85,6 @@ class Graph {
         this.drawnObjects.push(object)
     }
 
-    /** */
-    changePerspective() {
-
-    }
-
     // Draws all objects in the queue and the grid / axis if they are enabled.
     draw() {
         // Clear screen / add background
@@ -100,7 +106,8 @@ class Graph {
     }
     
     /**
-     * draws line from point1 to point2 on the graph canvas
+     * draws line from point1 to point2 on the graph canvas (standard) basis, 
+     * does not shift to graph basis, and length unscaled
      * @param {*} point1 endpoint 1
      * @param {*} point2 endpoint 2
      * @param {*} color color of line
@@ -119,10 +126,12 @@ class Graph {
 
     /**
      * draws line from the endpoint of vector 1 to the endpoint of vector 2
+     * draws in the basis, zoom, and current rotation of graph, as well as scaled to length
      * where vector = (a, b) has endpoints (a, b)
      * @param {*} vector1 first endpoint
      * @param {*} vector2 second endpoint
      * @param {*} color color of vector
+     * @param {*} inBasis if true, draws vector in current graph basis, else draws in standard basis
      * @param {*} lineWidth line width to draw the vector
      */
     drawLineFromVectors(vector1, vector2, color, lineWidth) {    
@@ -138,6 +147,7 @@ class Graph {
 
         this.drawLine([vec1X, vec1Y],[vec2X, vec2Y], color, lineWidth)
     }
+
     
     /**
      * draws a dot at the endpoint of given vector
@@ -343,9 +353,10 @@ class Vector {
 
         if(this.arrow) {
             let arrowLength = .3
+            let inBasisCords = this.graph.changeBasisZoomAndRotate(this.cords)
 
-            let vectorLength = Math.abs( Math.sqrt( Math.pow(this.cords[0], 2) + Math.pow(this.cords[1], 2) + Math.pow(this.cords[2], 2)) )
-            let inverseNormalizedVectorButThenScaledToCorrectLength = [arrowLength * -1 * (1/vectorLength) * this.cords[0], arrowLength * -1 * (1/vectorLength) * this.cords[1], arrowLength * -1 * (1/vectorLength) * this.cords[2]]
+            let vectorLength = Math.abs( Math.sqrt( Math.pow(inBasisCords[0], 2) + Math.pow(inBasisCords[1], 2) + Math.pow(inBasisCords[2], 2)) )
+            let inverseNormalizedVectorButThenScaledToCorrectLength = [arrowLength * -1 * (1/vectorLength) * inBasisCords[0], arrowLength * -1 * (1/vectorLength) * inBasisCords[1], arrowLength * -1 * (1/vectorLength) * inBasisCords[2]]
             
             //angle of the arrow head to line
             let headAngle = Math.PI/6;
@@ -359,13 +370,32 @@ class Vector {
 
             //want to add onto this.cords here because this is still in vector notation, 
             //so no need to subtract the ys as that is taken care of in drawLine
-            this.graph.drawLineFromVectors(this.cords, [this.cords[0] + arrow1[0], this.cords[1] + arrow1[1], 0], this.color, this.lineWidth)
-            this.graph.drawLineFromVectors(this.cords, [this.cords[0] + arrow2[0], this.cords[1] + arrow2[1], 0], this.color, this.lineWidth)
+            this.drawArrowLine(inBasisCords, [inBasisCords[0] + arrow1[0], inBasisCords[1] + arrow1[1], 0], this.color, this.lineWidth)
+            this.drawArrowLine(inBasisCords, [inBasisCords[0] + arrow2[0], inBasisCords[1] + arrow2[1], 0], this.color, this.lineWidth)
 
         }
 
         this.graph.drawDotFromVector(this.cords, this.color, 1)
+    }
 
+    /**
+     * draws line from endpoint of vector 1 to endpoint of vector 2
+     * w.r.t the standard (nontransformed) basis
+     * @param {*} vector1 
+     * @param {*} vector2 
+     * @param {*} color 
+     * @param {*} lineWidth 
+     */
+    drawArrowLine(vector1, vector2, color, lineWidth) {    
+        // First apply the basis, then the applied matrix. Not sure if this is the correct order for all situations...
+
+        let vec1X = this.graph.centerX + this.graph.scale * vector1[0]
+        let vec1Y = this.graph.centerY - this.graph.scale * vector1[1]
+
+        let vec2X = this.graph.centerX + this.graph.scale * vector2[0]
+        let vec2Y = this.graph.centerY - this.graph.scale * vector2[1]
+
+        this.graph.drawLine([vec1X, vec1Y],[vec2X, vec2Y], color, lineWidth)
     }
 }
 

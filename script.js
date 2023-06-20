@@ -17,7 +17,6 @@ canvas.height = displayHeight * 2
 
 let test_graph = new Graph(canvas);
 
-// test_graph.draw();
 
 let x = 0;
 let y = 0;
@@ -137,32 +136,26 @@ document.getElementById("graphButton").addEventListener("click", function() {
     let y = parseFloat(yInput.value)
     let color = vectorColors.value
     test_graph.addObject(new Vector(test_graph, [x, y, 0], color, 3, true))
-    //test_graph.draw()
 })
 
 document.getElementById("zoomIn").addEventListener("click", function() {
     test_graph.zoomIn()
-    //test_graph.draw()
 })
 
 document.getElementById("zoomOut").addEventListener("click", function() {
     test_graph.zoomOut()
-    //test_graph.draw()
 })
 
 document.getElementById("defaultZoom").addEventListener("click", function() {
     test_graph.setDefaultZoom()
-    //test_graph.draw()
 })
 
 document.getElementById("infiniteAxis").addEventListener("click", function() {
     test_graph.infiniteAxis = document.getElementById("infiniteAxis").checked
-    //test_graph.draw()
 })
 
 document.getElementById("showGrid").addEventListener("click", function() {
     test_graph.showGrid = document.getElementById("showGrid").checked
-    //test_graph.draw()
 })
 
 
@@ -172,7 +165,6 @@ document.getElementById("slider").addEventListener("input", function() {
     switch(parseInt(document.getElementById("slider").value)) {
         case 0:
             test_graph.basis = [[1,0,0],[0,1,0],[0,0,1]]
-            //test_graph.draw();
             break;
         case 1:
             matrix_a = getMatrixFromTable("matrix-A")
@@ -181,8 +173,6 @@ document.getElementById("slider").addEventListener("input", function() {
                 alert("Invalid Matrix")
             } else {
                 test_graph.basis = matrix_a
-                console.log(test_graph.basis)
-                //test_graph.draw()
             }
             break;
             // code block
@@ -196,7 +186,6 @@ document.getElementById("slider").addEventListener("input", function() {
                 test_graph.basis = matrixMultiplication(matrix_b, matrix_a)
                 console.log(matrix_a)
                 console.log(matrix_b)
-                //test_graph.draw()
             }
             break;
         case 3:
@@ -209,7 +198,6 @@ document.getElementById("slider").addEventListener("input", function() {
             } else {
                 test_graph.basis = matrixMultiplication(matrix_c, matrixMultiplication(matrix_b, matrix_a))
                 console.log(test_graph.basis)
-                //test_graph.draw()
             }
             // code block
             break;
@@ -250,5 +238,5 @@ test_graph.draw()
 
 
 setInterval(function() {
-  test_graph.draw()
+    test_graph.draw()
 }, 1000/60)
