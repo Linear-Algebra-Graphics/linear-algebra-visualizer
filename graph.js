@@ -31,7 +31,7 @@ class Graph {
         // the length of 20 units to be 600 px.
         this.numOfGraphUnitsEdgeToEdge = this.canvas.width / 80;
         this.scale                     = this.canvas.width / this.numOfGraphUnitsEdgeToEdge
-        this.backgroundColor           = "white"
+        this.backgroundColor           = "black"
         // I matrix is default
         this.basis                     = [[1,0,0],[0,1,0],[0,0,1]]
         this.currentZoom               = 1
@@ -422,25 +422,92 @@ class Grid {
             // y = mx + (y1-mx1)
             // y = mx + b
             // b = (y1-mx1)
+        /**
+         * we define the standard box as a box of w*h, that is 5x5 in terms of grid boxes
+         * boxW: is the width of the standard box in terms of current basis in default zoom 
+         *       ISSUE: if basis is super small does not scale grid!!!
+         *       SOLVED: by having boxW always being 1 unit lenght in defualt view
+         * 
+         * scaledAxisLength: the width of the a 5x5 grid box in zoomed basis
+         * iter_mult: number of times to double scaledAxisLength to being it back to the standard box
+         * iter_div: number of times to halve scaledAxisLength --||--
+         */
+        let scale = this.graph.scale
+        let inBasisX = matrixVectorMultiplication(this.graph.basis, [1, 0, 0])
+        let boxW =  scale //vectorLength([scale * inBasisX[0], scale * inBasisX[1]])
 
-        this.drawHalfAxisGrid(xBasis,yBasis)
-        this.drawHalfAxisGrid(neg_xBasis,yBasis)
-        this.drawHalfAxisGrid(yBasis, xBasis)
-        this.drawHalfAxisGrid(neg_yBasis, xBasis)
+        //we set scaledAxisLength to the minimum of the two in basis axis to avoid grids that are overpopulated
+        //EX: a basis where [1,1] is the vector [10000, 0.1] in the basis
+        //    here the length 0.1 will be scaled to 1 default unit length
+        let scaledAxisLengthY = Math.abs( Math.sqrt( Math.pow(yBasis[0] * scale, 2) + Math.pow(yBasis[1] * scale, 2)))
+        let scaledAxisLengthX = Math.abs( Math.sqrt( Math.pow(xBasis[0] * scale, 2) + Math.pow(xBasis[1] * scale, 2)))
+        let scaledAxisLength = Math.min(scaledAxisLengthX, scaledAxisLengthY)
+
+        let iter_mult = Number.MAX_VALUE
+        let iter_div = Number.MAX_VALUE
+
+        //find if scaling is division or multiplication, and how scaling iterations
+        if (5 * scaledAxisLength < 2.5 * boxW) {
+            iter_mult = 0
+            while (5 * scaledAxisLength < 2.5 * boxW) {
+                scaledAxisLength = scaledAxisLength * 2
+                iter_mult++
+            }
+        } else if (5 * scaledAxisLength > 5 * boxW) {
+            iter_div = 0
+            while (5 * scaledAxisLength > 5 * boxW) {
+                scaledAxisLength = scaledAxisLength / 2
+                iter_div++
+            }
+        }
+        
+        let iters = iter_div
+        let div = true
+        if (iter_div == Number.MAX_VALUE) {
+            iters = iter_mult
+            div = false
+        }
+        if (iters == Number.MAX_VALUE) {
+            iters = 0
+        }
+
+
+        this.drawHalfAxisGrid(xBasis,yBasis, iters, div)
+        this.drawHalfAxisGrid(neg_xBasis,yBasis, iters, div)
+        this.drawHalfAxisGrid(yBasis, xBasis, iters, div)
+        this.drawHalfAxisGrid(neg_yBasis, xBasis, iters, div)
     }
     
     /**
      * draws grid lines along half of an axis, in the direction of the vector axis
      * each grid line is defined by the vector gridVector
+     * 
+     * accounts for merging or splitting grid lines at enough zoom
      * @param {*} axis xBasis originally 
      * @param {*} gridVector vector defining grid lines
+     * @param {*} iteraions number of scalings applied to distance between grid lines
+     * @param {*} divide true if distance needs to be smaller, else false
      */
-    drawHalfAxisGrid(axis, gridVector) {
+    drawHalfAxisGrid(axis, gridVector, iterations, divide) {
         let x = this.graph.centerX
         let y = this.graph.centerY
 
         let keepGoing = true
         let lineCount = 0
+
+        let xStep = this.graph.scale * axis[0]
+        let yStep = this.graph.scale * axis[1]
+        if (divide) {
+            for (let i = 0; i < iterations; i++) {
+                xStep = xStep / 2
+                yStep = yStep / 2
+            }
+        } else {
+            for (let i = 0; i < iterations; i++) {
+                xStep = xStep * 2
+                yStep = yStep * 2
+            }
+        }
 
         while (keepGoing) {
 
@@ -461,13 +528,13 @@ class Grid {
                     // this.graph.ctx.fillStyle = "black"
                     // this.graph.ctx.font = "40px monospace";
                     // this.graph.ctx.fillText(("(" + ", " + ")"), x+10, y-20);
-                    this.graph.drawLine([startX, startY],[endX, endY], "black", 3);
+                    this.graph.drawLine([startX, startY],[endX, endY], "white", 3);
                 } else {
                     this.graph.drawLine([startX, startY],[endX, endY], "gray", 1);
                 }
                 
-                x += this.graph.scale * axis[0]
-                y -= this.graph.scale * axis[1]
+                x += xStep
+                y -= yStep
 
             } else {
                 keepGoing = false

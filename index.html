@@ -8,65 +8,74 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <title>Change of basis Example</title>
-        <div id="graph-container">
-            <canvas id="graph" style="border:1px solid #000000;"></canvas>
-        </div>
-        <div id="slider-container">
-            <input type="range" min="0" max="3" value="0" id="slider">
-        </div>
+        <div class="box">
+            <title>Change of basis Example</title>
+            <div id="graph-container">
+                <canvas id="graph" style="border:1px solid #000000;"></canvas>
+            </div>
+            <div class="matrixAndSlider" marginLeft="20px">
+                <h2  >Transformation Matrices</h2>
+                <div id="slider-container">
+                    <input type="range" min="0" max="3" value="0" id="slider">
+                </div>
 
-        <div id="matrixs-container">
-            <table id="matrix-C" class="matrix-table">
-                <tr>
-                    <td><input type="text" autocomplete="off"/></td>
-                    <td><input type="text" autocomplete="off"/></td>
-                </tr>
-                <tr>
-                    <td><input type="text" autocomplete="off"/></td>
-                    <td><input type="text" autocomplete="off"/></td>
-                </tr>
-            </table>
-            <table id="matrix-B" class="matrix-table">
-                <tr>
-                    <td><input type="text" autocomplete="off"/></td>
-                    <td><input type="text" autocomplete="off"/></td>
-                </tr>
-                <tr>
-                    <td><input type="text" autocomplete="off"/></td>
-                    <td><input type="text" autocomplete="off"/></td>
-                </tr>
-            </table>
-            <table id="matrix-A" class="matrix-table">
-                <tr>
-                    <td><input type="text" autocomplete="off"/></td>
-                    <td><input type="text" autocomplete="off"/></td>
-                </tr>
-                <tr>
-                    <td><input type="text" autocomplete="off"/></td>
-                    <td><input type="text" autocomplete="off"/></td>
-                </tr>
-            </table>
-            
-        </div>
-        <div id="vector-input">
-            <input id="x" size="5px" class="arrow-togglable" type="text" autocomplete="off"/>
-            <input id="y" size="5px" class="arrow-togglable" type="text" autocomplete="off"/>
-            <select id="vector colors" default="black">
-                <option value="black">black</option>
-                <option value="green">green</option>
-                <option value="blue">blue</option>
-            </select>
-            <button id="graphButton" marginLeft="10px">graph!</button>
-            <!-- <button id="showGrid" marginLeft="10px">show grid!</button> -->
-            <label>Infinite Axis</label>
-            <input type="checkbox" id="infiniteAxis" checked=""></input>
-            <label>Show Grid</label>
-            <input type="checkbox" id="showGrid" checked=""></input>
-            <label> zoom: </label>
-            <button id="zoomIn" marginLeft="10px">+</button>
-            <button id="zoomOut" marginLeft="10px"> - </button>
-            <button id="defaultZoom" marginLeft="10px"> default zoom </button>
+                <div id="matrix-container">
+                    <table id="matrix-C" class="matrix-table">
+                        <tr>
+                            <td><input type="text" autocomplete="off"/></td>
+                            <td><input type="text" autocomplete="off"/></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" autocomplete="off"/></td>
+                            <td><input type="text" autocomplete="off"/></td>
+                        </tr>
+                    </table>
+                    <table id="matrix-B" class="matrix-table">
+                        <tr>
+                            <td><input type="text" autocomplete="off"/></td>
+                            <td><input type="text" autocomplete="off"/></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" autocomplete="off"/></td>
+                            <td><input type="text" autocomplete="off"/></td>
+                        </tr>
+                    </table>
+                    <table id="matrix-A" class="matrix-table">
+                        <tr>
+                            <td><input type="text" autocomplete="off"/></td>
+                            <td><input type="text" autocomplete="off"/></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" autocomplete="off"/></td>
+                            <td><input type="text" autocomplete="off"/></td>
+                        </tr>
+                    </table>
+                    
+                </div>
+                <h2>Vector Input</h2>
+                <div id="vector-input">
+                    <input id="x" size="5px" class="arrow-togglable" type="text" autocomplete="off"/>
+                    <input id="y" size="5px" class="arrow-togglable" type="text" autocomplete="off"/>
+                    <select id="vector colors" default="black">
+                        <option value="black">black</option>
+                        <option value="green">green</option>
+                        <option value="blue">blue</option>
+                        <option value="white">white</option>
+                    </select>
+                    <button id="graphButton" marginLeft="10px">graph!</button>
+                    <!-- <button id="showGrid" marginLeft="10px">show grid!</button> -->
+                </div>
+                <div id="adjustment-buttons">
+                    <label>Infinite Axis</label>
+                    <input type="checkbox" id="infiniteAxis" checked=""></input>
+                    <label>Show Grid</label>
+                    <input type="checkbox" id="showGrid" checked=""></input>
+                    <label> zoom: </label>
+                    <button id="zoomIn" marginLeft="10px">+</button>
+                    <button id="zoomOut" marginLeft="10px"> - </button>
+                    <button id="defaultZoom" marginLeft="10px"> default zoom </button>
+                </div>
+            </div>
         </div>
     </body>
 </html>

@@ -3,14 +3,24 @@ body {
     background-color: white;
 }
 
+.box {
+    display: flex;
+}
+
+.matrixAndSlider {
+    flex-direction: column;
+}
+
 #graph-container{
     margin-left: 20px;
     margin-top: 20px;
 }
 
-/* canvas {
+canvas {
     border-radius: 15px;
-} */
+    border: 2px solid white !important;
+}
+
 
 #matrix-container {
     position: relative;
@@ -48,17 +58,15 @@ th, td {
 }
 
 #slider-container {
-    width:800px;
+    width:470px;
     margin-top: 20px;
     margin-left: 20px
 }
 
 
 input[type="text"] {
-    font-size: 30px;
-    min-width: 50px;
-    max-width: 100px;
-    min-height: 12px;
+    font-size: 15px;
+    max-width: 50px;
     text-align: center;
 }
 
@@ -67,6 +75,11 @@ input[type="range"] {
  }
 
 #vector-input {
+    margin-left: 20px;
+}
+
+#adjustment-buttons {
+    margin-top: 20px;
     margin-left: 20px;
 }
 

@@ -5,7 +5,7 @@ let yInput = document.getElementById("y")
 let vectorColors = document.getElementById("vector colors")
 
 displayWidth  = 800
-displayHeight = 800
+displayHeight = 600
 
 canvas.style.width = displayWidth + "px"
 canvas.style.height = displayHeight + "px"
@@ -184,8 +184,6 @@ document.getElementById("slider").addEventListener("input", function() {
                 alert("Invalid Matrix")
             } else {
                 test_graph.basis = matrixMultiplication(matrix_b, matrix_a)
-                console.log(matrix_a)
-                console.log(matrix_b)
             }
             break;
         case 3:
@@ -197,7 +195,6 @@ document.getElementById("slider").addEventListener("input", function() {
                 alert("Invalid Matrix")
             } else {
                 test_graph.basis = matrixMultiplication(matrix_c, matrixMultiplication(matrix_b, matrix_a))
-                console.log(test_graph.basis)
             }
             // code block
             break;
