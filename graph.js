@@ -31,7 +31,7 @@ class Graph {
         // the length of 20 units to be 600 px.
         this.numOfGraphUnitsEdgeToEdge = this.canvas.width / 80;
         this.scale                     = this.canvas.width / this.numOfGraphUnitsEdgeToEdge
-        this.backgroundColor           = "black"
+        this.backgroundColor           = "white"
         // I matrix is default
         this.basis                     = [[1,0,0],[0,1,0],[0,0,1]]
         this.currentZoom               = 1
@@ -52,7 +52,7 @@ class Graph {
         this.graphGrid                 = new Grid(this)
         this.showAxis                  = true
         this.showGrid                  = true
-        this.infiniteAxis              = true
+        this.infiniteAxis              = false
     }
 
     animate() {
@@ -92,6 +92,13 @@ class Graph {
         this.ctx.fillRect(0,0, this.canvas.width, this.canvas.height);
 
         if (this.showGrid) {
+            if (this.xRotationMatrix == [[1,0,0],[0,1,0],[0,0,1]] && 
+                this.yRotationMatrix == [[1,0,0],[0,1,0],[0,0,1]] &&
+                this.zRotationMatrix == [[1,0,0],[0,1,0],[0,0,1]]) {
+                    this.graphGrid.draw()
+            } else {
+                //make 3d definite grid
+            }
             this.graphGrid.draw()
         }
         
@@ -134,18 +141,34 @@ class Graph {
      * @param {*} inBasis if true, draws vector in current graph basis, else draws in standard basis
      * @param {*} lineWidth line width to draw the vector
      */
-    drawLineFromVectors(vector1, vector2, color, lineWidth) {    
+    drawVecFromOrigin(vector, color, lineWidth) {    
         // First apply the basis, then the applied matrix. Not sure if this is the correct order for all situations...
-        vector1 = this.changeBasisZoomAndRotate(vector1)
-        vector2 = this.changeBasisZoomAndRotate(vector2)
+        vector = this.changeBasisZoomAndRotate(vector)
 
-        let vec1X = this.centerX + this.scale * vector1[0]
-        let vec1Y = this.centerY - this.scale * vector1[1]
+        let endX = this.centerX + (this.scale * vector[0])
+        let endY = this.centerY - (this.scale * vector[1])
 
-        let vec2X = this.centerX + this.scale * vector2[0]
-        let vec2Y = this.centerY - this.scale * vector2[1]
 
-        this.drawLine([vec1X, vec1Y],[vec2X, vec2Y], color, lineWidth)
+        let diagonalLength = vectorLength([this.centerX, this.centerY])
+        
+        //need to scale vectors down for really long vectors when drawn on canvas
+        //super long vectors may cause drawing issues
+        if (vectorLength(vector) > 2 * diagonalLength) {
+
+            // let sortedIntersect = getGraphBoundaryEndpoints(this.centerX, this.centerY, vector, this);
+
+            // let end1 = [sortedIntersect[0], sortedIntersect[1]]
+            // let end2   = [sortedIntersect[2], sortedIntersect[3]]
+
+            // console.log("(" + vector + "), (" + end1 + "), (" + end2 + ")")
+            
+            // if (Math.sign(vector[0]) == 1) {
+
+            // }
+        }
+        
+
+        this.drawLine([this.centerX, this.centerY],[endX, endY], color, lineWidth)
     }
 
     
@@ -191,11 +214,11 @@ class Graph {
      * 
      * @param {*} theta 
      */
-    rotateZ(theta) {
+    rotateAboutZ(theta) {
         let x_rotation = [Math.cos(theta), Math.sin(theta), 0 ]
-        let y_rotation = [Math.cos(theta+Math.PI/2), Math.sin(theta+Math.PI/2), 0]
+        let y_rotation = [Math.sin(theta), Math.cos(theta), 0]
         let z_rotation = [0, 0, 1]
-
+    
         this.zRotationMatrix = [x_rotation, y_rotation, z_rotation]
 
     }
@@ -204,7 +227,7 @@ class Graph {
      * 
      * @param {*} theta 
      */
-    rotateY(theta) {
+    rotateAboutY(theta) {
         let x_rotation = [Math.cos(theta), 0, -1 * Math.sin(theta)]
         let y_rotation = [0, 1, 0]
         let z_rotation = [Math.sin(theta), 0, Math.cos(theta)]
@@ -216,13 +239,13 @@ class Graph {
      * 
      * @param {*} theta 
      */
-    rotateX(theta) {
+    rotateAboutX(theta) {
         let x_rotation = [1, 0, 0]
         let y_rotation = [0, Math.cos(theta), Math.sin(theta)]
         let z_rotation = [0, -1 * Math.sin(theta), Math.cos(theta)]
 
         this.xRotationMatrix = [x_rotation, y_rotation, z_rotation]
-    } 
+    }
 
 }
 
@@ -270,9 +293,11 @@ class Axis {
        } else {
             let xBasis = this.graph.changeBasisZoomAndRotate([1,0,0]);
             let yBasis = this.graph.changeBasisZoomAndRotate([0,1,0]);
+            let zBasis = this.graph.changeBasisZoomAndRotate([0,0,1]);
 
             let sortedIntersectX = getGraphBoundaryEndpoints(this.graph.centerX, this.graph.centerY, xBasis, this.graph);
             let sortedIntersectY = getGraphBoundaryEndpoints(this.graph.centerX, this.graph.centerY, yBasis, this.graph);
+            let sortedIntersectZ = getGraphBoundaryEndpoints(this.graph.centerX, this.graph.centerY, zBasis, this.graph);
 
             let xStart = [sortedIntersectX[0], sortedIntersectX[1]]
             let xEnd   = [sortedIntersectX[2], sortedIntersectX[3]]
@@ -280,8 +305,12 @@ class Axis {
             let yStart = [sortedIntersectY[0], sortedIntersectY[1]]
             let yEnd   = [sortedIntersectY[2], sortedIntersectY[3]]
 
+            let zStart = [sortedIntersectZ[0], sortedIntersectZ[1]]
+            let zEnd   = [sortedIntersectZ[2], sortedIntersectZ[3]]
+
             this.graph.drawLine(xStart, xEnd, "blue", this.lineWidth)
             this.graph.drawLine(yStart, yEnd, "red", this.lineWidth)
+            this.graph.drawLine(zStart, zEnd, "green", this.lineWidth)
        }
        
        if (this.zeroZeroDot) {
@@ -348,8 +377,8 @@ class Vector {
      * draws the vector on the graph
      */
     draw() {
-
-        this.graph.drawLineFromVectors([0, 0, 0], this.cords, this.color, this.lineWidth)
+        //check if vector is significantly larger than canvas
+        this.graph.drawVecFromOrigin(this.cords, this.color, this.lineWidth)
 
         if(this.arrow) {
             let arrowLength = .3
@@ -439,10 +468,19 @@ class Grid {
         //we set scaledAxisLength to the minimum of the two in basis axis to avoid grids that are overpopulated
         //EX: a basis where [1,1] is the vector [10000, 0.1] in the basis
         //    here the length 0.1 will be scaled to 1 default unit length
-        let scaledAxisLengthY = Math.abs( Math.sqrt( Math.pow(yBasis[0] * scale, 2) + Math.pow(yBasis[1] * scale, 2)))
-        let scaledAxisLengthX = Math.abs( Math.sqrt( Math.pow(xBasis[0] * scale, 2) + Math.pow(xBasis[1] * scale, 2)))
-        let scaledAxisLength = Math.min(scaledAxisLengthX, scaledAxisLengthY)
+        // let scaledAxisLengthY = Math.abs( Math.sqrt( Math.pow(yBasis[0] * scale, 2) + Math.pow(yBasis[1] * scale, 2)))
+        // let scaledAxisLengthX = Math.abs( Math.sqrt( Math.pow(xBasis[0] * scale, 2) + Math.pow(xBasis[1] * scale, 2)))
+        // let scaledAxisLength = Math.min(scaledAxisLengthX, scaledAxisLengthY)
+        let xLength = vectorLength(xBasis)
+        let yLength = vectorLength(yBasis)
+        let angle = Math.acos((vectorMultiplication(xBasis, yBasis)) / (vectorMultiplication(xBasis, xBasis) * vectorMultiplication(yBasis, yBasis)))
+        let area = xLength * yLength * Math.sin(angle)
+        let perpXLength = area / xLength
+        let perpYLength = area / yLength
 
+
+        let scaledAxisLength = scale * Math.min(perpXLength, perpYLength)
+    
         let iter_mult = Number.MAX_VALUE
         let iter_div = Number.MAX_VALUE
 
@@ -450,13 +488,19 @@ class Grid {
         if (5 * scaledAxisLength < 2.5 * boxW) {
             iter_mult = 0
             while (5 * scaledAxisLength < 2.5 * boxW) {
-                scaledAxisLength = scaledAxisLength * 2
+                xLength = xLength * 2
+                yLength = yLength * 2
+                area = xLength * yLength * Math.sin(angle)
+                scaledAxisLength = scale * Math.min(area / xLength, area / yLength)
                 iter_mult++
             }
         } else if (5 * scaledAxisLength > 5 * boxW) {
             iter_div = 0
             while (5 * scaledAxisLength > 5 * boxW) {
-                scaledAxisLength = scaledAxisLength / 2
+                xLength = xLength / 2
+                yLength = yLength / 2
+                area = xLength * yLength * Math.sin(angle)
+                scaledAxisLength = scale * Math.min(area / xLength, area / yLength)
                 iter_div++
             }
         }
@@ -470,6 +514,8 @@ class Grid {
         if (iters == Number.MAX_VALUE) {
             iters = 0
         }
+
+        console.log(scaledAxisLength + ", " + iters)
 
 
         this.drawHalfAxisGrid(xBasis,yBasis, iters, div)
@@ -528,9 +574,9 @@ class Grid {
                     // this.graph.ctx.fillStyle = "black"
                     // this.graph.ctx.font = "40px monospace";
                     // this.graph.ctx.fillText(("(" + ", " + ")"), x+10, y-20);
-                    this.graph.drawLine([startX, startY],[endX, endY], "white", 3);
+                    this.graph.drawLine([startX, startY],[endX, endY], "#BFBFBD", 3);
                 } else {
-                    this.graph.drawLine([startX, startY],[endX, endY], "gray", 1);
+                    this.graph.drawLine([startX, startY],[endX, endY], "#E6E6E3", 2);
                 }
                 
                 x += xStep
@@ -560,7 +606,12 @@ class Grid {
 function getGraphBoundaryEndpoints(x, y, gridVector, graph) {
     let startX, startY, endX, endY //points to draw from and to
     // First check if the lines are paralel to get rid of the edge case.
-    if (gridVector[0] === 0) {
+    if (gridVector[0] === 0 && gridVector[1] === 0) {
+        startX = x
+        startY = y
+        endX = x
+        endY = y
+    } else if (gridVector[0] === 0) {
         //parrallel with y axis case
         startX = x
         startY = graph.canvas.height

@@ -18,22 +18,23 @@ canvas.height = displayHeight * 2
 let test_graph = new Graph(canvas);
 
 
+//add mouse support
 let x = 0;
 let y = 0;
 
-//add mouse support
+let delta_x = 0
+let delta_y = 0
+
 canvas.addEventListener('mousemove', function(e) {    // return null
 
-    let delta_x = 0
-    let delta_y = 0
     // console.log("mouse on canvas!")
     if (mouseIsDown) {
         // this 20 is the offset of canvas
-        x = -20 + delta_x + e.clientX;
-        y = -20 + delta_y + e.clientY;
+        x = - delta_x + (e.clientX -20);
+        y = - delta_y + (e.clientY -20);
     } else {
-        delta_x = e.clientX - x
-        delta_y = e.clientY - y
+        delta_x = (e.clientX -20) - x
+        delta_y = (e.clientY -20) - y
     }
     // console.log("(" + x + ", " + y + ")")
     // console.log("(" + e.clientX + ", " + e.clientY + ")")
@@ -57,6 +58,20 @@ document.addEventListener('mouseup', function(event) {
     } 
 });
 
+
+canvas.addEventListener("wheel", event => {
+    const delta = Math.sign(event.deltaY);
+
+    if (delta==-1) {
+      test_graph.zoomIn()
+      // console.log("Increasing scale by 10%")
+    }
+
+    if (delta==1) {
+      test_graph.zoomOut()
+      // console.log("Decreasing scale by 10%")
+    }
+});
 
 
 
@@ -158,6 +173,12 @@ document.getElementById("showGrid").addEventListener("click", function() {
     test_graph.showGrid = document.getElementById("showGrid").checked
 })
 
+document.getElementById("defaultOrientation").addEventListener("click", function() {
+    // Resets to default state of x and y
+    x = 0
+    y = 0
+})
+
 
 document.getElementById("slider").addEventListener("input", function() {
     //alert(document.getElementById("slider").value);
@@ -209,9 +230,7 @@ document.getElementById("slider").addEventListener("input", function() {
  * gets the array of input values in from matrix with id:id
  * @requires {*} that the id is from a table, and that the table holds inputs for a 2x2 matrix
  * @param {*} id value of id tag of the table made matrix
- * @returns null if there is an unfilled input, else returns a matrix such that
- *             [[a,c],[b,d]] = |a b|
- *                             |c d|
+ * @returns null if there is an unfilled input, else returns a 3x3 matrix such that
  */
 function getMatrixFromTable(id) {
     let table = document.getElementById(id);
@@ -230,10 +249,18 @@ function getMatrixFromTable(id) {
 }
 
 
-
 test_graph.draw()
 
 
+
 setInterval(function() {
+
+    test_graph.rotateAboutY(2 * Math.PI * (x) / displayWidth)
+
+    test_graph.rotateAboutX(2 * Math.PI * (-y) / displayHeight)
+
     test_graph.draw()
 }, 1000/60)
+
+
+//test_graph.infiniteAxis = false

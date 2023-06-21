@@ -1,25 +1,25 @@
 Short term:
 
-make a dot function
 Add transformations
-Make sure 3d roatations work
 set graph size relative to screen size???
-
-Long term:
-Fix janky way of doing infinate for axis do same idea as grid lines
-MAKE SCALE NOT CALCULATED EVERY TIME
+NEED DARKMODE BUTTON
 Add grid numbers
 
+Long term:
+
 Add a hard limit to all while loops so it doesn't crash browswer
-Change zoom in and out to multiplication
-
-can draw a point on the graph, non scaled
-
-grid edi notes - think of as a mod->increment 
-to value and then go back to beginning, where value is the increment when drawing grid
 
 Change rotation:
     https://www.xarg.org/2021/07/trackball-rotation-using-quaternions/
     https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation
 
 Make so basis is always same size doesn't get scaled (Still gets rotated and stuff)
+
+FIX GLICH WHERE MANY ZOOM INS ON CHROME BREAKS VECTORS
+(We think its when you draw way outside the canvas)
+
+Add way to add lines and stuff with mouse
+
+IDEA? Have slider on the side of the graph change x y and z rotation
+
+CHANGE CHECKBOXES SO SEE IF CHECKED RATHER THAN ONCLICK

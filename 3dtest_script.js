@@ -66,9 +66,9 @@ test_graph.draw()
 
 setInterval(function() {
 
-    test_graph.rotateY(2 * Math.PI * (x) / displayWidth)
+    test_graph.rotateAboutY(2 * Math.PI * (x) / displayWidth)
 
-    test_graph.rotateX(2 * Math.PI * (-y) / displayHeight)
+    test_graph.rotateAboutX(2 * Math.PI * (-y) / displayHeight)
 
     test_graph.draw()
 }, 1000/60)
@@ -157,4 +157,4 @@ class ThreeDimCube {
 }
 
 
-test_graph.addObject(new ThreeDimCube(test_graph))
+//test_graph.addObject(new ThreeDimCube(test_graph))
