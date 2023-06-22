@@ -462,8 +462,7 @@ class Grid {
          * iter_div: number of times to halve scaledAxisLength --||--
          */
         let scale = this.graph.scale
-        let inBasisX = matrixVectorMultiplication(this.graph.basis, [1, 0, 0])
-        let boxW =  scale //vectorLength([scale * inBasisX[0], scale * inBasisX[1]])
+        let boxW =  1 //vectorLength([scale * inBasisX[0], scale * inBasisX[1]])
 
         //we set scaledAxisLength to the minimum of the two in basis axis to avoid grids that are overpopulated
         //EX: a basis where [1,1] is the vector [10000, 0.1] in the basis
@@ -471,36 +470,34 @@ class Grid {
         // let scaledAxisLengthY = Math.abs( Math.sqrt( Math.pow(yBasis[0] * scale, 2) + Math.pow(yBasis[1] * scale, 2)))
         // let scaledAxisLengthX = Math.abs( Math.sqrt( Math.pow(xBasis[0] * scale, 2) + Math.pow(xBasis[1] * scale, 2)))
         // let scaledAxisLength = Math.min(scaledAxisLengthX, scaledAxisLengthY)
-        let xLength = vectorLength(xBasis)
-        let yLength = vectorLength(yBasis)
-        let angle = Math.acos((vectorMultiplication(xBasis, yBasis)) / (vectorMultiplication(xBasis, xBasis) * vectorMultiplication(yBasis, yBasis)))
+        let xBasis2D = [xBasis[0], xBasis[1]] //only want x y so that the angle and 2d vector lengths are accurate
+        let yBasis2D = [yBasis[0], yBasis[1]]
+        let xLength = vectorLength(xBasis2D)
+        let yLength = vectorLength(yBasis2D)
+        let angle = Math.acos((vectorMultiplication(xBasis2D, yBasis2D)) / (xLength * yLength))
         let area = xLength * yLength * Math.sin(angle)
         let perpXLength = area / xLength
         let perpYLength = area / yLength
-
-
-        let scaledAxisLength = scale * Math.min(perpXLength, perpYLength)
+        
+        let scaledAxisLength = Math.min(perpXLength, perpYLength)
     
         let iter_mult = Number.MAX_VALUE
         let iter_div = Number.MAX_VALUE
+
+        console.log(angle)
+        //console.log("(" + xLength + ", " + yLength + ")" + 5*perpXLength + ", " + 5*perpYLength + "," + angle)
 
         //find if scaling is division or multiplication, and how scaling iterations
         if (5 * scaledAxisLength < 2.5 * boxW) {
             iter_mult = 0
             while (5 * scaledAxisLength < 2.5 * boxW) {
-                xLength = xLength * 2
-                yLength = yLength * 2
-                area = xLength * yLength * Math.sin(angle)
-                scaledAxisLength = scale * Math.min(area / xLength, area / yLength)
+                scaledAxisLength = scaledAxisLength * 2
                 iter_mult++
             }
         } else if (5 * scaledAxisLength > 5 * boxW) {
             iter_div = 0
             while (5 * scaledAxisLength > 5 * boxW) {
-                xLength = xLength / 2
-                yLength = yLength / 2
-                area = xLength * yLength * Math.sin(angle)
-                scaledAxisLength = scale * Math.min(area / xLength, area / yLength)
+                scaledAxisLength = scaledAxisLength / 2
                 iter_div++
             }
         }
@@ -515,7 +512,7 @@ class Grid {
             iters = 0
         }
 
-        console.log(scaledAxisLength + ", " + iters)
+        console.log(iters)
 
 
         this.drawHalfAxisGrid(xBasis,yBasis, iters, div)
