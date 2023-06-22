@@ -101,6 +101,7 @@ zInput.addEventListener("keydown", (event) => {
 
 
 
+
 //add functionality to switch between matrix input cells using arrow keys
 let inputMatrices = document.getElementsByClassName("matrix-table")
 let matrixToInputs = new Map()
@@ -184,6 +185,32 @@ document.getElementById("showGrid").addEventListener("click", function() {
     test_graph.showGrid = document.getElementById("showGrid").checked
 })
 
+darkMode = false
+document.getElementById("darkMode").addEventListener("click", function() {
+    if(darkMode == false ) {
+        test_graph.backgroundColor = "black"
+        document.getElementsByTagName("body")[0].style.backgroundColor = "black"
+        document.getElementsByTagName("body")[0].style.color = "white"
+        
+        test_graph.Grid.colorDark = "#6F7378"
+        test_graph.Grid.colorLight = "#292C33"
+        test_graph.Axis.zeroZeroDotColor = "#292C33"
+        
+        darkMode = true
+        document.getElementById("darkMode").innerText = "Light Mode!"
+    } else {
+        test_graph.backgroundColor = "white"
+        document.getElementsByTagName("body")[0].style.backgroundColor = "white"
+        document.getElementsByTagName("body")[0].style.color = "black"
+        
+        test_graph.Grid.colorDark = "#BFBFBD"
+        test_graph.Grid.colorLight = "#E6E6E3"
+        test_graph.Axis.zeroZeroDotColor = "black"
+        document.getElementById("darkMode").innerText = "Dark Mode!"
+        darkMode = false
+    }
+})
+
 document.getElementById("defaultOrientation").addEventListener("click", function() {
     // Resets to default state of x and y
     x = 0
@@ -248,7 +275,7 @@ function getMatrixFromTable(id) {
 
     inputArray = table.getElementsByTagName("input")
     
-    matrix = [[parseFloat(inputArray[0].value), parseFloat(inputArray[2].value), 0],[parseFloat(inputArray[1].value), parseFloat(inputArray[3].value), 0], [0,0,1]]
+    matrix = [[parseFloat(inputArray[0].value), parseFloat(inputArray[1].value), 0],[parseFloat(inputArray[2].value), parseFloat(inputArray[3].value), 0], [0,0,1]]
 
     for (let i = 0; i < inputArray.length; i++) {
         if (inputArray[i].value == "") {

@@ -15,12 +15,12 @@ body {
 #graph-container{
     margin-top: 20px;
     margin-left: 20px;
-    touch-action: none;
 }
 
 canvas {
     border-radius: 15px;
     border: 2px solid black !important;
+    touch-action: manipulation;
 }
 
 
@@ -42,6 +42,7 @@ canvas {
     width: 6px;
     height: 100%;
 }
+
 .matrix-table:before {
     left: -6px;
     border-right: 0;

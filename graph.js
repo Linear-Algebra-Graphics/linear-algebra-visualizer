@@ -48,8 +48,8 @@ class Graph {
 
         //this.basis                     = [[Math.cos(Math.PI/4),Math.sin(Math.PI/4),0],[-1*Math.sin(Math.PI/4),Math.cos(Math.PI/4),0],[0,0,1]]
         
-        this.graphAxis                 = new Axis(this)
-        this.graphGrid                 = new Grid(this)
+        this.Axis                 = new Axis(this)
+        this.Grid                 = new Grid(this)
         this.showAxis                  = true
         this.showGrid                  = true
         this.infiniteAxis              = false
@@ -95,15 +95,15 @@ class Graph {
             if (this.xRotationMatrix == [[1,0,0],[0,1,0],[0,0,1]] && 
                 this.yRotationMatrix == [[1,0,0],[0,1,0],[0,0,1]] &&
                 this.zRotationMatrix == [[1,0,0],[0,1,0],[0,0,1]]) {
-                    this.graphGrid.draw()
+                    this.Grid.draw()
             } else {
                 //make 3d definite grid
             }
-            this.graphGrid.draw()
+            this.Grid.draw()
         }
         
         if (this.showAxis) {
-            this.graphAxis.draw()
+            this.Axis.draw()
         }
         
         // Draw all objects
@@ -271,8 +271,10 @@ class Axis {
         this._zAxisNeg = new Vector(this.graph, [0,0,-10], "green", this.lineWidth, false)
     
         // Default
-        this.fullAxis     = true
-        this.zeroZeroDot  = true
+        this.fullAxis         = true
+        this.zeroZeroDot      = true
+        this.zeroZeroDotColor = "black"
+        this.zeroZeroDotSize  = 5
     }
     
     /**
@@ -315,10 +317,10 @@ class Axis {
        
        if (this.zeroZeroDot) {
             // puts a dot at (0, 0)
-            this.graph.ctx.fillStyle = "black"
-            this.graph.ctx.strokeStyle = "black"
+            this.graph.ctx.fillStyle   = this.zeroZeroDotColor
+            this.graph.ctx.strokeStyle = this.zeroZeroDotColor
             this.graph.ctx.beginPath();
-                this.graph.ctx.arc(this.graph.centerX, this.graph.centerY, 5, 0, 2 * Math.PI);
+                this.graph.ctx.arc(this.graph.centerX, this.graph.centerY, this.zeroZeroDotSize, 0, 2 * Math.PI);
                 this.graph.ctx.fill();
             this.graph.ctx.stroke();
 
@@ -427,6 +429,8 @@ class Vector {
         this.graph.drawLine([vec1X, vec1Y],[vec2X, vec2Y], color, lineWidth)
     }
 }
+
+
 
 class Grid {
     constructor(graph){
