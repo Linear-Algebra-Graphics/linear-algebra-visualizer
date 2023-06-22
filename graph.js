@@ -132,43 +132,43 @@ class Graph {
     }
 
     /**
-     * draws line from the endpoint of vector 1 to the endpoint of vector 2
-     * draws in the basis, zoom, and current rotation of graph, as well as scaled to length
-     * where vector = (a, b) has endpoints (a, b)
-     * @param {*} vector1 first endpoint
-     * @param {*} vector2 second endpoint
-     * @param {*} color color of vector
-     * @param {*} inBasis if true, draws vector in current graph basis, else draws in standard basis
-     * @param {*} lineWidth line width to draw the vector
+     * 
+     * @param {*} point1 
+     * @param {*} point2 
+     * @param {*} color 
+     * @param {*} lineWidth 
      */
-    drawVecFromOrigin(vector, color, lineWidth) {    
+    drawPointToPoint(point1, point2, color, lineWidth) {    
         // First apply the basis, then the applied matrix. Not sure if this is the correct order for all situations...
-        vector = this.changeBasisZoomAndRotate(vector)
-
-        let endX = this.centerX + (this.scale * vector[0])
-        let endY = this.centerY - (this.scale * vector[1])
-
-
-        let diagonalLength = vectorLength([this.centerX, this.centerY])
+        point2 = this.changeBasisZoomAndRotate(point2)
+        point1 = this.changeBasisZoomAndRotate(point1)
+        
+        let startX = this.centerX + (this.scale * point1[0])
+        let startY = this.centerY - (this.scale * point1[1])
+        
+        let endX = this.centerX + (this.scale * point2[0])
+        let endY = this.centerY - (this.scale * point2[1])
+        
+        
+        //let diagonalLength = vectorLength([this.centerX, this.centerY])
         
         //need to scale vectors down for really long vectors when drawn on canvas
         //super long vectors may cause drawing issues
-        if (vectorLength(vector) > 2 * diagonalLength) {
+        // if (vectorLength(vector) > 2 * diagonalLength) {
 
-            // let sortedIntersect = getGraphBoundaryEndpoints(this.centerX, this.centerY, vector, this);
+        //     // let sortedIntersect = getGraphBoundaryEndpoints(this.centerX, this.centerY, vector, this);
 
-            // let end1 = [sortedIntersect[0], sortedIntersect[1]]
-            // let end2   = [sortedIntersect[2], sortedIntersect[3]]
+        //     // let end1 = [sortedIntersect[0], sortedIntersect[1]]
+        //     // let end2   = [sortedIntersect[2], sortedIntersect[3]]
 
-            // console.log("(" + vector + "), (" + end1 + "), (" + end2 + ")")
+        //     // console.log("(" + vector + "), (" + end1 + "), (" + end2 + ")")
             
-            // if (Math.sign(vector[0]) == 1) {
+        //     // if (Math.sign(vector[0]) == 1) {
 
-            // }
-        }
-        
+        //     // }
+        // }
 
-        this.drawLine([this.centerX, this.centerY],[endX, endY], color, lineWidth)
+        this.drawLine([startX, startY],[endX, endY], color, lineWidth)
     }
 
     
@@ -378,7 +378,7 @@ class Vector {
      */
     draw() {
         //check if vector is significantly larger than canvas
-        this.graph.drawVecFromOrigin(this.cords, this.color, this.lineWidth)
+        this.graph.drawPointToPoint([0,0,0], this.cords, this.color, this.lineWidth)
 
         if(this.arrow) {
             let arrowLength = .3
@@ -430,7 +430,12 @@ class Vector {
 
 class Grid {
     constructor(graph){
-        this.graph = graph
+        this.graph          = graph
+        this.colorLight     = "#E6E6E3"
+        this.lineWidthLight = 2
+
+        this.colorDark      = "#BFBFBD"
+        this.lineWidthDark  = 3
     }
 
     /**
@@ -444,82 +449,136 @@ class Grid {
         let neg_xBasis = this.graph.changeBasisZoomAndRotate([-1,0,0]);
         let neg_yBasis = this.graph.changeBasisZoomAndRotate([0,-1,0]);
         
-        // Point slope formula
-            // y+y1 = m(x-x1)
-            // y = m(x-x1)+y1
-            // y = mx-mx1+y1
-            // y = mx + (y1-mx1)
-            // y = mx + b
-            // b = (y1-mx1)
-        /**
-         * we define the standard box as a box of w*h, that is 5x5 in terms of grid boxes
-         * boxW: is the width of the standard box in terms of current basis in default zoom 
-         *       ISSUE: if basis is super small does not scale grid!!!
-         *       SOLVED: by having boxW always being 1 unit lenght in defualt view
-         * 
-         * scaledAxisLength: the width of the a 5x5 grid box in zoomed basis
-         * iter_mult: number of times to double scaledAxisLength to being it back to the standard box
-         * iter_div: number of times to halve scaledAxisLength --||--
-         */
-        let scale = this.graph.scale
-        let boxW =  1 //vectorLength([scale * inBasisX[0], scale * inBasisX[1]])
-
-        //we set scaledAxisLength to the minimum of the two in basis axis to avoid grids that are overpopulated
-        //EX: a basis where [1,1] is the vector [10000, 0.1] in the basis
-        //    here the length 0.1 will be scaled to 1 default unit length
-        // let scaledAxisLengthY = Math.abs( Math.sqrt( Math.pow(yBasis[0] * scale, 2) + Math.pow(yBasis[1] * scale, 2)))
-        // let scaledAxisLengthX = Math.abs( Math.sqrt( Math.pow(xBasis[0] * scale, 2) + Math.pow(xBasis[1] * scale, 2)))
-        // let scaledAxisLength = Math.min(scaledAxisLengthX, scaledAxisLengthY)
-        let xBasis2D = [xBasis[0], xBasis[1]] //only want x y so that the angle and 2d vector lengths are accurate
-        let yBasis2D = [yBasis[0], yBasis[1]]
-        let xLength = vectorLength(xBasis2D)
-        let yLength = vectorLength(yBasis2D)
-        let angle = Math.acos((vectorMultiplication(xBasis2D, yBasis2D)) / (xLength * yLength))
-        let area = xLength * yLength * Math.sin(angle)
-        let perpXLength = area / xLength
-        let perpYLength = area / yLength
+        let identity = [[1,0,0],[0,1,0],[0,0,1]]
+        if (matrixEquals(this.graph.xRotationMatrix, identity) && matrixEquals(this.graph.yRotationMatrix, identity) && matrixEquals(this.graph.zRotationMatrix, identity)) {
         
-        let scaledAxisLength = Math.min(perpXLength, perpYLength)
-    
-        let iter_mult = Number.MAX_VALUE
-        let iter_div = Number.MAX_VALUE
+            // Point slope formula
+                // y+y1 = m(x-x1)
+                // y = m(x-x1)+y1
+                // y = mx-mx1+y1
+                // y = mx + (y1-mx1)
+                // y = mx + b
+                // b = (y1-mx1)
+            /**
+             * we define the standard box as a box of w*h, that is 5x5 in terms of grid boxes
+             * boxW: is the width of the standard box in terms of current basis in default zoom 
+             *       ISSUE: if basis is super small does not scale grid!!!
+             *       SOLVED: by having boxW always being 1 unit lenght in defualt view
+             * 
+             * scaledAxisLength: the width of the a 5x5 grid box in zoomed basis
+             * iter_mult: number of times to double scaledAxisLength to being it back to the standard box
+             * iter_div: number of times to halve scaledAxisLength --||--
+             */
+            let scale = this.graph.scale
+            let boxW =  0.5 //vectorLength([scale * inBasisX[0], scale * inBasisX[1]])
 
-        console.log(angle)
-        //console.log("(" + xLength + ", " + yLength + ")" + 5*perpXLength + ", " + 5*perpYLength + "," + angle)
-
-        //find if scaling is division or multiplication, and how scaling iterations
-        if (5 * scaledAxisLength < 2.5 * boxW) {
-            iter_mult = 0
-            while (5 * scaledAxisLength < 2.5 * boxW) {
-                scaledAxisLength = scaledAxisLength * 2
-                iter_mult++
-            }
-        } else if (5 * scaledAxisLength > 5 * boxW) {
-            iter_div = 0
-            while (5 * scaledAxisLength > 5 * boxW) {
-                scaledAxisLength = scaledAxisLength / 2
-                iter_div++
-            }
-        }
+            //we set scaledAxisLength to the minimum of the two in basis axis to avoid grids that are overpopulated
+            //EX: a basis where [1,1] is the vector [10000, 0.1] in the basis
+            //    here the length 0.1 will be scaled to 1 default unit length
+            // let scaledAxisLengthY = Math.abs( Math.sqrt( Math.pow(yBasis[0] * scale, 2) + Math.pow(yBasis[1] * scale, 2)))
+            // let scaledAxisLengthX = Math.abs( Math.sqrt( Math.pow(xBasis[0] * scale, 2) + Math.pow(xBasis[1] * scale, 2)))
+            // let scaledAxisLength = Math.min(scaledAxisLengthX, scaledAxisLengthY)
+            let xBasis2D = [xBasis[0], xBasis[1]] //only want x y so that the angle and 2d vector lengths are accurate
+            let yBasis2D = [yBasis[0], yBasis[1]]
+            let xLength = vectorLength(xBasis2D)
+            let yLength = vectorLength(yBasis2D)
+            let angle = Math.acos((vectorMultiplication(xBasis2D, yBasis2D)) / (xLength * yLength))
+            let area = xLength * yLength * Math.sin(angle)
+            let perpXLength = area / xLength
+            let perpYLength = area / yLength
+            
+            let scaledAxisLength = Math.min(perpXLength, perpYLength)
         
-        let iters = iter_div
-        let div = true
-        if (iter_div == Number.MAX_VALUE) {
-            iters = iter_mult
-            div = false
+            let iter_mult = Number.MAX_VALUE
+            let iter_div = Number.MAX_VALUE
+
+            //console.log("(" + xLength + ", " + yLength + ")" + 5*perpXLength + ", " + 5*perpYLength + "," + angle)
+
+            //find if scaling is division or multiplication, and how scaling iterations
+            if (5 * scaledAxisLength < 2.5 * boxW) {
+                iter_mult = 0
+                while (5 * scaledAxisLength < 2.5 * boxW) {
+                    scaledAxisLength = scaledAxisLength * 2
+                    iter_mult++
+                }
+            } else if (5 * scaledAxisLength > 5 * boxW) {
+                iter_div = 0
+                while (5 * scaledAxisLength > 5 * boxW) {
+                    scaledAxisLength = scaledAxisLength / 2
+                    iter_div++
+                }
+            }
+            
+            let iters = iter_div
+            let div = true
+            if (iter_div == Number.MAX_VALUE) {
+                iters = iter_mult
+                div = false
+            }
+            if (iters == Number.MAX_VALUE) {
+                iters = 0
+            }
+
+            //2d infinite grid
+            this.drawHalfAxisGridInf(xBasis,yBasis, iters, div)
+            this.drawHalfAxisGridInf(neg_xBasis,yBasis, iters, div)
+            this.drawHalfAxisGridInf(yBasis, xBasis, iters, div)
+            this.drawHalfAxisGridInf(neg_yBasis, xBasis, iters, div)
+        } else {
+            let gridSize = 2 * 5
+            //this.graph.drawPointToPoint([3,3, 0], [10,3, 0], "green", 3)
+
+            // let xAxisVec = this.changeBasisZoomAndRotate([gridSize,0,0])
+            // let yAxisVec = this.changeBasisZoomAndRotate([0,gridSize,0])
+            
+            for (let i = 1; i < gridSize + 1; i++) {
+                let currentColor = this.colorLight
+                let lineWidth    = this.lineWidthLight 
+
+                if (i % 5 == 0) {
+                    currentColor = this.colorDark
+                    lineWidth    = this.lineWidthDark
+                }
+                // xy plane
+                    //on x axis drawing y axis grid lines
+                    this.graph.drawPointToPoint([i, gridSize, 0], [i, -(gridSize), 0], currentColor, lineWidth)
+                    // same on negative x axis
+                    this.graph.drawPointToPoint([-i, gridSize, 0], [-i, -(gridSize), 0], currentColor, lineWidth)
+                                  
+                    //on y axis drawing x axis grid lines
+                    this.graph.drawPointToPoint([-(gridSize), i, 0], [gridSize,i, 0], currentColor, lineWidth)
+                    //same as above on negative y axis
+                    this.graph.drawPointToPoint([-(gridSize), -i, 0], [gridSize,-i, 0], currentColor, lineWidth)
+
+
+                //xz plane
+                    //on x axis drawing z axis grid lines
+                    this.graph.drawPointToPoint([i, 0, -(gridSize)], [gridSize, 0, i], currentColor, lineWidth)
+                    //same as above on negative x axis
+                    this.graph.drawPointToPoint([-i, 0, -(gridSize)], [gridSize, 0, -i], currentColor, lineWidth)
+
+                    //on z axis drawing x axis grid lines
+                    this.graph.drawPointToPoint([i, 0, -(gridSize)], [gridSize, 0, i], currentColor, lineWidth)
+                    //same as above on negative z axis
+                    this.graph.drawPointToPoint([-i, 0, -(gridSize)], [gridSize, 0, -i], currentColor, lineWidth)
+
+
+                //yz plane
+                    //on y axis drawing x axis grid lines
+                    this.graph.drawPointToPoint([0, -(gridSize), i], [0, gridSize, i], currentColor, lineWidth)
+                    //same as above on negative y axis
+                    this.graph.drawPointToPoint([0, -(gridSize), -i], [0, gridSize,-i], currentColor, lineWidth)
+
+                    //on y axis drawing x axis grid lines
+                    this.graph.drawPointToPoint([0, -(gridSize), i], [0, gridSize, i], currentColor, lineWidth)
+                    //same as above on negative y axis
+                    this.graph.drawPointToPoint([0, -(gridSize), -i], [0, gridSize,-i], currentColor, lineWidth)
+            }
+
         }
-        if (iters == Number.MAX_VALUE) {
-            iters = 0
-        }
 
-        console.log(iters)
-
-
-        this.drawHalfAxisGrid(xBasis,yBasis, iters, div)
-        this.drawHalfAxisGrid(neg_xBasis,yBasis, iters, div)
-        this.drawHalfAxisGrid(yBasis, xBasis, iters, div)
-        this.drawHalfAxisGrid(neg_yBasis, xBasis, iters, div)
     }
+
     
     /**
      * draws grid lines along half of an axis, in the direction of the vector axis
@@ -531,7 +590,7 @@ class Grid {
      * @param {*} iteraions number of scalings applied to distance between grid lines
      * @param {*} divide true if distance needs to be smaller, else false
      */
-    drawHalfAxisGrid(axis, gridVector, iterations, divide) {
+    drawHalfAxisGridInf(axis, gridVector, iterations, divide) {
         let x = this.graph.centerX
         let y = this.graph.centerY
 
@@ -563,7 +622,6 @@ class Grid {
             // Biggest grid spacing should be the default number we start with
             // Smallest grid spacing should be 2 times the default
 
-
             // This means the two minimum points are outside the canvas. This means that we do not need to draw the lines anymore so we break the loop.
             if (!outSideCanvas(this.graph, [startX, startY]) || !outSideCanvas(this.graph, [endX, endY])) {
                 // Make every fith line dark
@@ -571,9 +629,9 @@ class Grid {
                     // this.graph.ctx.fillStyle = "black"
                     // this.graph.ctx.font = "40px monospace";
                     // this.graph.ctx.fillText(("(" + ", " + ")"), x+10, y-20);
-                    this.graph.drawLine([startX, startY],[endX, endY], "#BFBFBD", 3);
+                    this.graph.drawLine([startX, startY],[endX, endY], this.colorDark, this.lineWidthDark);
                 } else {
-                    this.graph.drawLine([startX, startY],[endX, endY], "#E6E6E3", 2);
+                    this.graph.drawLine([startX, startY],[endX, endY], this.colorLight, this.lineWidthLight);
                 }
                 
                 x += xStep
