@@ -2,6 +2,7 @@
 let canvas = document.getElementById("graph")
 let xInput = document.getElementById("x")
 let yInput = document.getElementById("y")
+let zInput = document.getElementById("z")
 let vectorColors = document.getElementById("vector colors")
 
 displayWidth  = 800
@@ -87,6 +88,15 @@ yInput.addEventListener("keydown", (event) => {
     if (event.key === "ArrowLeft") {
         xInput.focus()
     }
+    if (event.key === "ArrowRight") {
+        zInput.focus()
+    }
+})
+
+zInput.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft") {
+        yInput.focus()
+    }
 })
 
 
@@ -149,8 +159,9 @@ for (let i = 0; i < inputMatrices.length; i++) {
 document.getElementById("graphButton").addEventListener("click", function() {
     let x = parseFloat(xInput.value)
     let y = parseFloat(yInput.value)
+    let z = parseFloat(zInput.value)
     let color = vectorColors.value
-    test_graph.addObject(new Vector(test_graph, [x, y, 0], color, 3, true))
+    test_graph.addObject(new Vector(test_graph, [x, y, z], color, 3, true))
 })
 
 document.getElementById("zoomIn").addEventListener("click", function() {
@@ -264,3 +275,83 @@ setInterval(function() {
 
 
 //test_graph.infiniteAxis = false
+
+
+class ThreeDimCube {
+
+    constructor(graph){
+        this.graph  = graph
+        this.points = [
+            [0,0,0],
+            [1,0,0],
+            [0,1,0],
+            [1,1,0],
+
+            [0,0,1],
+            [1,0,1],
+            [0,1,1],
+            [1,1,1]
+        ]
+
+        this.lines = [
+            [0,1, "orange"],
+            [1,3, "orange"],
+            [3,2, "orange"],
+            [2,0, "orange"],
+
+            [4,5, "orange"],
+            [5,7, "orange"],
+            [7,6, "orange"],
+            [6,4, "orange"],
+
+            [0,4, "orange"],
+            [2,6, "orange"],
+            [3,7, "orange"],
+            [1,5, "orange"]
+
+        ]
+
+        this.scale = 3
+        this.offset = [-.5, -.5, -.5]
+    }
+
+    draw() {
+
+        for(let i=0; i<this.lines.length; i++) {
+
+            const scale = this.graph.canvas.width / this.graph.numOfGraphUnitsEdgeToEdge
+
+            let point1 = this.points[this.lines[i][0]]
+            let point2 = this.points[this.lines[i][1]]
+
+            point1 = [point1[0] + this.offset[0], point1[1] + this.offset[1], point1[2] + this.offset[2]]
+            point2 = [point2[0] + this.offset[0], point2[1] + this.offset[1], point2[2] + this.offset[2]]
+
+            let firstPointUpdated  = this.graph.changeBasisZoomAndRotate(point1)
+            let secondPointUpdated = this.graph.changeBasisZoomAndRotate(point2)    
+            
+            let firstX = this.graph.centerX + scale * this.scale * firstPointUpdated[0]
+            let firstY = this.graph.centerY - scale * this.scale * firstPointUpdated[1]
+
+            let secondX = this.graph.centerX + scale * this.scale * secondPointUpdated[0]
+            let secondY = this.graph.centerY - scale * this.scale * secondPointUpdated[1]
+
+            this.graph.drawLine(
+              // First point
+              [firstX, firstY],
+              // Second point
+              [secondX, secondY],
+              // Offset
+              this.lines[i][2],
+              // Color
+              4
+            )
+    
+          }
+
+
+    }
+}
+
+
+test_graph.addObject(new ThreeDimCube(test_graph))

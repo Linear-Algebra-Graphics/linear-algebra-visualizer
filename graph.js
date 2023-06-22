@@ -553,14 +553,14 @@ class Grid {
 
                 //xz plane
                     //on x axis drawing z axis grid lines
-                    this.graph.drawPointToPoint([i, 0, -(gridSize)], [gridSize, 0, i], currentColor, lineWidth)
+                    this.graph.drawPointToPoint([i, 0, -(gridSize)], [i, 0, gridSize], currentColor, lineWidth)
                     //same as above on negative x axis
-                    this.graph.drawPointToPoint([-i, 0, -(gridSize)], [gridSize, 0, -i], currentColor, lineWidth)
+                    this.graph.drawPointToPoint([-i, 0, -(gridSize)], [-i, 0, gridSize], currentColor, lineWidth)
 
                     //on z axis drawing x axis grid lines
-                    this.graph.drawPointToPoint([i, 0, -(gridSize)], [gridSize, 0, i], currentColor, lineWidth)
+                    this.graph.drawPointToPoint([-(gridSize), 0, i], [gridSize, 0, i], currentColor, lineWidth)
                     //same as above on negative z axis
-                    this.graph.drawPointToPoint([-i, 0, -(gridSize)], [gridSize, 0, -i], currentColor, lineWidth)
+                    this.graph.drawPointToPoint([-(gridSize), 0, -i], [gridSize, 0, -i], currentColor, lineWidth)
 
 
                 //yz plane
@@ -570,9 +570,9 @@ class Grid {
                     this.graph.drawPointToPoint([0, -(gridSize), -i], [0, gridSize,-i], currentColor, lineWidth)
 
                     //on y axis drawing x axis grid lines
-                    this.graph.drawPointToPoint([0, -(gridSize), i], [0, gridSize, i], currentColor, lineWidth)
+                    this.graph.drawPointToPoint([0, i, -(gridSize)], [0, i, gridSize], currentColor, lineWidth)
                     //same as above on negative y axis
-                    this.graph.drawPointToPoint([0, -(gridSize), -i], [0, gridSize,-i], currentColor, lineWidth)
+                    this.graph.drawPointToPoint([0, -i, -(gridSize)], [0,-i, gridSize], currentColor, lineWidth)
             }
 
         }

@@ -23,3 +23,5 @@ Add way to add lines and stuff with mouse
 IDEA? Have slider on the side of the graph change x y and z rotation
 
 CHANGE CHECKBOXES SO SEE IF CHECKED RATHER THAN ONCLICK
+
+add random vector function
