@@ -46,14 +46,12 @@ let mouseIsDown = false
 
 
 document.addEventListener('mousedown', function(event) {
-    
     if (event.button === 0) {
         mouseIsDown = true
     }
 });
 
 document.addEventListener('mouseup', function(event) {
-
     if (event.button === 0) {
         mouseIsDown = false
     } 

@@ -275,7 +275,7 @@ function getMatrixFromTable(id) {
 
     inputArray = table.getElementsByTagName("input")
     
-    matrix = [[parseFloat(inputArray[0].value), parseFloat(inputArray[1].value), 0],[parseFloat(inputArray[2].value), parseFloat(inputArray[3].value), 0], [0,0,1]]
+    matrix = [[parseFloat(inputArray[0].value), parseFloat(inputArray[2].value), 0],[parseFloat(inputArray[1].value), parseFloat(inputArray[3].value), 0], [0,0,1]]
 
     for (let i = 0; i < inputArray.length; i++) {
         if (inputArray[i].value == "") {
