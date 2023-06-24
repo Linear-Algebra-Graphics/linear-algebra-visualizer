@@ -24,7 +24,6 @@ class Grid {
         let neg_xBasis = this.graph.changeBasisZoomAndRotate([-1,0,0]);
         let neg_yBasis = this.graph.changeBasisZoomAndRotate([0,-1,0]);
         
-        let identity = [[1,0,0],[0,1,0],[0,0,1]]
         if (this.graph.noRotation()) {
         
             // Point slope formula
@@ -114,7 +113,7 @@ class Grid {
                 if (i % 5 == 0) {
                     currentColor = this.colorDark
                     lineWidth    = this.lineWidthDark
-
+                    
                 //    this.graph.
                 }
                 // xy plane

@@ -98,9 +98,7 @@ class Graph {
         this.ctx.fillRect(0,0, this.canvas.width, this.canvas.height);
 
         if (this.showGrid) {
-            if (this.xRotationMatrix == [[1,0,0],[0,1,0],[0,0,1]] && 
-                this.yRotationMatrix == [[1,0,0],[0,1,0],[0,0,1]] &&
-                this.zRotationMatrix == [[1,0,0],[0,1,0],[0,0,1]]) {
+            if (this.noRotation()) {
                     this.Grid.draw()
             } else {
                 //make 3d definite grid

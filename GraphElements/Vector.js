@@ -49,8 +49,10 @@ class Vector {
             this._drawArrowLine(inBasisCords, [inBasisCords[0] + arrow2[0], inBasisCords[1] + arrow2[1], 0], this.color, this.lineWidth)
         }
         
+
         if (this.label != "") {
-            
+                        
+                        
             let inBasisCords = this.graph.changeBasisZoomAndRotate(this.cords)
             
             let scale = this.graph.scale + 6
@@ -61,10 +63,14 @@ class Vector {
             this.graph.ctx.fillStyle = this.color
             this.graph.ctx.textAlign = 'center'
             this.graph.ctx.textBaseline = 'middle';
+            
+            let labelX = centerX + (scale * inBasisCords[0]) + (scale * Math.sign(inBasisCords[0]) * 0.5)
+            let labelY = centerY - (scale * inBasisCords[1]) - (scale * Math.sign(inBasisCords[1]) * 0.5)
+            
             if (this.label == "cords") {
-                this.graph.ctx.fillText("(" + this.cords[0] + ", " + this.cords[1] + ", " + this.cords[2] + ")", centerX + (scale * inBasisCords[0]), centerY - (scale * inBasisCords[1]))
+                this.graph.ctx.fillText("(" + this.cords[0] + "," + this.cords[1] + "," + this.cords[2] + ")", labelX, labelY)
             } else {
-                this.graph.ctx.fillText(this.label, centerX + (scale * inBasisCords[0]), centerY - (scale * inBasisCords[1]))
+                this.graph.ctx.fillText(this.label, labelX, labelY)
             }
         }
 
