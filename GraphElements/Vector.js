@@ -28,6 +28,9 @@ class Vector {
 
         if(this.arrow) {
             let arrowLength = .3
+            if (this.graph.currentZoom <= 1) {
+                arrowLength = arrowLength * this.graph.currentZoom
+            }
             let inBasisCords = this.graph.changeBasisZoomAndRotate(this.cords)
 
             let vectorLength = Math.abs( Math.sqrt( Math.pow(inBasisCords[0], 2) + Math.pow(inBasisCords[1], 2) + Math.pow(inBasisCords[2], 2)) )
@@ -55,7 +58,7 @@ class Vector {
                         
             let inBasisCords = this.graph.changeBasisZoomAndRotate(this.cords)
             
-            let scale = this.graph.scale + 6
+            let scale = this.graph.scale
             let centerX = this.graph.centerX
             let centerY = this.graph.centerY
 
@@ -63,9 +66,16 @@ class Vector {
             this.graph.ctx.fillStyle = this.color
             this.graph.ctx.textAlign = 'center'
             this.graph.ctx.textBaseline = 'middle';
+
+            let labelXOffset = ((inBasisCords[0])/(vectorLength(inBasisCords)) * 80)
+            let labelYOffset = ((inBasisCords[1])/(vectorLength(inBasisCords)) * 80)
+            if (this.graph.currentZoom < 1) {
+                labelXOffset = labelXOffset * this.graph.currentZoom
+                labelYOffset = labelYOffset * this.graph.currentZoom
+            }
             
-            let labelX = centerX + (scale * inBasisCords[0]) + (scale * Math.sign(inBasisCords[0]) * 0.5)
-            let labelY = centerY - (scale * inBasisCords[1]) - (scale * Math.sign(inBasisCords[1]) * 0.5)
+            let labelX = centerX + (scale * inBasisCords[0]) + ((inBasisCords[0])/(vectorLength(inBasisCords)) * 80 * this.graph.currentZoom)
+            let labelY = centerY - (scale * inBasisCords[1]) - ((inBasisCords[1])/(vectorLength(inBasisCords)) * 80 * this.graph.currentZoom)
             
             if (this.label == "cords") {
                 this.graph.ctx.fillText("(" + this.cords[0] + "," + this.cords[1] + "," + this.cords[2] + ")", labelX, labelY)
