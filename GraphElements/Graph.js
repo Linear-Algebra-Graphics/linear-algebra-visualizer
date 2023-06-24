@@ -260,15 +260,42 @@ class Graph {
     }
 
     xAxisVisible() {
-        return !vectorEquals(this.changeBasisZoomAndRotate([1, 0, 0]), [0, 0, 1])
+        let xAxis = this.changeBasisZoomAndRotate([1, 0, 0])
+        let x = xAxis[0]
+        let y = xAxis[1]
+        if (x <= 0.0000000000001 && x >= -0.0000000000001) {
+            x = 0
+        }
+        if (y <= 0.0000000000001 && y >= -0.0000000000001) {
+            y = 0
+        }
+        return !vectorEquals([x, y, xAxis[2]/xAxis[2]], [0, 0, 1])
     }
 
     yAxisVisible() {
-        return !vectorEquals(this.changeBasisZoomAndRotate([0, 1, 0]), [0, 0, 1])
+        let yAxis = this.changeBasisZoomAndRotate([0, 1, 0])
+        let x = yAxis[0]
+        let y = yAxis[1]
+        if (x <= 0.0000000000001 && x >= -0.0000000000001) {
+            x = 0
+        }
+        if (y <= 0.0000000000001 && y >= -0.0000000000001) {
+            y = 0
+        }
+        return !vectorEquals([x, y, yAxis[2]/yAxis[2]], [0, 0, 1])
     }
 
     zAxisVisible() {
-        return !vectorEquals(this.changeBasisZoomAndRotate([0, 0, 1]), [0, 0, 1])
+        let zAxis = this.changeBasisZoomAndRotate([0, 0, 1])
+        let x = zAxis[0]
+        let y = zAxis[1]
+        if (x <= 0.0000000000001 && x >= -0.0000000000001) {
+            x = 0
+        }
+        if (y <= 0.0000000000001 && y >= -0.0000000000001) {
+            y = 0
+        }
+        return !vectorEquals([x, y, zAxis[2]/zAxis[2]], [0, 0, 1])
     }
 
     /**

@@ -17,16 +17,37 @@ class Grid {
      * 
      */
     draw() {
-        // Need to decide if where we want to changeBasis andd zoom, in functions, or outside functions?
-        let xBasis = this.graph.changeBasisZoomAndRotate([1,0,0]);
-        let yBasis = this.graph.changeBasisZoomAndRotate([0,1,0]);
-
-        let neg_xBasis = this.graph.changeBasisZoomAndRotate([-1,0,0]);
-        let neg_yBasis = this.graph.changeBasisZoomAndRotate([0,-1,0]);
+        
         
         if (!this.graph.xAxisVisible() || !this.graph.yAxisVisible() || !this.graph.zAxisVisible()) {
             //infinite grid case
+            
+            // xBasis and yBasis are relative 
+            let xBasis
+            let yBasis
 
+            let neg_xBasis
+            let neg_yBasis
+
+            if (!this.graph.xAxisVisible()) {
+                xBasis = this.graph.changeBasisZoomAndRotate([0,1,0]);
+                yBasis = this.graph.changeBasisZoomAndRotate([0,0,1]);
+
+                neg_xBasis = this.graph.changeBasisZoomAndRotate([0,-1,0]);
+                neg_yBasis = this.graph.changeBasisZoomAndRotate([0,0,-1]);
+            } else if (!this.graph.yAxisVisible()) {
+                xBasis = this.graph.changeBasisZoomAndRotate([1,0,0]);
+                yBasis = this.graph.changeBasisZoomAndRotate([0,0,1]);
+
+                neg_xBasis = this.graph.changeBasisZoomAndRotate([-1,0,0]);
+                neg_yBasis = this.graph.changeBasisZoomAndRotate([0,0,-1]);
+            } else {
+                xBasis = this.graph.changeBasisZoomAndRotate([1,0,0]);
+                yBasis = this.graph.changeBasisZoomAndRotate([0,1,0]);
+
+                neg_xBasis = this.graph.changeBasisZoomAndRotate([-1,0,0]);
+                neg_yBasis = this.graph.changeBasisZoomAndRotate([0,-1,0]);
+            }
 
             // Point slope formula
                 // y+y1 = m(x-x1)
