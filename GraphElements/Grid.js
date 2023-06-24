@@ -201,7 +201,7 @@ class Grid {
             // Smallest grid spacing should be 2 times the default
 
             // This means the two minimum points are outside the canvas. This means that we do not need to draw the lines anymore so we break the loop.
-            if (!outSideCanvas(this.graph, [startX, startY]) || !outSideCanvas(this.graph, [endX, endY])) {
+            if (!this.graph.outSideCanvas([startX, startY]) || !this.graph.outSideCanvas([endX, endY])) {
                 // Make every fith line dark
                 if (lineCount % 5 == 0) {
                     // this.graph.ctx.fillStyle = "black"

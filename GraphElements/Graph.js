@@ -268,6 +268,26 @@ class Graph {
     zVisible() {
         return !(this.basis[0][2] == 0 && this.basis[1][2] == 0)
     }
+    /**
+     * finds if point is outside the graph canvas or not
+     * @param {*} point point to check for outside canvas
+     * @returns true if outside graph canvas, else false
+     */
+    outSideCanvas(point) {
+        return (point[0] < 0 || point[0] > this.canvas.width) || (point[1] < 0 || point[1] > this.canvas.height)
+    }
+
+    /**
+     * returns the euclidean distance from point to the graph center
+     * @param {*} point point to get distance of
+     * @returns distance of point to graph center
+     */
+    distToGraphCenter(point) {
+        let x = this.centerX
+        let y = this.centerY
+        return Math.abs( Math.sqrt( Math.pow(point[0] - x, 2) + Math.pow(point[1] - y, 2)) )
+    }
+
 }
 
 
@@ -329,10 +349,10 @@ function getGraphBoundaryEndpoints(x, y, gridVector, graph) {
         let point3 = [getXIntersept(0, m, b), 0]
         let point4 = [getXIntersept(graph.canvas.height, m, b), graph.canvas.height]
 
-        let dis_point1 = [distToGraphCenter(graph, point1), point1]
-        let dis_point2 = [distToGraphCenter(graph, point2), point2]
-        let dis_point3 = [distToGraphCenter(graph, point3), point3]
-        let dis_point4 = [distToGraphCenter(graph, point4), point4]
+        let dis_point1 = [graph.distToGraphCenter(point1), point1]
+        let dis_point2 = [graph.distToGraphCenter(point2), point2]
+        let dis_point3 = [graph.distToGraphCenter(point3), point3]
+        let dis_point4 = [graph.distToGraphCenter(point4), point4]
 
         // Either is empty or two points.
         let pointsOnCanvas = findTwoClosesPoints([dis_point1, dis_point2, dis_point3, dis_point4])
@@ -344,29 +364,6 @@ function getGraphBoundaryEndpoints(x, y, gridVector, graph) {
         endY   = pointsOnCanvas[1][1]
     }
     return [startX, startY, endX, endY]
-}
-
-
-/**
- * finds if point is outside the graph canvas or not
- * @param {*} graph graph whose canvas the point is evaluated on
- * @param {*} point point to check for outside canvas
- * @returns true if outside graph canvas, else false
- */
-function outSideCanvas(graph, point) {
-    return (point[0] < 0 || point[0] > graph.canvas.width) || (point[1] < 0 || point[1] > graph.canvas.height)
-}
-
-/**
- * returns the euclidean distance from point to the graph center
- * @param {*} graph graph in question
- * @param {*} point point to get distance of
- * @returns distance of point to graph center
- */
-function distToGraphCenter(graph, point) {
-    let x = graph.centerX
-    let y = graph.centerY
-    return Math.abs( Math.sqrt( Math.pow(point[0] - x, 2) + Math.pow(point[1] - y, 2)) )
 }
 
 /**
