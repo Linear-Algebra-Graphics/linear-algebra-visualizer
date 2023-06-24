@@ -42,7 +42,7 @@ class Grid {
              * iter_mult: number of times to double minPgramHeight to being it back to the standard box
              * iter_div: number of times to halve minPgramHeight --||--
              */
-            let boxW =  0.5 
+            let boxW =  1
             //get (x,y) vector elements of x and y basis
             let xBasis2D = [xBasis[0], xBasis[1]] //only want x y so that the angle and 2d vector lengths are accurate
             let yBasis2D = [yBasis[0], yBasis[1]]

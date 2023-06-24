@@ -58,7 +58,7 @@ class Vector {
             let centerY = this.graph.centerY
 
             this.graph.ctx.font = "45px Monospace"
-            this.graph.ctx.fillStyle = "black"
+            this.graph.ctx.fillStyle = this.color
             this.graph.ctx.textAlign = 'center'
             this.graph.ctx.textBaseline = 'middle';
             if (this.label == "cords") {

@@ -162,7 +162,7 @@ document.getElementById("graphButton").addEventListener("click", function() {
     let y = parseFloat(yInput.value)
     let z = parseFloat(zInput.value)
     let color = vectorColors.value
-    test_graph.addObject(new Vector(test_graph, [x, y, z], color, 3, true))
+    test_graph.addObject(new Vector(test_graph, [x, y, z], color, 3, true, "cords"))
 })
 
 document.getElementById("zoomIn").addEventListener("click", function() {
@@ -206,8 +206,9 @@ document.getElementById("darkMode").addEventListener("click", function() {
         test_graph.Grid.colorDark = "#BFBFBD"
         test_graph.Grid.colorLight = "#E6E6E3"
         test_graph.Axis.zeroZeroDotColor = "black"
-        document.getElementById("darkMode").innerText = "Dark Mode!"
+    
         darkMode = false
+        document.getElementById("darkMode").innerText = "Dark Mode!"
     }
 })
 
@@ -293,9 +294,10 @@ test_graph.draw()
 
 setInterval(function() {
 
-    test_graph.rotateAboutY(2 * Math.PI * (x) / displayWidth)
+    test_graph.rotateAboutZ(2 * Math.PI * (x) / displayWidth)
 
-    test_graph.rotateAboutX(2 * Math.PI * (-y) / displayHeight)
+    test_graph.rotateAboutX(2 * Math.PI * (y) / displayHeight)
+
 
     test_graph.draw()
 }, 1000/60)

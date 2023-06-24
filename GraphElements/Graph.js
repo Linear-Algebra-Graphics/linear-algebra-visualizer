@@ -208,9 +208,9 @@ class Graph {
     changeBasisZoomAndRotate(vector) {
         let updatedVector = matrixVectorMultiplication(this.basis, vector)
         
+        updatedVector     = matrixVectorMultiplication(this.zRotationMatrix, updatedVector)
         updatedVector     = matrixVectorMultiplication(this.xRotationMatrix, updatedVector)
         updatedVector     = matrixVectorMultiplication(this.yRotationMatrix, updatedVector)
-        updatedVector     = matrixVectorMultiplication(this.zRotationMatrix, updatedVector)
 
         updatedVector     = matrixVectorMultiplication([[this.currentZoom, 0, 0],[0, this.currentZoom, 0],[0, 0, this.currentZoom]], updatedVector)
         return updatedVector
@@ -222,7 +222,7 @@ class Graph {
      */
     rotateAboutZ(theta) {
         let x_rotation = [Math.cos(theta), Math.sin(theta), 0 ]
-        let y_rotation = [Math.sin(theta), Math.cos(theta), 0]
+        let y_rotation = [-1* Math.sin(theta), Math.cos(theta), 0]
         let z_rotation = [0, 0, 1]
     
         this.zRotationMatrix = [x_rotation, y_rotation, z_rotation]
