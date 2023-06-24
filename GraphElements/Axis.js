@@ -21,7 +21,7 @@ class Axis {
         this._zAxisNeg = new Vector(this.graph, [0,0,-10], "green", this.lineWidth, false, "")
     
         // Default
-        this.fullAxis         = true
+        this.fullAxis         = true //if false draws only positive axis
         this.zeroZeroDot      = true
         this.zeroZeroDotColor = "black"
         this.zeroZeroDotSize  = 5
@@ -34,17 +34,29 @@ class Axis {
 
         if(this.graph.infiniteAxis === false) {
             if (this.fullAxis) {
-                this._xAxisNeg.draw()
-                this._yAxisNeg.draw()
-                this._zAxisNeg.draw()
+                //draw negative axis as well
+                if (this.graph.xAxisVisible()) {
+                    this._xAxisNeg.draw()
+                }
+                if (this.graph.yAxisVisible()) {
+                    this._yAxisNeg.draw()
+                }
+                if (this.graph.zAxisVisible()) {
+                    console.log("test")
+                    this._zAxisNeg.draw()
+                }
             }
-            this._xAxis.draw()
-            this._yAxis.draw()
 
-            if (!this.graph.noRotation() && !this.graph.zVisible()) {
-                this._zAxisNeg.draw()
+            if (this.graph.xAxisVisible()) {
+                this._xAxis.draw()
+            }
+            if (this.graph.yAxisVisible()) {
+                this._yAxis.draw()
+            }
+            if (this.graph.zAxisVisible()) {
                 this._zAxis.draw()
             }
+
 
        } else {
             let xBasis = this.graph.changeBasisZoomAndRotate([1,0,0]);

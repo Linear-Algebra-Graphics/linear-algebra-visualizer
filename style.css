@@ -18,7 +18,7 @@ body {
 }
 
 canvas {
-    border-radius: 15px;
+    border-radius: 0px;
     border: 2px solid black !important;
     touch-action: manipulation;
 }

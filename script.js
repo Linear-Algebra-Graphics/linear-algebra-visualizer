@@ -5,8 +5,8 @@ let yInput = document.getElementById("y")
 let zInput = document.getElementById("z")
 let vectorColors = document.getElementById("vector colors")
 
-displayWidth  = 800
-displayHeight = 600
+displayWidth  = 700
+displayHeight = 700
 
 canvas.style.width = displayWidth + "px"
 canvas.style.height = displayHeight + "px"
@@ -162,7 +162,7 @@ document.getElementById("graphButton").addEventListener("click", function() {
     let y = parseFloat(yInput.value)
     let z = parseFloat(zInput.value)
     let color = vectorColors.value
-    test_graph.addObject(new Vector(test_graph, [x, y, z], color, 3, true, "cords"))
+    test_graph.addObject(new Vector(test_graph, [x, y, z], color, 4, true, "cords"))
 })
 
 document.getElementById("zoomIn").addEventListener("click", function() {

@@ -24,8 +24,10 @@ class Grid {
         let neg_xBasis = this.graph.changeBasisZoomAndRotate([-1,0,0]);
         let neg_yBasis = this.graph.changeBasisZoomAndRotate([0,-1,0]);
         
-        if (this.graph.noRotation()) {
-        
+        if (!this.graph.xAxisVisible() || !this.graph.yAxisVisible() || !this.graph.zAxisVisible()) {
+            //infinite grid case
+
+
             // Point slope formula
                 // y+y1 = m(x-x1)
                 // y = m(x-x1)+y1

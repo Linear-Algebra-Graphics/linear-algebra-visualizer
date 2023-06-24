@@ -29,7 +29,7 @@ class Graph {
 
         // This is the number of graph units from edge to edge. E.g if the canvas is 600x600px we want
         // the length of 20 units to be 600 px.
-        this.numOfGraphUnitsEdgeToEdge = this.canvas.width / 80;
+        this.numOfGraphUnitsEdgeToEdge = this.canvas.width / 60;
         this.scale                     = this.canvas.width / this.numOfGraphUnitsEdgeToEdge
         this.backgroundColor           = "white"
         // I matrix is default
@@ -259,12 +259,24 @@ class Graph {
         return matrixEquals(this.xRotationMatrix, identity) && matrixEquals(this.yRotationMatrix, identity) && matrixEquals(this.zRotationMatrix, identity)
     }
 
+    xAxisVisible() {
+        return !vectorEquals(this.changeBasisZoomAndRotate([1, 0, 0]), [0, 0, 1])
+    }
+
+    yAxisVisible() {
+        return !vectorEquals(this.changeBasisZoomAndRotate([0, 1, 0]), [0, 0, 1])
+    }
+
+    zAxisVisible() {
+        return !vectorEquals(this.changeBasisZoomAndRotate([0, 0, 1]), [0, 0, 1])
+    }
+
     /**
      * 
      * @returns true if z axis is not directly facing front of graph
      */
     zVisible() {
-        return !(this.basis[0][2] == 0 && this.basis[1][2] == 0)
+        return !(this.basis[2][0] == 0 && this.basis[2][1] == 0)
     }
     /**
      * finds if point is outside the graph canvas or not

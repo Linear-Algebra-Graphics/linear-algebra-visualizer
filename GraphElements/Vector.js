@@ -67,8 +67,8 @@ class Vector {
             this.graph.ctx.textAlign = 'center'
             this.graph.ctx.textBaseline = 'middle';
 
-            let labelXOffset = ((inBasisCords[0])/(vectorLength(inBasisCords)) * 80)
-            let labelYOffset = ((inBasisCords[1])/(vectorLength(inBasisCords)) * 80)
+            let labelXOffset = ((inBasisCords[0])/(vectorLength(inBasisCords)) * 60)
+            let labelYOffset = ((inBasisCords[1])/(vectorLength(inBasisCords)) * 60)
             if (this.graph.currentZoom < 1) {
                 labelXOffset = labelXOffset * this.graph.currentZoom
                 labelYOffset = labelYOffset * this.graph.currentZoom
