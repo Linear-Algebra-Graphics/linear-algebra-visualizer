@@ -74,8 +74,8 @@ class Vector {
                 labelYOffset = labelYOffset * this.graph.currentZoom
             }
             
-            let labelX = centerX + (scale * inBasisCords[0]) + ((inBasisCords[0])/(vectorLength(inBasisCords)) * 80 * this.graph.currentZoom)
-            let labelY = centerY - (scale * inBasisCords[1]) - ((inBasisCords[1])/(vectorLength(inBasisCords)) * 80 * this.graph.currentZoom)
+            let labelX = centerX + (scale * inBasisCords[0]) + labelXOffset
+            let labelY = centerY - (scale * inBasisCords[1]) - labelYOffset
             
             if (this.label == "cords") {
                 this.graph.ctx.fillText("(" + this.cords[0] + "," + this.cords[1] + "," + this.cords[2] + ")", labelX, labelY)
