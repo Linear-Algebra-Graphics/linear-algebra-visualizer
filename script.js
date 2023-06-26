@@ -5,7 +5,7 @@ let yInput = document.getElementById("y")
 let zInput = document.getElementById("z")
 let vectorColors = document.getElementById("vector colors")
 
-displayWidth  = 700
+displayWidth  = 1000
 displayHeight = 700
 
 canvas.style.width = displayWidth + "px"
@@ -384,4 +384,4 @@ class ThreeDimCube {
 }
 
 
-test_graph.addObject(new ThreeDimCube(test_graph))
+//test_graph.addObject(new ThreeDimCube(test_graph))

@@ -91,17 +91,48 @@ class Grid {
             //keep if else for now
             if (5 * minPgramHeight < 2.5 * boxW) {
                 iter_mult = 0
-                while (5 * minPgramHeight < 2.5 * boxW) {
-                    minPgramHeight = minPgramHeight * 2
+                let factor = 5
+                let multScale = 2
+                while (factor * minPgramHeight < 2.5 * boxW) {
+                    minPgramHeight = minPgramHeight * multScale
                     iter_mult++
+                    //we calculate scaling starting from unit square 1x1 on the graph
+                    //this means copying desmos the first merge up takes to a 4x4 from a 5x5.
+                    // therefore on the second iteration of the while loop, we check using factor 4, this then happens every 3 iterations
+                    if (iter_mult % 3 == 1) {
+                        factor = 4
+                        multScale = 2.5
+                    } else {
+                        factor = 5
+                        multScale = 2
+                    }
                 }
             } else if (5 * minPgramHeight > 5 * boxW) {
                 iter_div = 0
+                let divScale = 2
                 while (5 * minPgramHeight > 5 * boxW) {
-                    minPgramHeight = minPgramHeight / 2
+                    minPgramHeight = minPgramHeight / divScale
                     iter_div++
+                    if (iter_div % 3 == 1) {
+                        divScale = 2.5
+                    } else {
+                        divScale = 2
+                    }
                 }
             }
+            // if (5 * minPgramHeight < 2.5 * boxW) {
+            //     iter_mult = 0
+            //     while (5 * minPgramHeight < 2.5 * boxW) {
+            //         minPgramHeight = minPgramHeight * 2
+            //         iter_mult++
+            //     }
+            // } else if (5 * minPgramHeight > 5 * boxW) {
+            //     iter_div = 0
+            //     while (5 * minPgramHeight > 5 * boxW) {
+            //         minPgramHeight = minPgramHeight / 2
+            //         iter_div++
+            //     }
+            // }
             
             //get lower of the iteration counts => least # of scaling 
             //to get back to standard boxW dimensions
@@ -116,12 +147,13 @@ class Grid {
             }
 
             //2d infinite grid
-            this.drawHalfAxisGridInf(xBasis,yBasis, iters, div)
-            this.drawHalfAxisGridInf(neg_xBasis,yBasis, iters, div)
-            this.drawHalfAxisGridInf(yBasis, xBasis, iters, div)
-            this.drawHalfAxisGridInf(neg_yBasis, xBasis, iters, div)
+            this.drawHalfAxisGridInf(true, xBasis,yBasis, iters, div)
+            this.drawHalfAxisGridInf(false, neg_xBasis,yBasis, iters, div)
+            this.drawHalfAxisGridInf(true, yBasis, xBasis, iters, div)
+            this.drawHalfAxisGridInf(false, neg_yBasis, xBasis, iters, div)
             
         } else {
+        
             let gridSize = 2 * 5
             //this.graph.drawPointToPoint([3,3, 0], [10,3, 0], "green", 3)
 
@@ -137,6 +169,23 @@ class Grid {
                     currentColor = this.colorDark
                     lineWidth    = this.lineWidthDark
                     
+                    //grid numbers
+                    this.graph.ctx.font = "30px Monospace"
+                    this.graph.ctx.fillStyle = "black"
+                    this.graph.ctx.textAlign = 'center'
+                    this.graph.ctx.textBaseline = 'middle';
+
+                    let labelPtX = this.graph.changeBasisZoomAndRotate([i, 0, 0])
+                    let labelPtY = this.graph.changeBasisZoomAndRotate([0, i, 0])
+                    let labelPtZ = this.graph.changeBasisZoomAndRotate([0, 0, i])
+                    let scale = this.graph.scale
+                    this.graph.ctx.fillText(i, this.graph.centerX + (scale * labelPtX[0]), this.graph.centerY - (scale * labelPtX[1]))
+                    this.graph.ctx.fillText(i, this.graph.centerX + (scale * labelPtY[0]), this.graph.centerY - (scale * labelPtY[1]))
+                    this.graph.ctx.fillText(i, this.graph.centerX + (scale * labelPtZ[0]), this.graph.centerY - (scale * labelPtZ[1]))
+
+                    this.graph.ctx.fillText(-1*i, this.graph.centerX - (scale * labelPtX[0]), this.graph.centerY + (scale * labelPtX[1]))
+                    this.graph.ctx.fillText(-1*i, this.graph.centerX - (scale * labelPtY[0]), this.graph.centerY + (scale * labelPtY[1]))
+                    this.graph.ctx.fillText(-1*i, this.graph.centerX - (scale * labelPtZ[0]), this.graph.centerY + (scale * labelPtZ[1]))
                 //    this.graph.
                 }
                 // xy plane
@@ -185,12 +234,13 @@ class Grid {
      * each grid line is defined by the vector gridVector
      * 
      * accounts for merging or splitting grid lines at enough zoom
-     * @param {*} axis xBasis originally 
+     * @param {*} isPositiveAxis boolean value that indicates if half axis is positive
+     * @param {*} axis vector defining axis along which grid lines are drawn
      * @param {*} gridVector vector defining grid lines
-     * @param {*} iteraions number of scalings applied to distance between grid lines
-     * @param {*} divide true if distance needs to be smaller, else false
+     * @param {*} iterations numberic value of scalings applied to inter grid line distance
+     * @param {*} divide boolean value, true if distance needs to be smaller, else false
      */
-    drawHalfAxisGridInf(axis, gridVector, iterations, divide) {
+    drawHalfAxisGridInf(isPositiveAxis, axis, gridVector, iterations, divide) {
         let x = this.graph.centerX
         let y = this.graph.centerY
 
@@ -201,15 +251,28 @@ class Grid {
         let yStep = this.graph.scale * axis[1]
         if (divide) {
             for (let i = 0; i < iterations; i++) {
-                xStep = xStep / 2
-                yStep = yStep / 2
+                if (i % 3 == 1) {
+                    //every 3rd we have 4x4 from previous square of 4 small 5x5s, so this step requires step scale
+                    // up by 2.5
+                    xStep = xStep / 2.5
+                    yStep = yStep / 2.5
+                } else {
+                    xStep = xStep / 2
+                    yStep = yStep / 2
+                }
             }
         } else {
             for (let i = 0; i < iterations; i++) {
-                xStep = xStep * 2
-                yStep = yStep * 2
+                if (i % 3 == 1) {
+                    xStep = xStep * 2.5
+                    yStep = yStep * 2.5
+                } else {
+                    xStep = xStep * 2
+                    yStep = yStep * 2
+                }
             }
         }
+        
 
         while (keepGoing) {
 
@@ -219,18 +282,79 @@ class Grid {
             let startY = endPoints[1]
             let endX = endPoints[2]
             let endY = endPoints[3]
+
+
+            // start weirdness <= I do not know exaclty why the
+            // next 4 lines do what they do
+            let mergesToFourSquare = 2
+            if (divide) {
+                mergesToFourSquare = 1
+            }
+            // end weirdness??
+
+            // we check for % = 2 on zoom out because our graph starts at default on 5units by 5units square,
+            // which is two merge ups to the next 4x4
+            //
+            // we check for % = 1 on zoom in because on defualt 5unit by 5unit square one iteration of square
+            // split on zoom in brings up 4x4 from 5x5
+            let boxSize = 5
+            if (iterations % 3 == mergesToFourSquare) {
+                boxSize = 4
+            }
+
             // Biggest grid spacing should be the default number we start with
             // Smallest grid spacing should be 2 times the default
 
             // This means the two minimum points are outside the canvas. This means that we do not need to draw the lines anymore so we break the loop.
             if (!this.graph.outSideCanvas([startX, startY]) || !this.graph.outSideCanvas([endX, endY])) {
                 // Make every fith line dark
-                if (lineCount % 5 == 0) {
+                if (lineCount % boxSize == 0) {
                     // this.graph.ctx.fillStyle = "black"
                     // this.graph.ctx.font = "40px monospace";
                     // this.graph.ctx.fillText(("(" + ", " + ")"), x+10, y-20);
                     this.graph.drawLine([startX, startY],[endX, endY], this.colorDark, this.lineWidthDark);
+
+                    if (lineCount != 0) {
+                        // grid numbers
+                        this.graph.ctx.font = "30px Monospace"
+                        this.graph.ctx.fillStyle = "black"
+                        this.graph.ctx.textAlign = 'center'
+                        this.graph.ctx.textBaseline = 'middle';
+                        
+                        // calculate value at current gridline
+                        let dist = (vectorLength([x - this.graph.centerX, y - this.graph.centerY, 0])/vectorLength(axis)) / this.graph.scale
+                        //set to 0 decimals rn
+
+                        // parse into float so that .toExponential can be called
+                        dist = parseFloat(dist)
+                        let indexVal = "" //the string of the value to be displayed
+                        let expStr = "" + dist 
+                        // convert to scienfitic notation if index is greater than value
+                        if (dist / 1000000 > 1 || dist * 10 < 1) {
+                            expStr = dist.toExponential()
+                            let split = expStr.split("e")
+                            //parse into int to get rid of floating point errors
+                            let coeff = Math.round(split[0])
+                            expStr = "" + coeff + "e" + split[1]
+                        } else {
+                            if (dist >= 1) {
+                                expStr = dist.toFixed(0)
+                            } else {
+                                expStr = dist.toFixed(1)
+                            }
+                        }
+
+                        indexVal = expStr
+                        //negative sign for negative axis
+                        if (!isPositiveAxis) {
+                            indexVal = "-" + indexVal
+                        }
+
+                    
+                        this.graph.ctx.fillText(indexVal, x, y + 20)
+                    }
                 } else {
+                    //no labeling, just drawing light grid line
                     this.graph.drawLine([startX, startY],[endX, endY], this.colorLight, this.lineWidthLight);
                 }
                 

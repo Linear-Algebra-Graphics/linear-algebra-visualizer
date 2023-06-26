@@ -259,43 +259,50 @@ class Graph {
         return matrixEquals(this.xRotationMatrix, identity) && matrixEquals(this.yRotationMatrix, identity) && matrixEquals(this.zRotationMatrix, identity)
     }
 
+
     xAxisVisible() {
+        let upperBound = 0.0000000000001
+        let lowerBound = -0.0000000000001
         let xAxis = this.changeBasisZoomAndRotate([1, 0, 0])
         let x = xAxis[0]
         let y = xAxis[1]
-        if (x <= 0.0000000000001 && x >= -0.0000000000001) {
-            x = 0
-        }
-        if (y <= 0.0000000000001 && y >= -0.0000000000001) {
-            y = 0
-        }
-        return !vectorEquals([x, y, xAxis[2]/xAxis[2]], [0, 0, 1])
+        // if (x <= upperBound && x >= lowerBound) {
+        //     x = 0
+        // }
+        // if (y <= upperBound && y >=lowerBound) {
+        //     y = 0
+        // }
+        return !vectorEquals([x, y, 1], [0, 0, 1])
     }
 
     yAxisVisible() {
+        let upperBound = 0.0000000000001
+        let lowerBound = -0.0000000000001
         let yAxis = this.changeBasisZoomAndRotate([0, 1, 0])
         let x = yAxis[0]
         let y = yAxis[1]
-        if (x <= 0.0000000000001 && x >= -0.0000000000001) {
-            x = 0
-        }
-        if (y <= 0.0000000000001 && y >= -0.0000000000001) {
-            y = 0
-        }
-        return !vectorEquals([x, y, yAxis[2]/yAxis[2]], [0, 0, 1])
+        // if (x <= upperBound && x >= lowerBound) {
+        //     x = 0
+        // }
+        // if (y <= upperBound && y >=lowerBound) {
+        //     y = 0
+        // }
+        return !vectorEquals([x, y, 1], [0, 0, 1])
     }
 
     zAxisVisible() {
+        let upperBound = 0.0000000000001
+        let lowerBound = -0.0000000000001
         let zAxis = this.changeBasisZoomAndRotate([0, 0, 1])
         let x = zAxis[0]
         let y = zAxis[1]
-        if (x <= 0.0000000000001 && x >= -0.0000000000001) {
-            x = 0
-        }
-        if (y <= 0.0000000000001 && y >= -0.0000000000001) {
-            y = 0
-        }
-        return !vectorEquals([x, y, zAxis[2]/zAxis[2]], [0, 0, 1])
+        // if (x <= upperBound && x >= lowerBound) {
+        //     x = 0
+        // }
+        // if (y <= upperBound && y >=lowerBound) {
+        //     y = 0
+        // }
+        return !vectorEquals([x, y, 1], [0, 0, 1])
     }
 
     /**
