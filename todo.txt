@@ -25,3 +25,7 @@ IDEA? Have slider on the side of the graph change x y and z rotation
 CHANGE CHECKBOXES SO SEE IF CHECKED RATHER THAN ONCLICK
 
 add random vector function
+
+Fix numbers because they are totalloy broken
+
+Fix decieml numbers so looks right. Now its odd.

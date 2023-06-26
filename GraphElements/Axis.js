@@ -33,6 +33,8 @@ class Axis {
     draw() {
 
         if(this.graph.infiniteAxis === false) {
+            // finite axis case
+            // we only draw an axis if it is visible!
             if (this.fullAxis) {
                 //draw negative axis as well
                 if (this.graph.xAxisVisible()) {
@@ -42,7 +44,6 @@ class Axis {
                     this._yAxisNeg.draw()
                 }
                 if (this.graph.zAxisVisible()) {
-                    console.log("test")
                     this._zAxisNeg.draw()
                 }
             }
@@ -59,6 +60,7 @@ class Axis {
 
 
        } else {
+            // infinite axis case
             let xBasis = this.graph.changeBasisZoomAndRotate([1,0,0]);
             let yBasis = this.graph.changeBasisZoomAndRotate([0,1,0]);
             let zBasis = this.graph.changeBasisZoomAndRotate([0,0,1]);

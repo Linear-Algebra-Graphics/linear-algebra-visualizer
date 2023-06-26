@@ -14,7 +14,7 @@ class Grid {
     }
 
     /**
-     * 
+     * draws grid
      */
     draw() {
         
@@ -89,6 +89,8 @@ class Grid {
 
             //find if scaling is division or multiplication, and how many scaling iterations
             //keep if else for now
+            
+            // If statments are just for clarity
             if (5 * minPgramHeight < 2.5 * boxW) {
                 iter_mult = 0
                 let factor = 5
@@ -120,19 +122,6 @@ class Grid {
                     }
                 }
             }
-            // if (5 * minPgramHeight < 2.5 * boxW) {
-            //     iter_mult = 0
-            //     while (5 * minPgramHeight < 2.5 * boxW) {
-            //         minPgramHeight = minPgramHeight * 2
-            //         iter_mult++
-            //     }
-            // } else if (5 * minPgramHeight > 5 * boxW) {
-            //     iter_div = 0
-            //     while (5 * minPgramHeight > 5 * boxW) {
-            //         minPgramHeight = minPgramHeight / 2
-            //         iter_div++
-            //     }
-            // }
             
             //get lower of the iteration counts => least # of scaling 
             //to get back to standard boxW dimensions
@@ -153,7 +142,8 @@ class Grid {
             this.drawHalfAxisGridInf(false, neg_yBasis, xBasis, iters, div)
             
         } else {
-        
+            
+            // there are gridSize lines on each half axis
             let gridSize = 2 * 5
             //this.graph.drawPointToPoint([3,3, 0], [10,3, 0], "green", 3)
 
@@ -169,23 +159,25 @@ class Grid {
                     currentColor = this.colorDark
                     lineWidth    = this.lineWidthDark
                     
-                    //grid numbers
-                    this.graph.ctx.font = "30px Monospace"
-                    this.graph.ctx.fillStyle = "black"
-                    this.graph.ctx.textAlign = 'center'
-                    this.graph.ctx.textBaseline = 'middle';
+                    //grid numbers - they currently look bad
+                    
+                    // this.graph.ctx.font = "30px Monospace"
+                    // this.graph.ctx.fillStyle = "black"
+                    // this.graph.ctx.textAlign = 'center'
+                    // this.graph.ctx.textBaseline = 'middle';
 
-                    let labelPtX = this.graph.changeBasisZoomAndRotate([i, 0, 0])
-                    let labelPtY = this.graph.changeBasisZoomAndRotate([0, i, 0])
-                    let labelPtZ = this.graph.changeBasisZoomAndRotate([0, 0, i])
-                    let scale = this.graph.scale
-                    this.graph.ctx.fillText(i, this.graph.centerX + (scale * labelPtX[0]), this.graph.centerY - (scale * labelPtX[1]))
-                    this.graph.ctx.fillText(i, this.graph.centerX + (scale * labelPtY[0]), this.graph.centerY - (scale * labelPtY[1]))
-                    this.graph.ctx.fillText(i, this.graph.centerX + (scale * labelPtZ[0]), this.graph.centerY - (scale * labelPtZ[1]))
+                    // let labelPtX = this.graph.changeBasisZoomAndRotate([i, 0, 0])
+                    // let labelPtY = this.graph.changeBasisZoomAndRotate([0, i, 0])
+                    // let labelPtZ = this.graph.changeBasisZoomAndRotate([0, 0, i])
+                    // let scale = this.graph.scale
 
-                    this.graph.ctx.fillText(-1*i, this.graph.centerX - (scale * labelPtX[0]), this.graph.centerY + (scale * labelPtX[1]))
-                    this.graph.ctx.fillText(-1*i, this.graph.centerX - (scale * labelPtY[0]), this.graph.centerY + (scale * labelPtY[1]))
-                    this.graph.ctx.fillText(-1*i, this.graph.centerX - (scale * labelPtZ[0]), this.graph.centerY + (scale * labelPtZ[1]))
+                    // this.graph.ctx.fillText(i, this.graph.centerX + (scale * labelPtX[0]), this.graph.centerY - (scale * labelPtX[1]))
+                    // this.graph.ctx.fillText(i, this.graph.centerX + (scale * labelPtY[0]), this.graph.centerY - (scale * labelPtY[1]))
+                    // this.graph.ctx.fillText(i, this.graph.centerX + (scale * labelPtZ[0]), this.graph.centerY - (scale * labelPtZ[1]))
+
+                    // this.graph.ctx.fillText(-1*i, this.graph.centerX - (scale * labelPtX[0]), this.graph.centerY + (scale * labelPtX[1]))
+                    // this.graph.ctx.fillText(-1*i, this.graph.centerX - (scale * labelPtY[0]), this.graph.centerY + (scale * labelPtY[1]))
+                    // this.graph.ctx.fillText(-1*i, this.graph.centerX - (scale * labelPtZ[0]), this.graph.centerY + (scale * labelPtZ[1]))
                 //    this.graph.
                 }
                 // xy plane
@@ -244,9 +236,6 @@ class Grid {
         let x = this.graph.centerX
         let y = this.graph.centerY
 
-        let keepGoing = true
-        let lineCount = 0
-
         let xStep = this.graph.scale * axis[0]
         let yStep = this.graph.scale * axis[1]
         if (divide) {
@@ -273,7 +262,8 @@ class Grid {
             }
         }
         
-
+        let keepGoing = true
+        let lineCount = 0
         while (keepGoing) {
 
             let endPoints = getGraphBoundaryEndpoints(x, y, gridVector, this.graph)
@@ -309,49 +299,10 @@ class Grid {
             if (!this.graph.outSideCanvas([startX, startY]) || !this.graph.outSideCanvas([endX, endY])) {
                 // Make every fith line dark
                 if (lineCount % boxSize == 0) {
-                    // this.graph.ctx.fillStyle = "black"
-                    // this.graph.ctx.font = "40px monospace";
-                    // this.graph.ctx.fillText(("(" + ", " + ")"), x+10, y-20);
                     this.graph.drawLine([startX, startY],[endX, endY], this.colorDark, this.lineWidthDark);
 
                     if (lineCount != 0) {
-                        // grid numbers
-                        this.graph.ctx.font = "30px Monospace"
-                        this.graph.ctx.fillStyle = "black"
-                        this.graph.ctx.textAlign = 'center'
-                        this.graph.ctx.textBaseline = 'middle';
-                        
-                        // calculate value at current gridline
-                        let dist = (vectorLength([x - this.graph.centerX, y - this.graph.centerY, 0])/vectorLength(axis)) / this.graph.scale
-                        //set to 0 decimals rn
-
-                        // parse into float so that .toExponential can be called
-                        dist = parseFloat(dist)
-                        let indexVal = "" //the string of the value to be displayed
-                        let expStr = "" + dist 
-                        // convert to scienfitic notation if index is greater than value
-                        if (dist / 1000000 > 1 || dist * 10 < 1) {
-                            expStr = dist.toExponential()
-                            let split = expStr.split("e")
-                            //parse into int to get rid of floating point errors
-                            let coeff = Math.round(split[0])
-                            expStr = "" + coeff + "e" + split[1]
-                        } else {
-                            if (dist >= 1) {
-                                expStr = dist.toFixed(0)
-                            } else {
-                                expStr = dist.toFixed(1)
-                            }
-                        }
-
-                        indexVal = expStr
-                        //negative sign for negative axis
-                        if (!isPositiveAxis) {
-                            indexVal = "-" + indexVal
-                        }
-
-                    
-                        this.graph.ctx.fillText(indexVal, x, y + 20)
+                        this._addGridNumber(x, y, axis, gridVector, isPositiveAxis)
                     }
                 } else {
                     //no labeling, just drawing light grid line
@@ -367,4 +318,73 @@ class Grid {
             lineCount++
         }
     }
+
+    /**
+     * adds a grid number offset from the x, y location
+     * @param {*} x x coordinate
+     * @param {*} y y coordinate
+     * @param {*} axis vector defining the line x, y is on
+     * @param {*} gridVector vector perp to axis along which the number is added
+     * @param {*} isPositiveAxis boolean value of whether the axis is positive or negative
+     */
+    _addGridNumber(x, y, axis, gridVector, isPositiveAxis) {
+        // grid numbers
+        let angle = Math.acos((vectorMultiplication([axis[0], axis[1]], [1, 0])) / (vectorLength([axis[0], axis[1]]) * vectorLength([1,0])))
+        // console.log(angle)
+        this.graph.ctx.font = "30px Monospace"
+        this.graph.ctx.fillStyle = "black"
+    
+        if (angle >= Math.PI/4 && angle < 3*Math.PI/4) {
+            this.graph.ctx.textAlign = 'right'
+            this.graph.ctx.textBaseline = 'middle';
+        } else {
+            this.graph.ctx.textAlign = 'center'
+            this.graph.ctx.textBaseline = 'top';
+        }
+        
+        // calculate value at current gridline
+        let dist = (vectorLength([x - this.graph.centerX, y - this.graph.centerY, 0])/vectorLength(axis)) / this.graph.scale
+        //set to 0 decimals rn
+        // .001
+        let indexVal = "" //the string of the value to be displayed
+
+        indexVal = formatNumber(parseFloat(dist))
+
+        //negative sign for negative axis
+        if (!isPositiveAxis) {
+            indexVal = "-" + indexVal
+        }
+        
+        //offset grid numbers from axis
+        let scale = this.graph.scale
+        let gridNumX = (0.5 * scale * gridVector[0]/vectorLength(gridVector))
+        let gridNumY = (0.5 * scale * gridVector[1]/vectorLength(gridVector))
+        this.graph.ctx.fillText(indexVal, x - gridNumX, y + gridNumY)
+    }
+}
+
+
+/**
+ * formats number to string, turns in to scientific notation 
+ * if value > PLACEHOLDER or value < PLACEHOLDER
+ * @param {*} dist a numeric float value 
+ * @return returns dist formatted as a string
+ */
+function formatNumber(dist) {
+    let expStr = "" + dist 
+    // convert to scienfitic notation if index is greater than value
+    if (dist / 1000000 > 1 || dist * 100 < 1) {
+        expStr = dist.toExponential()
+        let split = expStr.split("e")
+        // parse into int to get rid of floating point errors
+        let coeff = Math.round(split[0])
+        expStr = "" + coeff + "e" + split[1]
+    } else {
+        if (dist >= 1) {
+            expStr = dist.toFixed(0)
+        } else {
+            expStr = dist.toFixed(2)
+        }
+    }
+    return expStr
 }
