@@ -78,7 +78,7 @@ class Vector {
             let labelY = centerY - (scale * inBasisCords[1]) - labelYOffset
             
             if (this.label == "cords") {
-                this.graph.ctx.fillText("(" + this.cords[0] + "," + this.cords[1] + "," + this.cords[2] + ")", labelX, labelY)
+                this.graph.ctx.fillText("(" + formatNumber(this.cords[0]) + "," + formatNumber(this.cords[1]) + "," + formatNumber(this.cords[2]) + ")", labelX, labelY)
             } else {
                 this.graph.ctx.fillText(this.label, labelX, labelY)
             }

@@ -37,14 +37,14 @@ class Graph {
         this.currentZoom               = 1
         this.zoomIncrement             = 1.1
         
-        //only rotation...
-        this.animateBasis
-        this.animateAngles
-        this.animateFinalAngles
+        this.finalBasis                = [[0,0,0],[0,1,0],[0,0,1]]
+        this.animationPercentage       = 0
+        this.animationTickAdd          = 1/600
+        this.currentlyAnimating        = false
         
-        this.xRotationMatrix            = [[1,0,0],[0,1,0],[0,0,1]]
-        this.yRotationMatrix            = [[1,0,0],[0,1,0],[0,0,1]]
-        this.zRotationMatrix            = [[1,0,0],[0,1,0],[0,0,1]]
+        this.xRotationMatrix           = [[1,0,0],[0,1,0],[0,0,1]]
+        this.yRotationMatrix           = [[1,0,0],[0,1,0],[0,0,1]]
+        this.zRotationMatrix           = [[1,0,0],[0,1,0],[0,0,1]]
 
         //this.basis                     = [[Math.cos(Math.PI/4),Math.sin(Math.PI/4),0],[-1*Math.sin(Math.PI/4),Math.cos(Math.PI/4),0],[0,0,1]]
         
@@ -56,10 +56,160 @@ class Graph {
     }
 
     animate() {
-        if (animating) {
-             
+        console.log("test")
+        let UEV = SVD(this.finalBasis)
+
+        let U = UEV[0]
+        let E = UEV[1]
+        let V = UEV[2]
+
+        // Polar decomp -> A = U E V^T = U V^T V E V^T = (U*V^T) (V E V^T) = U P
+        // I will use U = R (Rotation) and P = S (Scale) 
+        
+        // U * V^T
+        let R = matrixMultiplication(U, transpose(V))
+        // V E V^T
+        // let S = matrixMultiplication(V, matrixMultiplication(E, transpose(V)))
+
+        let angles  = this._decomposeRotation(R)
+
+        // -1 since last term is error
+        for(let i = 0; i < angles.length - 1; i++) {
+            angles[i] = angles[i] * this.animationPercentage
+        }
+        
+        // We need to start at the I basis. So we need to go FROM 1 TO the singular value
+        // in a smooth way.
+        for(let i = 0; i < E.length; i++) {
+            if (E[i][i] > 1) {
+                E[i][i] = 1 + ((E[i][i] - 1) * this.animationPercentage)
+            } else {
+                E[i][i] = 1 - ((E[i][i] - 1) * this.animationPercentage)
+            }
+        }
+
+        let transitionR = this._makeRotationMatrix(angles[0], angles[1], angles[2])
+        let transitionS = matrixMultiplication(V, matrixMultiplication(E, transpose(V)))
+        
+        this.animationPercentage += this.animationTickAdd
+        
+        this.basis = matrixMultiplication(transitionR, transitionS)
+        
+        if (this.animationPercentage >= 1) {
+            this.currentlyAnimating = false
         }
     }
+
+
+    /**
+     * decomposes rotation matrix into x, y, z rotation angles 
+     * @param {*} R rotation matrix to decompose
+     * @returns an array of [xTheta, yTheta, zTheta, errorFromR]
+     */
+    _decomposeRotation(R) {
+        // This is the rotation matrix where: R = Y X Z, where X, Y, and Z are
+        // rotation matrcies that rotate around that axis.
+        //     
+        //     | sin(x)sin(y)sin(z)+cos(y)cos(z)  sin(x)sin(y)cos(z)-cos(y)sin(z)  cos(x)sin(y) |
+        // R = | cos(x)sin(z)                     cos(x)cos(z)                     -sin(x)      |
+        //     | sin(x)cos(y)sin(z)-sin(y)cos(z)  sin(x)cos(y)cos(z)+sin(y)sin(z)  cos(x)cos(y) |
+        //     
+
+        let xTheta = Math.abs( Math.asin(-R[2][1])                 )
+        // console.log(xTheta)
+
+        let yTheta = Math.abs( Math.asin(R[2][0]/Math.cos(xTheta)) )
+        let zTheta = Math.abs( Math.acos(R[1][1]/Math.cos(xTheta)) )
+        
+        //                      [xTheta, yTheta, zTheta, error]
+        let lowestErrorAngles = [undefined, undefined, undefined, Number.MAX_SAFE_INTEGER]
+        
+        // Goes through all possible signs of the angles. We only know the abs of them
+        // so we need to check everything
+        for (let i = -1; i < 3; i=i+2) {
+            for (let j = -1; j < 3; j=j+2) {
+                for (let k = -1; k < 3; k=k+2) {
+                    
+                    xTheta = i * xTheta
+                    yTheta = j * yTheta
+                    zTheta = k * zTheta
+                    
+                    // console.log("ijk: " + xTheta + " " + yTheta+ " " + zTheta)
+
+                    let sumSquaredError = this._sumSquaredError(R, this._makeRotationMatrix(xTheta, yTheta, zTheta))
+                    //console.log(sumSquaredError)
+                    // console.log(R)
+                    // console.log(this._makeRotationMatrix(xTheta, yTheta, zTheta))
+                    // console.log("Error: " + sumSquaredError)
+                    //console.log("---------\n---------")
+
+                    if (lowestErrorAngles[3] > sumSquaredError) {
+                        lowestErrorAngles = [xTheta, yTheta, zTheta, sumSquaredError]
+                    }
+                }
+            }
+        }
+
+        if (lowestErrorAngles[3] > 0.0001) {
+            console.log("%c" + "LOWEST ERROR IS ABOVE 0.0001... \nERROR: " + lowestErrorAngles[3], "color: red; background: black;")
+        }
+
+        return lowestErrorAngles
+        
+    }
+
+    // returns the sum squared error of the differences between entries of input matrix with matrix R
+    // R is deifned in _decomposeRotation
+    _sumSquaredError(matrix1, matrix2) {
+        if (matrix1.length != matrix2.length) {
+            throw new Error("_sumSquareError matrices different size")
+        }
+        if (matrix1[0].length != matrix1.length || matrix2[0].length != matrix2.length) {
+            throw new Error("matrices not square")
+        }
+        if (matrix1.length == 0 || matrix2.length == 0) {
+            return 0
+        }
+
+        let sumSquaredError = 0
+        
+        for (let i = 0; i < matrix1.length; i++) {
+            for (let j = 0; j < matrix1[i].length; j++) {
+                sumSquaredError += Math.pow((matrix1[j][i] - matrix2[j][i]), 2)
+            }
+        }
+        return sumSquaredError
+    }
+
+    //sometimes my genius scares me....
+    
+    //     
+    //     | sin(x)sin(y)sin(z)+cos(y)cos(z)  sin(x)sin(y)cos(z)-cos(y)sin(z)  cos(x)sin(y) |
+    // R = | cos(x)sin(z)                     cos(x)cos(z)                     -sin(x)      |
+    //     | sin(x)cos(y)sin(z)-sin(y)cos(z)  sin(x)cos(y)cos(z)+sin(y)sin(z)  cos(x)cos(y) |
+    //     
+    _makeRotationMatrix (x, y, z) {
+        let rotation = Array(3)
+        rotation[0]  = Array(3)
+        rotation[1]  = Array(3)
+        rotation[2]  = Array(3)
+
+        
+        rotation[0][0] = Math.sin(x) * Math.sin(y) * Math.sin(z) + Math.cos(y) * Math.cos(z)
+        rotation[0][1] = Math.cos(x) * Math.sin(z)
+        rotation[0][2] = Math.sin(x) * Math.cos(y) * Math.sin(z) - Math.sin(y) * Math.cos(z)
+
+        rotation[1][0] = Math.sin(x) * Math.sin(y) * Math.cos(z) - Math.cos(y) * Math.sin(z)
+        rotation[1][1] = Math.cos(x) * Math.cos(z)
+        rotation[1][2] = Math.sin(x) * Math.cos(y) * Math.cos(z) + Math.sin(y) * Math.sin(z)
+
+        rotation[2][0] = Math.cos(x) * Math.sin(y)
+        rotation[2][1] = -1 * Math.sin(x)
+        rotation[2][2] = Math.cos(x) * Math.cos(y)
+        
+        return rotation
+    }
+
 
     /**
      * zooms in graph view
@@ -97,6 +247,10 @@ class Graph {
         this.ctx.fillStyle = this.backgroundColor
         this.ctx.fillRect(0,0, this.canvas.width, this.canvas.height);
 
+        if(this.currentlyAnimating) {
+            this.animate()
+        }
+        
         if (this.showGrid) {
             if (this.noRotation()) {
                     this.Grid.draw()

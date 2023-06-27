@@ -131,3 +131,20 @@ function getYIntersept(x, m, b) {
 function getXIntersept(y, m, b) {
     return (y - b) / m
 }
+
+function transpose(matrix) {
+
+    outputMatrix = new Array(matrix[0].length)
+
+    for (i=0; i<outputMatrix.length; i++) {
+        outputMatrix[i] = new Array(matrix.length)
+    }
+
+    for (i=0; i<matrix.length; i++) {
+        for (j=0; j<matrix[i].length; j++) {
+            outputMatrix[j][i] = matrix[i][j]
+        }
+    }
+
+    return outputMatrix
+}
