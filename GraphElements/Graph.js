@@ -59,7 +59,7 @@ class Graph {
         // debugger
         let y = SVD([[1,1,0],[1,1,0],[0,0,1]])
         
-        console.log(SVD([[1,1,0],[1,1,0],[0,0,1]]))
+        console.log(y)
 
         let U = y[0]
         let E = y[1]
