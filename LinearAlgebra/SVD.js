@@ -25,7 +25,7 @@ function SVD (a, withu, withv, eps, tol) {
 
     
     // Our matricies have the index be the columbs, not the rows.
-    a = transpose(a)
+    //a = transpose(a)
 
 
 
@@ -328,23 +328,24 @@ function SVD (a, withu, withv, eps, tol) {
 
     // Initalize qMatrix.
 
-    qMatrix = new Array(u.length);
+    // qMatrix = new Array(u.length);
 
-    for (i=0; i<outputMatrix.length; i++) {
-        qMatrix[i] = (new Array(v.length)).fill(0)
-    }
+    // for (i=0; i<outputMatrix.length; i++) {
+    //     qMatrix[i] = (new Array(v.length)).fill(0)
+    // }
 
-    // Set the diagonal
-    for (i=0; i<q.length; i++) {
-        qMatrix[i][i] = q[i]
-    }
+    // // Set the diagonal
+    // for (i=0; i<q.length; i++) {
+    //     qMatrix[i][i] = q[i]
+    // }
 
     
 
-    ut = transpose(u)
+    // ut = transpose(u)
     
-    vt = transpose(v)
+    // vt = transpose(v)
 
 
-    return [ ut, qMatrix, vt ]
+//     return [ ut, qMatrix, vt ]
+    return [q, u, v]
 }

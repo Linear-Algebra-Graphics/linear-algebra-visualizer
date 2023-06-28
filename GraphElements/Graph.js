@@ -37,9 +37,9 @@ class Graph {
         this.currentZoom               = 1
         this.zoomIncrement             = 1.1
         
-        this.finalBasis                = [[1,1,0],[1,1,0],[0,0,1]]
+        this.finalBasis                = [[0.44838321609003245,0.8938414241512637,0],[-0.3586652681480998,0.17991948245712944,-0.9159629933881666],[-0.8187256664799333, 0.41070243279483926,0.4012627502564743]]//[[1,1,0],[1,1,0],[0,0,1]]
         this.animationPercentage       = 0
-        this.animationTickAdd          = .25
+        this.animationTickAdd          = .01
         this.currentlyAnimating        = false
         
         this.xRotationMatrix           = [[1,0,0],[0,1,0],[0,0,1]]
@@ -57,13 +57,15 @@ class Graph {
 
     animate() {
         // debugger
-        let y = SVD([[1,1,0],[1,1,0],[0,0,1]])
+        let y = SVD(this.finalBasis)
         
-        console.log(y)
+        //console.log(y)
 
-        let U = y[0]
-        let E = y[1]
-        let V = y[2]
+        let S = y[0]
+        let U = transpose(y[1])
+        let V = transpose(y[2])
+        console.log(S)
+        //debugger
 
         //console.log(y)
         //console.log(matrixMultiplication(U, matrixMultiplication(E, transpose(V))))
@@ -85,26 +87,35 @@ class Graph {
         
         // We need to start at the I basis. So we need to go FROM 1 TO the singular value
         // in a smooth way.
+        let E = Array(3)
+        for (let i = 0; i < 3; i++) {
+            E[i] = Array(3).fill(0)
+        }
 
         for(let i = 0; i < E.length; i++) {
-            if (E[i][i] > 1) {
-                E[i][i] = 1 + ((E[i][i] - 1) * this.animationPercentage)
+            if (S[i] > 1) {
+                E[i][i] = 1 + ((S[i] - 1) * this.animationPercentage)
             } else {
-                E[i][i] = 1 - ((E[i][i] - 1) * this.animationPercentage)
+                E[i][i] = 1 - ((1 - S[i]) * this.animationPercentage)
             }
         }
+        console.log(E)
 
 
         let transitionR = this._makeRotationMatrix(angles[0], angles[1], angles[2])
         let transitionS = matrixMultiplication(V, matrixMultiplication(E, transpose(V)))
+        //if must be before animate percentage update!!!
+        if (this.animationPercentage > 1) {
+            this.currentlyAnimating = false
+        }
         
         this.animationPercentage += this.animationTickAdd
         
-        this.basis = matrixMultiplication(transitionR, transitionS)
         
-        if (this.animationPercentage >= 1) {
-            this.currentlyAnimating = false
-        }
+        this.basis = matrixMultiplication(transitionR, transitionS)
+        this.addObject(new Dot(this, matrixVectorMultiplication(this.basis, [1,0,0]), "blue"))
+        this.addObject(new Dot(this, matrixVectorMultiplication(this.basis, [0,1,0]), "red"))
+        this.addObject(new Dot(this, matrixVectorMultiplication(this.basis, [0,0,1]), "green"))
     }
 
 
@@ -581,3 +592,14 @@ function findTwoClosesPoints(dis_points) {
     return [twoClosestPoints[0][1], twoClosestPoints[1][1]]
 }
 
+class Dot {
+    constructor(graph, vector, color) { 
+        this.graph  = graph
+        this.vector = vector
+        this.color  = color
+    }
+
+    draw() {
+        this.graph.drawDotFromVector(this.vector, this.color, 3)
+    }
+}
