@@ -39,9 +39,12 @@ class Graph {
         
         //this.finalBasis                = [[0.44838321609003245,0.8938414241512637,0],[-0.3586652681480998,0.17991948245712944,-0.9159629933881666],[-0.8187256664799333, 0.41070243279483926,0.4012627502564743]]//[[1,1,0],[1,1,0],[0,0,1]]
         
-        //this.finalBasis = [[0,1,0],[-1,0,0],[0,0,1]]
-        this.finalBasis = [[0,2,0],[-2,0,0],[0,0,2]]
         this.finalBasis = [[0,1,0],[-1,0,0],[0,0,1]]
+        // this.finalBasis = [[0,2,0],[-2,0,0],[0,0,2]]
+        // this.finalBasis = [[0,.5,0],[-.5,0,0],[0,0,.5]]
+        // this.finalBasis = [[2,0,0],[0,2,0],[0,0,2]]
+        // this.finalBasis = [[2,1,0],[0,1,0],[0,0,1]]
+        // this.finalBasis = [[2,.5,0],[1,1,0],[0,0,1]]
 
 
         this.animationPercentage       = 0
@@ -69,7 +72,6 @@ class Graph {
         let S = SUV[0]
         let U = transpose(SUV[1])
         let V = transpose(SUV[2])
-        console.log(S)
         //debugger
 
         //console.log(y)
