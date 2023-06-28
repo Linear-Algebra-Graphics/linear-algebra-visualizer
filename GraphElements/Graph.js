@@ -37,9 +37,9 @@ class Graph {
         this.currentZoom               = 1
         this.zoomIncrement             = 1.1
         
-        this.finalBasis                = [[0,0,0],[0,1,0],[0,0,1]]
+        this.finalBasis                = [[1,1,0],[1,1,0],[0,0,1]]
         this.animationPercentage       = 0
-        this.animationTickAdd          = 1/600
+        this.animationTickAdd          = .25
         this.currentlyAnimating        = false
         
         this.xRotationMatrix           = [[1,0,0],[0,1,0],[0,0,1]]
@@ -56,12 +56,17 @@ class Graph {
     }
 
     animate() {
-        console.log("test")
-        let UEV = SVD(this.finalBasis)
+        // debugger
+        let y = SVD([[1,1,0],[1,1,0],[0,0,1]])
+        
+        console.log(SVD([[1,1,0],[1,1,0],[0,0,1]]))
 
-        let U = UEV[0]
-        let E = UEV[1]
-        let V = UEV[2]
+        let U = y[0]
+        let E = y[1]
+        let V = y[2]
+
+        //console.log(y)
+        //console.log(matrixMultiplication(U, matrixMultiplication(E, transpose(V))))
 
         // Polar decomp -> A = U E V^T = U V^T V E V^T = (U*V^T) (V E V^T) = U P
         // I will use U = R (Rotation) and P = S (Scale) 
@@ -80,6 +85,7 @@ class Graph {
         
         // We need to start at the I basis. So we need to go FROM 1 TO the singular value
         // in a smooth way.
+
         for(let i = 0; i < E.length; i++) {
             if (E[i][i] > 1) {
                 E[i][i] = 1 + ((E[i][i] - 1) * this.animationPercentage)
@@ -87,6 +93,7 @@ class Graph {
                 E[i][i] = 1 - ((E[i][i] - 1) * this.animationPercentage)
             }
         }
+
 
         let transitionR = this._makeRotationMatrix(angles[0], angles[1], angles[2])
         let transitionS = matrixMultiplication(V, matrixMultiplication(E, transpose(V)))
@@ -252,11 +259,11 @@ class Graph {
         }
         
         if (this.showGrid) {
-            if (this.noRotation()) {
-                    this.Grid.draw()
-            } else {
-                //make 3d definite grid
-            }
+            // if (this.noRotation()) {
+            //         this.Grid.draw()
+            // } else {
+            //     //make 3d definite grid
+            // }
             this.Grid.draw()
         }
         

@@ -3,6 +3,7 @@
  */
 class Grid {
     constructor(graph){
+        
         this.graph          = graph
         //lighter grid lines
         this.colorLight     = "#E6E6E3"
@@ -17,7 +18,6 @@ class Grid {
      * draws grid
      */
     draw() {
-        
         
         if (!this.graph.xAxisVisible() || !this.graph.yAxisVisible() || !this.graph.zAxisVisible()) {
             //infinite grid case
@@ -83,64 +83,66 @@ class Grid {
             
             //get minimum of two pgram heights
             let minPgramHeight = Math.min(perpXLength, perpYLength)
+            
         
             let iter_mult = Number.MAX_VALUE
             let iter_div = Number.MAX_VALUE
 
             //find if scaling is division or multiplication, and how many scaling iterations
             //keep if else for now
-            
-            // If statments are just for clarity
-            if (5 * minPgramHeight < 2.5 * boxW) {
-                iter_mult = 0
-                let factor = 5
-                let multScale = 2
-                while (factor * minPgramHeight < 2.5 * boxW) {
-                    minPgramHeight = minPgramHeight * multScale
-                    iter_mult++
-                    //we calculate scaling starting from unit square 1x1 on the graph
-                    //this means copying desmos the first merge up takes to a 4x4 from a 5x5.
-                    // therefore on the second iteration of the while loop, we check using factor 4, this then happens every 3 iterations
-                    if (iter_mult % 3 == 1) {
-                        factor = 4
-                        multScale = 2.5
-                    } else {
-                        factor = 5
-                        multScale = 2
-                    }
-                }
-            } else if (5 * minPgramHeight > 5 * boxW) {
-                iter_div = 0
-                let divScale = 2
-                while (5 * minPgramHeight > 5 * boxW) {
-                    minPgramHeight = minPgramHeight / divScale
-                    iter_div++
-                    if (iter_div % 3 == 1) {
-                        divScale = 2.5
-                    } else {
-                        divScale = 2
-                    }
-                }
-            }
-            
-            //get lower of the iteration counts => least # of scaling 
-            //to get back to standard boxW dimensions
-            let iters = iter_div
-            let div = true
-            if (iter_div == Number.MAX_VALUE) {
-                iters = iter_mult
-                div = false
-            }
-            if (iters == Number.MAX_VALUE) {
-                iters = 0
-            }
 
-            //2d infinite grid
-            this.drawHalfAxisGridInf(true, xBasis,yBasis, iters, div)
-            this.drawHalfAxisGridInf(false, neg_xBasis,yBasis, iters, div)
-            this.drawHalfAxisGridInf(true, yBasis, xBasis, iters, div)
-            this.drawHalfAxisGridInf(false, neg_yBasis, xBasis, iters, div)
-            
+            if (!(det3x3(this.graph.basis) < 0.000001 && det3x3(this.graph.basis) > -0.000001)) {
+                // If statments are just for clarity
+                if (5 * minPgramHeight < 2.5 * boxW) {
+                    iter_mult = 0
+                    let factor = 5
+                    let multScale = 2
+                    while (factor * minPgramHeight < 2.5 * boxW) {
+                        minPgramHeight = minPgramHeight * multScale
+                        iter_mult++
+                        //we calculate scaling starting from unit square 1x1 on the graph
+                        //this means copying desmos the first merge up takes to a 4x4 from a 5x5.
+                        // therefore on the second iteration of the while loop, we check using factor 4, this then happens every 3 iterations
+                        if (iter_mult % 3 == 1) {
+                            factor = 4
+                            multScale = 2.5
+                        } else {
+                            factor = 5
+                            multScale = 2
+                        }
+                    }
+                } else if (5 * minPgramHeight > 5 * boxW) {
+                    iter_div = 0
+                    let divScale = 2
+                    while (5 * minPgramHeight > 5 * boxW) {
+                        minPgramHeight = minPgramHeight / divScale
+                        iter_div++
+                        if (iter_div % 3 == 1) {
+                            divScale = 2.5
+                        } else {
+                            divScale = 2
+                        }
+                    }
+                }
+                
+                //get lower of the iteration counts => least # of scaling 
+                //to get back to standard boxW dimensions
+                let iters = iter_div
+                let div = true
+                if (iter_div == Number.MAX_VALUE) {
+                    iters = iter_mult
+                    div = false
+                }
+                if (iters == Number.MAX_VALUE) {
+                    iters = 0
+                }
+
+                //2d infinite grid
+                this.drawHalfAxisGridInf(true, xBasis,yBasis, iters, div)
+                this.drawHalfAxisGridInf(false, neg_xBasis,yBasis, iters, div)
+                this.drawHalfAxisGridInf(true, yBasis, xBasis, iters, div)
+                this.drawHalfAxisGridInf(false, neg_yBasis, xBasis, iters, div)
+            }
         } else {
             
             // there are gridSize lines on each half axis
@@ -236,6 +238,9 @@ class Grid {
         let x = this.graph.centerX
         let y = this.graph.centerY
 
+        let keepGoing = true
+        let lineCount = 0
+
         let xStep = this.graph.scale * axis[0]
         let yStep = this.graph.scale * axis[1]
         if (divide) {
@@ -262,8 +267,7 @@ class Grid {
             }
         }
         
-        let keepGoing = true
-        let lineCount = 0
+
         while (keepGoing) {
 
             let endPoints = getGraphBoundaryEndpoints(x, y, gridVector, this.graph)
