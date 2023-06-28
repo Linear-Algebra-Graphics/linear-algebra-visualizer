@@ -37,9 +37,15 @@ class Graph {
         this.currentZoom               = 1
         this.zoomIncrement             = 1.1
         
-        this.finalBasis                = [[0.44838321609003245,0.8938414241512637,0],[-0.3586652681480998,0.17991948245712944,-0.9159629933881666],[-0.8187256664799333, 0.41070243279483926,0.4012627502564743]]//[[1,1,0],[1,1,0],[0,0,1]]
+        //this.finalBasis                = [[0.44838321609003245,0.8938414241512637,0],[-0.3586652681480998,0.17991948245712944,-0.9159629933881666],[-0.8187256664799333, 0.41070243279483926,0.4012627502564743]]//[[1,1,0],[1,1,0],[0,0,1]]
+        
+        //this.finalBasis = [[0,1,0],[-1,0,0],[0,0,1]]
+        this.finalBasis = [[0,2,0],[-2,0,0],[0,0,2]]
+        this.finalBasis = [[0,1,0],[-1,0,0],[0,0,1]]
+
+
         this.animationPercentage       = 0
-        this.animationTickAdd          = .01
+        this.animationTickAdd          = 1/300
         this.currentlyAnimating        = false
         
         this.xRotationMatrix           = [[1,0,0],[0,1,0],[0,0,1]]
@@ -57,13 +63,12 @@ class Graph {
 
     animate() {
         // debugger
-        let y = SVD(this.finalBasis)
+        let SUV = SVD(transpose(this.finalBasis))
         
-        //console.log(y)
-
-        let S = y[0]
-        let U = transpose(y[1])
-        let V = transpose(y[2])
+        // S doesn't need to be transposed because its diagonal
+        let S = SUV[0]
+        let U = transpose(SUV[1])
+        let V = transpose(SUV[2])
         console.log(S)
         //debugger
 
