@@ -2,7 +2,7 @@
  * returns an instance of a graph grid
  */
 class Grid {
-    constructor(graph){
+    constructor(graph, colorLight, lineWidthLight, colorDark, lineWidthDark){
         
         this.graph          = graph
         //lighter grid lines
@@ -74,7 +74,7 @@ class Grid {
             let yLength = vectorLength(yBasis2D)
 
             //calculate area of parrallelogram defined by x and y axis vectors in R2
-            let angle = Math.acos((vectorMultiplication(xBasis2D, yBasis2D)) / (xLength * yLength))
+            let angle = Math.acos((dotProduct(xBasis2D, yBasis2D)) / (xLength * yLength))
             let area = xLength * yLength * Math.sin(angle)
 
             //calculate the two heights of the parrallelogram 
@@ -179,9 +179,9 @@ class Grid {
                     // let labelPtZ = this.graph.changeBasisZoomAndRotate([0, 0, i])
                     // let scale = this.graph.scale
 
-                    // let xAngle = Math.acos((vectorMultiplication([labelPtX[0], labelPtX[1]], [1, 0])) / (vectorLength([labelPtX[0], labelPtX[1]]) * vectorLength([1,0])))
-                    // let yAngle = Math.acos((vectorMultiplication([labelPtY[0], labelPtY[1]], [1, 0])) / (vectorLength([labelPtY[0], labelPtY[1]]) * vectorLength([1,0])))
-                    // let zAngle = Math.acos((vectorMultiplication([labelPtZ[0], labelPtZ[1]], [1, 0])) / (vectorLength([labelPtZ[0], labelPtZ[1]]) * vectorLength([1,0])))
+                    // let xAngle = Math.acos((dotProduct([labelPtX[0], labelPtX[1]], [1, 0])) / (vectorLength([labelPtX[0], labelPtX[1]]) * vectorLength([1,0])))
+                    // let yAngle = Math.acos((dotProduct([labelPtY[0], labelPtY[1]], [1, 0])) / (vectorLength([labelPtY[0], labelPtY[1]]) * vectorLength([1,0])))
+                    // let zAngle = Math.acos((dotProduct([labelPtZ[0], labelPtZ[1]], [1, 0])) / (vectorLength([labelPtZ[0], labelPtZ[1]]) * vectorLength([1,0])))
 
                     // if (xAngle >= Math.PI/4 && xAngle < 3*Math.PI/4) {
                     //     ctx.textAlign = 'center'
@@ -366,7 +366,7 @@ class Grid {
      */
     _addGridNumber(x, y, axis, gridVector, isPositiveAxis) {
         // grid numbers
-        let angle = Math.acos((vectorMultiplication([axis[0], axis[1]], [1, 0])) / (vectorLength([axis[0], axis[1]]) * vectorLength([1,0])))
+        let angle = Math.acos((dotProduct([axis[0], axis[1]], [1, 0])) / (vectorLength([axis[0], axis[1]]) * vectorLength([1,0])))
         // console.log(angle)
         this.graph.ctx.font = "30px Monospace"
         this.graph.ctx.fillStyle = "black"

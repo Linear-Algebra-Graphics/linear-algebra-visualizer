@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <script src="../LinearAlgebra/matrixMult.js"></script>
+        <script src="../LinearAlgebra/SVD.js"></script>
+        <script src="../LinearAlgebra/det.js"></script>
+        <script src="../LinearAlgebra/guassianElimination.js"></script>
+        
+
+
+        <script src="../GraphElements/Vector.js"></script>
+        <script src="../GraphElements/Axis.js"></script>
+        <script src="../GraphElements/Grid.js"></script>
+        <script src="../GraphElements/Graph.js"></script>
+        <script src="../GraphElements/LinearTransformation.js"></script>
+        <script src="../GraphElements/ThreeDimCubes.js"></script>
+    
+        <script src="script.js" defer></script>
+
+        <link rel="stylesheet" href="../style.css">
+        <link rel="stylesheet" href="../navigationBar.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+    <body>
+        <div class="topnav">
+            <a href="index.html">Linear Transformation</a>
+            <a class="active" href="..//LinearTransformation/index.html">Gaussian Eliminatioon</a>
+        </div>
+        Long Live Guassia!
+        <div class="box">
+            <title>Change of basis Example</title>
+            <div id="graph-container">
+                <canvas id="graph" style="border:1px solid #000000;"></canvas>
+            </div>
+            <div id="adjustment-buttons">
+                <label>Infinite Axis</label>
+                <input type="checkbox" id="infiniteAxis" ></input>
+                <label>Show Grid</label>
+                <input type="checkbox" id="showGrid" checked=""></input>
+                <label> zoom: </label>
+                <button id="zoomIn" marginLeft="10px">+</button>
+                <button id="zoomOut" marginLeft="10px"> - </button>
+                <button id="defaultZoom" marginLeft="10px"> default zoom </button>
+                <button id="defaultOrientation" marginLeft="10px"> default orientation</button>
+                <button id="darkMode">Dark Mode!</button>
+            </div>
+        </div>
+    </body>
+</html>

@@ -29,3 +29,7 @@ add random vector function
 Fix numbers because they are totalloy broken
 
 Fix decieml numbers so looks right. Now its odd.
+
+Transpose:
+    Change name to transpsoeMatrix
+    Make it work for non square matries

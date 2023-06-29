@@ -52,7 +52,7 @@ function matrixMultiplication(leftMatrix, rightMatrix) {
  * @requires : that vector1 and vector2 have the same dimension
  * @returns a numerical value vector1 * vector2
  */
-function vectorMultiplication(vector1, vector2) {
+function dotProduct(vector1, vector2) {
     if (vector1.length != vector2.length) {
         return null
     }
@@ -62,6 +62,30 @@ function vectorMultiplication(vector1, vector2) {
     }
     return output
 }
+
+/**
+ * returns the matrix result of vector multiplication
+ * @param {*} v1 a column vector
+ * @param {*} v2 a column vector
+ * @requires : vectors v1 and v2 both in Rn
+ * @returns v1 * v2^T
+ */
+function vectorMultiplication(v1, v2) {
+    let output = new Array(v2.length)
+
+    for (let i = 0; i < v2.length; i++) {
+        output[i] = new Array(v2.length);
+    }
+
+    for (let i = 0; i < v2.length; i++) {
+        let factor = v2[i]
+        for (let j = 0; j < v2.length; j++) {
+            output[i][j] = v1[j] * factor
+        }
+    }
+    return output
+}
+
 
 /**
  * checks if two matrices are equal
@@ -132,19 +156,27 @@ function getXIntersept(y, m, b) {
     return (y - b) / m
 }
 
+/**
+ * NEEDS FIX!! ONLY WORKS FOR SQUARE MATRICES!!!
+ * returns the transpose of input matrix 
+ * @param {*} matrix a matrix as defined by us two idiots
+ * @returns the transposed matrix in the matrix form defined by us two idiots, ie [[a,b,c],[d,e,f],[g,h,i]] for 3x3
+ */
 function transpose(matrix) {
 
     outputMatrix = new Array(matrix[0].length)
-
-    for (i=0; i<outputMatrix.length; i++) {
+    
+    for (i = 0; i < outputMatrix.length; i++) {
         outputMatrix[i] = new Array(matrix.length)
     }
 
-    for (i=0; i<matrix.length; i++) {
-        for (j=0; j<matrix[i].length; j++) {
+    for (i = 0; i < matrix.length; i++) {
+        for (j = 0; j < matrix[i].length; j++) {
             outputMatrix[j][i] = matrix[i][j]
         }
     }
 
     return outputMatrix
 }
+
+// [[1],[2],[3]]

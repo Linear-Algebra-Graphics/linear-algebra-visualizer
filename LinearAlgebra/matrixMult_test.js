@@ -26,5 +26,9 @@ checkEqual(matrixEquals(matrixMultiplication([[1,2,3],[4,5,6],[7,8,9]],  [[1,4,7
 
 checkEqual(matrixEquals(matrixMultiplication([[7, 8, 9],[10, 11, 12]], [[1, 2],[3, 4],[5, 6]]), [[27, 30, 33], [61, 68, 75], [95, 106, 117]]), true, "matrix multiplcation 4")
 
-checkEqual(vectorMultiplication([1,2], [3,4]), 11, "vec vec mult 1")
-checkEqual(vectorMultiplication([1,2,5], [3,4,2]), 21, "vec vec mult 2")
+checkEqual(dotProduct([1,2], [3,4]), 11, "dot product 1")
+checkEqual(dotProduct([1,2,5], [3,4,2]), 21, "dot product 2")
+
+checkEqual(matrixEquals(vectorMultiplication([1,2,3],[4,5,6]), [[4,8,12],[5,10,15],[6,12,18]]), true, "vector mult 1")
+checkEqual(matrixEquals(vectorMultiplication([2,5,1],[1,4,5]), [[2,5,1],[8,20,4],[10,25,5]]), true, "vector mul 2")
+checkEqual(matrixEquals(vectorMultiplication([-6,-5,1],[-3,4,-15]), [[18,15,-3],[-24,-20,4],[90,75,-15]]), true, "vector mul 3")
