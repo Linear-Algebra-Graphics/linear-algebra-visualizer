@@ -2,11 +2,9 @@
 
 <html>
     <head>
-        
         <script src="LinearAlgebra/matrixMult.js"></script>
         <script src="LinearAlgebra/SVD.js"></script>
         <script src="LinearAlgebra/det.js"></script>
-        <script src="LinearAlgebra/guassianElimination.js"></script>
         
 
 
@@ -24,13 +22,13 @@
         <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="navigationBar.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
     </head>
     <body>
         <div class="topnav">
-            <a class="active" href="#Linear Transformation">Linear Transformation</a>
-            <a href="gaussianElimination.html">Gaussian Eliminatioon</a>
+            <a href="index.html">Linear Transformation</a>
+            <a class="active" href="gaussianElimination.html">Gaussian Eliminatioon</a>
         </div>
+        Long Live Guassia!
         <div class="box">
             <title>Change of basis Example</title>
             <div id="graph-container">
@@ -105,13 +103,12 @@
                     <input id="x" size="5px" class="arrow-togglable" type="text" autocomplete="off"/>
                     <input id="y" size="5px" class="arrow-togglable" type="text" autocomplete="off"/>
                     <input id="z" size="5px" class="arrow-togglable" type="text" autocomplete="off"/>
-                    <input type="color" id="vector colors" value="#000000">
-                    <!-- <select id="vector colors" default="black">
+                    <select id="vector colors" default="black">
                         <option value="black">black</option>
                         <option value="green">green</option>
                         <option value="blue">blue</option>
                         <option value="white">white</option>
-                    </select> -->
+                    </select>
                     <button id="graphButton" marginLeft="10px">graph!</button>
                     <!-- <button id="showGrid" marginLeft="10px">show grid!</button> -->
                 </div>

@@ -1,7 +1,11 @@
-class ThreeDimCube {
 
-    constructor(graph){
+
+
+class CenteredThreeDimCube {
+
+    constructor(graph, color, cubeType){
         this.graph  = graph
+        this.color = color
         this.points = [
             [0,0,0],
             [1,0,0],
@@ -15,25 +19,36 @@ class ThreeDimCube {
         ]
 
         this.lines = [
-            [0,1, "orange"],
-            [1,3, "orange"],
-            [3,2, "orange"],
-            [2,0, "orange"],
+            [0,1, this.color],
+            [1,3, this.color],
+            [3,2, this.color],
+            [2,0, this.color],
 
-            [4,5, "orange"],
-            [5,7, "orange"],
-            [7,6, "orange"],
-            [6,4, "orange"],
+            [4,5, this.color],
+            [5,7, this.color],
+            [7,6, this.color],
+            [6,4, this.color],
 
-            [0,4, "orange"],
-            [2,6, "orange"],
-            [3,7, "orange"],
-            [1,5, "orange"]
+            [0,4, this.color],
+            [2,6, this.color],
+            [3,7, this.color],
+            [1,5, this.color]
 
         ]
 
-        this.scale = 2
-        this.offset = [-.5, -.5, -.5]
+        if (cubeType == "centered") {
+            this.scale = 2
+            this.offset = [-.5, -.5, -.5]
+        } else {
+            this.scale = 1
+            this.offset = [0, 0, 0]
+        }
+        
+        this.linearTransformation = new LinearTransformation([[1,0,0],[0,1,0],[0,0,1]])
+    }
+
+    setTransformation(linearTransformation) {
+        this.linearTransformation = linearTransformation
     }
 
     draw() {
@@ -47,6 +62,9 @@ class ThreeDimCube {
 
             point1 = [point1[0] + this.offset[0], point1[1] + this.offset[1], point1[2] + this.offset[2]]
             point2 = [point2[0] + this.offset[0], point2[1] + this.offset[1], point2[2] + this.offset[2]]
+
+            point1 = matrixVectorMultiplication(this.linearTransformation.matrix, point1)
+            point2 = matrixVectorMultiplication(this.linearTransformation.matrix, point2)
 
             let firstPointUpdated  = this.graph.changeBasisZoomAndRotate(point1)
             let secondPointUpdated = this.graph.changeBasisZoomAndRotate(point2)    
@@ -69,7 +87,5 @@ class ThreeDimCube {
             )
     
           }
-
-
     }
 }

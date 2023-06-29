@@ -16,7 +16,12 @@ class Vector {
         this.lineWidth = lineWidth
         this.arrow     = arrow
         this.label     = label
-    }   
+        this.linearTransformation = new LinearTransformation([[1,0,0],[0,1,0],[0,0,1]])
+    }
+
+    setTransformation(linearTransformation) {
+        this.linearTransformation = linearTransformation
+    }
 
     /**
      * draws the vector on the graph, according to 
@@ -24,14 +29,16 @@ class Vector {
      */
     draw() {
         //check if vector is significantly larger than canvas
-        this.graph.drawPointToPoint([0,0,0], this.cords, this.color, this.lineWidth)
+        let transformedCords = matrixVectorMultiplication(this.linearTransformation.matrix, this.cords)
+
+        this.graph.drawPointToPoint([0,0,0], transformedCords, this.color, this.lineWidth)
 
         if(this.arrow) {
             let arrowLength = .3
             if (this.graph.currentZoom <= 1) {
                 arrowLength = arrowLength * this.graph.currentZoom
             }
-            let inBasisCords = this.graph.changeBasisZoomAndRotate(this.cords)
+            let inBasisCords = this.graph.changeBasisZoomAndRotate(transformedCords)
 
             let vectorLength = Math.abs( Math.sqrt( Math.pow(inBasisCords[0], 2) + Math.pow(inBasisCords[1], 2) + Math.pow(inBasisCords[2], 2)) )
             let inverseNormalizedVectorButThenScaledToCorrectLength = [arrowLength * -1 * (1/vectorLength) * inBasisCords[0], arrowLength * -1 * (1/vectorLength) * inBasisCords[1], arrowLength * -1 * (1/vectorLength) * inBasisCords[2]]
@@ -56,7 +63,7 @@ class Vector {
         if (this.label != "") {
                         
                         
-            let inBasisCords = this.graph.changeBasisZoomAndRotate(this.cords)
+            let inBasisCords = this.graph.changeBasisZoomAndRotate(transformedCords)
             
             let scale = this.graph.scale
             let centerX = this.graph.centerX
@@ -78,13 +85,13 @@ class Vector {
             let labelY = centerY - (scale * inBasisCords[1]) - labelYOffset
             
             if (this.label == "cords") {
-                this.graph.ctx.fillText("(" + formatNumber(this.cords[0]) + "," + formatNumber(this.cords[1]) + "," + formatNumber(this.cords[2]) + ")", labelX, labelY)
+                this.graph.ctx.fillText("(" + formatNumber(transformedCords[0]) + "," + formatNumber(transformedCords[1]) + "," + formatNumber(transformedCords[2]) + ")", labelX, labelY)
             } else {
                 this.graph.ctx.fillText(this.label, labelX, labelY)
             }
         }
 
-        this.graph.drawDotFromVector(this.cords, this.color, 1)
+        this.graph.drawDotFromVector(transformedCords, this.color, 1)
     }
 
     /**

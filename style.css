@@ -149,3 +149,8 @@ input:checked + .slider:before {
 .slider.round:before {
     border-radius: 50%;
 }
+
+#cube-adder {
+    margin-top: 20px;
+    margin-left: 20px
+}

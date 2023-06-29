@@ -5,6 +5,8 @@ let yInput = document.getElementById("y")
 let zInput = document.getElementById("z")
 let vectorColors = document.getElementById("vector colors")
 
+linearTransformation = new LinearTransformation([[1,0,0],[0,1,0],[0,0,1]])
+
 displayWidth  = 1000
 displayHeight = 700
 
@@ -155,6 +157,15 @@ for (let i = 0; i < inputMatrices.length; i++) {
     }
 }
 
+document.getElementById("addCube").addEventListener("click", function() {
+    let type = document.getElementById("cube-options").value
+    let color = document.getElementById("cube-color").value
+    let cube 
+    cube = new CenteredThreeDimCube(test_graph, color, type)
+    cube.setTransformation(linearTransformation)
+    test_graph.addObject(cube)
+})
+
 // //scale needs to change
 // //since with scale = 1 graphed vectors are too small
 document.getElementById("graphButton").addEventListener("click", function() {
@@ -162,7 +173,9 @@ document.getElementById("graphButton").addEventListener("click", function() {
     let y = parseFloat(yInput.value)
     let z = parseFloat(zInput.value)
     let color = vectorColors.value
-    test_graph.addObject(new Vector(test_graph, [x, y, z], color, 4, true, "cords"))
+    let thisVector = new Vector(test_graph, [x, y, z], color, 4, true, "cords")
+    thisVector.setTransformation(linearTransformation)
+    test_graph.addObject(thisVector)
 })
 
 document.getElementById("zoomIn").addEventListener("click", function() {
@@ -224,7 +237,7 @@ document.getElementById("slider").addEventListener("input", function() {
     //do matrix multy stuff with document.getElementById("slider").value
     switch(parseInt(document.getElementById("slider").value)) {
         case 0:
-            test_graph.basis = [[1,0,0],[0,1,0],[0,0,1]]
+            linearTransformation.setTransformation([[1,0,0],[0,1,0],[0,0,1]])
             break;
         case 1:
             matrix_a = getMatrixFromTable("matrix-A")
@@ -232,7 +245,7 @@ document.getElementById("slider").addEventListener("input", function() {
             if (matrix_a === null) {
                 alert("Invalid Matrix")
             } else {
-                test_graph.basis = matrix_a
+                linearTransformation.setTransformation(matrix_a)
             }
             break;
             // code block
@@ -243,7 +256,7 @@ document.getElementById("slider").addEventListener("input", function() {
             if (matrix_a === null || matrix_b === null) {
                 alert("Invalid Matrix")
             } else {
-                test_graph.basis = matrixMultiplication(matrix_b, matrix_a)
+                linearTransformation.setTransformation(matrixMultiplication(matrix_b, matrix_a))
             }
             break;
         case 3:
@@ -254,7 +267,7 @@ document.getElementById("slider").addEventListener("input", function() {
             if (matrix_a === null || matrix_b === null || matrix_c === null) {
                 alert("Invalid Matrix")
             } else {
-                test_graph.basis = matrixMultiplication(matrix_c, matrixMultiplication(matrix_b, matrix_a))
+                linearTransformation.setTransformation(matrixMultiplication(matrix_c, matrixMultiplication(matrix_b, matrix_a)))
             }
             // code block
             break;
@@ -315,4 +328,4 @@ setInterval(function() {
 //test_graph.infiniteAxis = false
 
 
-test_graph.addObject(new ThreeDimCube(test_graph))
+//test_graph.addObject(new ThreeDimCube(test_graph))

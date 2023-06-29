@@ -163,23 +163,55 @@ class Grid {
                     
                     //grid numbers - they currently look bad
                     
-                    // this.graph.ctx.font = "30px Monospace"
-                    // this.graph.ctx.fillStyle = "black"
-                    // this.graph.ctx.textAlign = 'center'
-                    // this.graph.ctx.textBaseline = 'middle';
+                    // ctx.font = "30px Monospace"
+                    // ctx.fillStyle = "black"
+                
+                    // if (angle >= Math.PI/4 && angle < 3*Math.PI/4) {
+                    //     ctx.textAlign = 'center'
+                    //     ctx.textBaseline = 'middle';
+                    // } else {
+                    //     ctx.textAlign = 'center'
+                    //     ctx.textBaseline = 'middle';
+                    // }
 
                     // let labelPtX = this.graph.changeBasisZoomAndRotate([i, 0, 0])
                     // let labelPtY = this.graph.changeBasisZoomAndRotate([0, i, 0])
                     // let labelPtZ = this.graph.changeBasisZoomAndRotate([0, 0, i])
                     // let scale = this.graph.scale
 
-                    // this.graph.ctx.fillText(i, this.graph.centerX + (scale * labelPtX[0]), this.graph.centerY - (scale * labelPtX[1]))
-                    // this.graph.ctx.fillText(i, this.graph.centerX + (scale * labelPtY[0]), this.graph.centerY - (scale * labelPtY[1]))
-                    // this.graph.ctx.fillText(i, this.graph.centerX + (scale * labelPtZ[0]), this.graph.centerY - (scale * labelPtZ[1]))
+                    // let xAngle = Math.acos((vectorMultiplication([labelPtX[0], labelPtX[1]], [1, 0])) / (vectorLength([labelPtX[0], labelPtX[1]]) * vectorLength([1,0])))
+                    // let yAngle = Math.acos((vectorMultiplication([labelPtY[0], labelPtY[1]], [1, 0])) / (vectorLength([labelPtY[0], labelPtY[1]]) * vectorLength([1,0])))
+                    // let zAngle = Math.acos((vectorMultiplication([labelPtZ[0], labelPtZ[1]], [1, 0])) / (vectorLength([labelPtZ[0], labelPtZ[1]]) * vectorLength([1,0])))
 
-                    // this.graph.ctx.fillText(-1*i, this.graph.centerX - (scale * labelPtX[0]), this.graph.centerY + (scale * labelPtX[1]))
-                    // this.graph.ctx.fillText(-1*i, this.graph.centerX - (scale * labelPtY[0]), this.graph.centerY + (scale * labelPtY[1]))
-                    // this.graph.ctx.fillText(-1*i, this.graph.centerX - (scale * labelPtZ[0]), this.graph.centerY + (scale * labelPtZ[1]))
+                    // if (xAngle >= Math.PI/4 && xAngle < 3*Math.PI/4) {
+                    //     ctx.textAlign = 'center'
+                    //     ctx.textBaseline = 'middle';
+                    // } else {
+                    //     ctx.textAlign = 'center'
+                    //     ctx.textBaseline = 'middle';
+                    // }
+                    // ctx.fillText(i, this.graph.centerX + (scale * labelPtX[0]), this.graph.centerY - (scale * labelPtX[1]))
+                    // ctx.fillText(-1*i, this.graph.centerX - (scale * labelPtX[0]), this.graph.centerY + (scale * labelPtX[1]))
+
+                    // if (yAngle >= Math.PI/4 && yAngle < 3*Math.PI/4) {
+                    //     ctx.textAlign = 'center'
+                    //     ctx.textBaseline = 'middle';
+                    // } else {
+                    //     ctx.textAlign = 'center'
+                    //     ctx.textBaseline = 'middle';
+                    // }
+                    // ctx.fillText(i, this.graph.centerX + (scale * labelPtY[0]), this.graph.centerY - (scale * labelPtY[1]))
+                    // ctx.fillText(-1*i, this.graph.centerX - (scale * labelPtY[0]), this.graph.centerY + (scale * labelPtY[1]))
+
+                    // if (zAngle >= Math.PI/4 && zAngle < 3*Math.PI/4) {
+                    //     ctx.textAlign = 'center'
+                    //     ctx.textBaseline = 'middle';
+                    // } else {
+                    //     ctx.textAlign = 'center'
+                    //     ctx.textBaseline = 'middle';
+                    // }
+                    // ctx.fillText(i, this.graph.centerX + (scale * labelPtZ[0]), this.graph.centerY - (scale * labelPtZ[1]))
+                    // ctx.fillText(-1*i, this.graph.centerX - (scale * labelPtZ[0]), this.graph.centerY + (scale * labelPtZ[1]))
                 //    this.graph.
                 }
                 // xy plane
@@ -304,7 +336,8 @@ class Grid {
                 // Make every fith line dark
                 if (lineCount % boxSize == 0) {
                     this.graph.drawLine([startX, startY],[endX, endY], this.colorDark, this.lineWidthDark);
-
+                    
+                    //do not want to add 0 4 times (once per half axis call)
                     if (lineCount != 0) {
                         this._addGridNumber(x, y, axis, gridVector, isPositiveAxis)
                     }
@@ -339,11 +372,11 @@ class Grid {
         this.graph.ctx.fillStyle = "black"
     
         if (angle >= Math.PI/4 && angle < 3*Math.PI/4) {
-            this.graph.ctx.textAlign = 'right'
+            this.graph.ctx.textAlign = 'center'
             this.graph.ctx.textBaseline = 'middle';
         } else {
             this.graph.ctx.textAlign = 'center'
-            this.graph.ctx.textBaseline = 'top';
+            this.graph.ctx.textBaseline = 'middle';
         }
         
         // calculate value at current gridline
@@ -361,8 +394,8 @@ class Grid {
         
         //offset grid numbers from axis
         let scale = this.graph.scale
-        let gridNumX = (0.5 * scale * gridVector[0]/vectorLength(gridVector))
-        let gridNumY = (0.5 * scale * gridVector[1]/vectorLength(gridVector))
+        let gridNumX = (0.9 * scale * gridVector[0]/vectorLength(gridVector))
+        let gridNumY = (0.9 * scale * gridVector[1]/vectorLength(gridVector))
         this.graph.ctx.fillText(indexVal, x - gridNumX, y + gridNumY)
     }
 }
@@ -375,7 +408,7 @@ class Grid {
  * @return returns dist formatted as a string
  */
 function formatNumber(dist) {
-    let expStr = "" + dist 
+    let expStr = ""
     // convert to scienfitic notation if index is greater than value
     if (dist / 1000000 > 1 || dist * 100 < 1) {
         expStr = dist.toExponential()
