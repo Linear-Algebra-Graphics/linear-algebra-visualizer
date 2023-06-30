@@ -1,5 +1,3 @@
-
-
 function GramSchmidt (v) {
     let u = Array(vectorList.length)
 
