@@ -124,11 +124,32 @@ function vectorEquals(vector1, vector2) {
 
 /**
  * returns the length of a vector
- * @param {*} vector the vector in question
+ * @param {*} vector a 2d vector
  * @returns length of vector
  */
 function vectorLength(vector) {
-    return Math.abs( Math.sqrt( Math.pow(vector[0], 2) + Math.pow(vector[1], 2)) )
+    let sum = 0;
+    for (let i = 0; i < vector.length; i++) {
+        sum += Math.pow(vector[i], 2)
+    }
+    
+    return Math.abs(Math.sqrt(sum))
+}
+
+/**
+ * normalizes a vector of any dimension
+ * @param {*} v vector to be normalized
+ * @returns normalized vector
+ */
+function normalizeVector(v) {
+    
+    let length = vectorLength(v)
+    
+    for (i = 0; i < v.length; i++) {
+        v[i] = v[i] / length
+    }
+
+    return v
 }
 
 /**

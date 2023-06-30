@@ -12,10 +12,13 @@
  *              |d e f|y|
  *              |g h i|z|
  * using partial pivot method
- * @param {*} matrixWithAugment augmenting matrix
+ * @param {*} inputMatrixWithAugment augmenting matrix
  * @modifies matrixWithAugment to be in parital pivoted reduced echelon form
  */
-function gaussianElimination(matrixWithAugment) {
+function gaussianElimination(inputMatrixWithAugment) {
+    //make local copy of matrixWithAugment
+    let matrixWithAugment = JSON.parse(JSON.stringify(inputMatrixWithAugment))
+
     //tech dont need to do very last column i think, so -2 instead of -1
     for(let columb = 0; columb < matrixWithAugment.length - 2; columb++) {
         

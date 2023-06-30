@@ -6,6 +6,7 @@
         <script src="../LinearAlgebra/SVD.js"></script>
         <script src="../LinearAlgebra/det.js"></script>
         <script src="../LinearAlgebra/guassianElimination.js"></script>
+        <script src="../LinearAlgebra/GramSchmidt.js"></script>
         
 
 
@@ -15,6 +16,8 @@
         <script src="../GraphElements/Graph.js"></script>
         <script src="../GraphElements/LinearTransformation.js"></script>
         <script src="../GraphElements/ThreeDimCubes.js"></script>
+        <script src="../GraphElements/Plane.js"></script>
+
     
         <script src="script.js" defer></script>
 
@@ -24,8 +27,8 @@
     </head>
     <body>
         <div class="topnav">
-            <a href="index.html">Linear Transformation</a>
-            <a class="active" href="..//LinearTransformation/index.html">Gaussian Eliminatioon</a>
+            <a href="..\LinearTransformation\index.html">Linear Transformation</a>
+            <a class="active" href="">Gaussian Eliminatioon</a>
         </div>
         Long Live Guassia!
         <div class="box">
@@ -45,6 +48,21 @@
                 <button id="defaultOrientation" marginLeft="10px"> default orientation</button>
                 <button id="darkMode">Dark Mode!</button>
             </div>
+        </div>
+        <h2>Vector Input</h2>
+        <div id="vector-input">
+            <input id="x" size="5px" class="arrow-togglable" type="text" autocomplete="off"/>
+            <input id="y" size="5px" class="arrow-togglable" type="text" autocomplete="off"/>
+            <input id="z" size="5px" class="arrow-togglable" type="text" autocomplete="off"/>
+            <input type="color" id="vector colors" value="#000000">
+            <!-- <select id="vector colors" default="black">
+                <option value="black">black</option>
+                <option value="green">green</option>
+                <option value="blue">blue</option>
+                <option value="white">white</option>
+            </select> -->
+            <button id="graphButton" marginLeft="10px">graph!</button>
+            <!-- <button id="showGrid" marginLeft="10px">show grid!</button> -->
         </div>
     </body>
 </html>

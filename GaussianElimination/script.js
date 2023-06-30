@@ -133,6 +133,18 @@ document.getElementById("defaultOrientation").addEventListener("click", function
     y = 0
 })
 
+// //scale needs to change
+// //since with scale = 1 graphed vectors are too small
+document.getElementById("graphButton").addEventListener("click", function() {
+    let x = parseFloat(xInput.value)
+    let y = parseFloat(yInput.value)
+    let z = parseFloat(zInput.value)
+    let color = vectorColors.value
+    let thisVector = new Vector(test_graph, [x, y, z], color, 4, true, "cords")
+    thisVector.setTransformation(linearTransformation)
+    test_graph.addObject(thisVector)
+})
+
 
 test_graph.draw()
 
