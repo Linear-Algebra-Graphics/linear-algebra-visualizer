@@ -1,3 +1,120 @@
+
+/**
+ * IDEA! find polygons by getting all individual lines from planes and intersections, then 
+ * recursive down each half and keep splitting until not splittable, the not splittable result is 
+ * a single polygon????
+ * 
+ * then apply painters algorithm and boom boom boom....??!!
+ * 
+ * 
+ * 
+ * I THINK theres is max 22 polygons in this overlap..., so can initilize size 22 array for speed in graph
+ * 
+ * need to get overall outline of all plane intersections
+ * perhaps find all intersecting points, then sort by distance from center point. 
+ * you then begin with 3 smallest distance points, and add points to set,
+ * if the added point is already within the polygon enclosed by the set, then do not add, else add
+ * 
+ * lines defining polygon must not be infinite, need start and end point, info (ez get from vertices)
+ * 
+ * 
+ * you know what if we recursived down each plane, and used its intersect lines with the other planes as split reference? <= seems goodd....
+ * yes this is the plan
+ * 
+ * 1) recursively reduce each plane into its splitted polygons, using set of all lines defined by other planes
+ *      a) each subpolygon must keep its color information
+ *      b) each polygon must keep track of its lowest z value point
+ * 2) compile all polygons from planes, and sort w.r.t z values, 
+ * 3) iterate through list of polygons, drawing in order of most to least distance to viewer in 3d
+ * 
+ * 
+ * IDEA REVISED:
+ * 1) find 4 endpoints for all planes
+ * 2) find all intersections lines between planes
+ * 3) call algorithm(plane1, [intersections with plane2, plane3]), repeat for plane2, plane3 -> returns list of polygons
+ *     a) We now have 4 points for edges of plane also UP TO two intersection lines
+ *     b) take first intersect line in list, call splitpolygon() which will return two polygons. Then with second line split those two polygons again
+ *     c) repeat until list of intersect lines is empty
+ *     d) add polygon to return list
+ * 4) compile all polygons
+ * 5) sort by lowest z coordinate
+ * 6) draw in order
+ * 
+ */
+
+
+
+
+
+
+
+
+// /**
+//  * 
+//  * @param {*} shape polygon defined by points relative to nonRotated standard basis in graph (gauranteed to be 4 sided for our uses)
+//  * @param {*} lines lines with witch shape could be split
+//  * @param {*} color color of shape and all subshapes
+//  * @returns an array of all polygons, sorted by z????
+//  */
+// function getSubPolygons(polygon, lines, color, alpha) {
+//     //line is defined by Ax + By = C
+//     //for each line need (A, B, C) and endpoints point1, point2
+//     let polygonLines = new Array(polygon.length - 1)
+//     for (let i = 0; i < polygon.length - 1; i++) {
+//         const start = polygon[i]
+//         const end = polygon[i + 1]
+
+//         let a = end[0] - start[0]
+//         let b = end[1] - start[1]
+//         let c = end[2] - start[2]
+
+//         //
+//         //line is defined as two dimensional since that is the visual intersectino we care about
+//         polygonLines[i] = {abc: [a, b, c], start: [start[0], start[1], start[2]], end: [end[0], end[1], end[2]], inf: false}
+//     }
+
+
+//     let intersects = false
+//     for (let i = 0; i < lines.length; i++) { 
+//         for (let j = 0; j < polygonLines.length; j++) {
+//             if (lines2DIntersect(polygonLines[j], lines[i])) {
+//                 intersects = true
+//                 //split into polygons
+//             }
+//             if (intersects) {
+//                 break
+//             }
+//         }
+//         if (intersects) {
+//             break
+//         }
+//     }
+
+//     if (!intersects) {
+        
+//     }
+// }
+
+
+// function lines2DIntersect(line1, line2) {
+//     const a1 = line1.abc[0]
+//     const b1 = line1.abc[1]
+//     const c1 = line1.abc[2]
+
+//     const a2 = line2.abc[0]
+//     const b2 = line2.abc[1]
+//     const c2 = line2.abc[2]
+//     const det = (a1 * b2) - (a2 * b1)
+
+//     if (det != 0) {
+//         let x = ((b2 * c1) - (b1 * c2)) / det
+//         let y = ((a1 * c2) - (a2 * c1)) / det
+//         return [x, y]
+//     }
+
+//     return []
+// }
+
 class Plane {
     /**
      * creates an instance of a plane
@@ -15,10 +132,12 @@ class Plane {
         this.centerCords = centerCords
         this.sideLength  = sideLength
         this.color       = color
-
     }
-    
-    draw() {
+
+    /**
+     * must return vertices in drawable order, ie traveling around shape
+     */
+    getLines() {
         //ax + by + cz = 0
 
         // x = (-b(1)-c(1))/a
@@ -32,12 +151,12 @@ class Plane {
         // cz = -ax -by     |-a/c -b/c|
         //then get perp basis...
         //
-
+        
         let a = this.normal[0]
         let b = this.normal[1]
         let c = this.normal[2]
 
-        if(a==0 && b==0 && c==0) {
+        if(a == 0 && b == 0 && c == 0) {
             throw new Error("Normal vector is [0,0,0]")
         }
 
@@ -91,7 +210,76 @@ class Plane {
         corner2 = scaleVector(corner2, this.graph.scale)
         corner3 = scaleVector(corner3, this.graph.scale)
         corner4 = scaleVector(corner4, this.graph.scale)
+
+        let line1 = new Line(corner1, corner3, false)
+        let line2 = new Line(corner3, corner4, false)
+        let line3 = new Line(corner4, corner2, false)
+        let line4 = new Line(corner2, corner1, false)
+
+        return  [line1, line2, line3, line4]
+    }
+    
+    draw() {
+
+        let a = this.normal[0]
+        let b = this.normal[1]
+        let c = this.normal[2]
+
+        if(a == 0 && b == 0 && c == 0) {
+            throw new Error("Normal vector is [0,0,0]")
+        }
+
+        let planeBasis = new Array(2)
+
+        if(a != 0) {
+            // x = -(b/a)y - (c/a)z   |-b/a -c/a|
+            // y = y + 0z             |1       0|
+            // z = 0y + z             |0       1|
+            
+            planeBasis[0] = [(-1 * b/a), 1, 0]
+            planeBasis[1] = [(-1 * c/a), 0, 1]
+            
+        } else if (b != 0) {
+            // x = x + 0z             |1       0|
+            // y = -(a/b)x - (c/b)z   |-a/b -c/b|
+            // z = 0x + z             |0       1|
+            
+            planeBasis[0] = [1,(-1 * a/b),0]
+            planeBasis[1] = [0,(-1 * b/c),1]
+            
+        } else {
+            // x = x                  |1       0|
+            // y = y                  |0       1|
+            // z = -(a/c)x - (b/c)y   |-a/c -b/c|
+
+            planeBasis[0] = [1,0,-a/c]
+            planeBasis[1] = [0,1,-b/c]
+        }
+
+        let orthanormalBasis = GramSchmidt(planeBasis)
+        let basisVec1 = this.graph.changeBasisZoomAndRotate(orthanormalBasis[0])
+        let basisVec2 = this.graph.changeBasisZoomAndRotate(orthanormalBasis[1])
+
+
+
+        // there are gridSize lines on each half axis
+        let gridSize = this.sideLength
+        //this.graph.drawPointToPoint([3,3, 0], [10,3, 0], "green", 3)
+
+        // let xAxisVec = this.changeBasisZoomAndRotate([gridSize,0,0])
+        // let yAxisVec = this.changeBasisZoomAndRotate([0,gridSize,0])
         
+        let corner1 = vectorAdd(scaleVector(basisVec2, -1 * gridSize), scaleVector(basisVec1, gridSize))
+        let corner2 = vectorAdd(scaleVector(basisVec2, -1 * gridSize), scaleVector(basisVec1, -gridSize))
+
+        let corner3 = vectorAdd(scaleVector(basisVec2, gridSize), scaleVector(basisVec1, gridSize))
+        let corner4 = vectorAdd(scaleVector(basisVec2, gridSize), scaleVector(basisVec1, -gridSize))
+
+        corner1 = scaleVector(corner1, this.graph.scale)
+        corner2 = scaleVector(corner2, this.graph.scale)
+        corner3 = scaleVector(corner3, this.graph.scale)
+        corner4 = scaleVector(corner4, this.graph.scale)
+
         this.graph.ctx.globalAlpha = 0.5;
         this.graph.ctx.beginPath()
         this.graph.ctx.moveTo(this.graph.centerX + corner1[0], this.graph.centerY - corner1[1])
@@ -121,40 +309,40 @@ class Plane {
 
 
 
-            // xy plane
-                //on x axis drawing y axis grid lines
+        //     // xy plane
+        //     //     on x axis drawing y axis grid lines
                 
-                // this.graph.drawPointToPoint(
+        //         this.graph.drawPointToPoint(
                     
-                //     vectorAdd(scaleVector(basisVec2, -1 * gridSize),scaleVector(basisVec1, i)),
+        //             vectorAdd(scaleVector(basisVec2, -1 * gridSize),scaleVector(basisVec1, i)),
 
-                //     vectorAdd(scaleVector(basisVec2, gridSize), scaleVector(basisVec1, i))
+        //             vectorAdd(scaleVector(basisVec2, gridSize), scaleVector(basisVec1, i))
                     
-                //     , this.color, lineWidth)
+        //             , this.color, lineWidth)
 
-                // this.graph.drawPointToPoint(
+        //         this.graph.drawPointToPoint(
                 
-                //     vectorAdd(scaleVector(basisVec2, -1 * gridSize),scaleVector(basisVec1, -i)),
+        //             vectorAdd(scaleVector(basisVec2, -1 * gridSize),scaleVector(basisVec1, -i)),
 
-                //     vectorAdd(scaleVector(basisVec2, gridSize), scaleVector(basisVec1, -i))
+        //             vectorAdd(scaleVector(basisVec2, gridSize), scaleVector(basisVec1, -i))
                     
-                //     , this.color, lineWidth)
+        //             , this.color, lineWidth)
 
-                // this.graph.drawPointToPoint(
+        //         this.graph.drawPointToPoint(
                 
-                //     vectorAdd(scaleVector(basisVec1, -1 * gridSize),scaleVector(basisVec2,i)),
+        //             vectorAdd(scaleVector(basisVec1, -1 * gridSize),scaleVector(basisVec2,i)),
 
-                //     vectorAdd(scaleVector(basisVec1, gridSize), scaleVector(basisVec2,i))
+        //             vectorAdd(scaleVector(basisVec1, gridSize), scaleVector(basisVec2,i))
                     
-                //     , this.color, lineWidth)
+        //             , this.color, lineWidth)
 
-                // this.graph.drawPointToPoint(
+        //         this.graph.drawPointToPoint(
             
-                //     vectorAdd(scaleVector(basisVec1, -1 * gridSize),scaleVector(basisVec2,-i)),
+        //             vectorAdd(scaleVector(basisVec1, -1 * gridSize),scaleVector(basisVec2,-i)),
 
-                //     vectorAdd(scaleVector(basisVec1, gridSize), scaleVector(basisVec2,-i))
+        //             vectorAdd(scaleVector(basisVec1, gridSize), scaleVector(basisVec2,-i))
                     
-                //     , this.color, lineWidth)
-
+        //             , this.color, lineWidth)
+        // }
     }   
 }

@@ -113,12 +113,15 @@ function vectorEquals(vector1, vector2) {
         return false;
     }
 
+    let sumSquaredError = 0
     for (let i = 0; i < vector1.length; i++) {
         if (vector1[i] !== vector2[i]) {
             return false;
         }
+        sumSquaredError += Math.pow((vector1[i] - vector2[i]), 2)
     }
-    return true;
+
+    return true && sumSquaredError < 0.0001
 }
 
 

@@ -62,6 +62,9 @@ class Graph {
         this.showAxis                  = true
         this.showGrid                  = true
         this.infiniteAxis              = false
+        
+        debugger
+        this.gaussianPlanes            = new GaussianPlanes(this, [[1,1,0], [0,1,0], [0,0,1]])
     }
 
     animate() {
@@ -88,7 +91,7 @@ class Graph {
         let angles  = this._decomposeRotation(R)
 
         // -1 since last term is error
-        for(let i = 0; i < angles.length - 1; i++) {
+        for (let i = 0; i < angles.length - 1; i++) {
             angles[i] = angles[i] * this.animationPercentage
         }
         
@@ -288,6 +291,10 @@ class Graph {
         if (this.showAxis) {
             this.Axis.draw()
         }
+
+
+        //
+        this.gaussianPlanes.draw()
         
         // Draw all objects
         for(let i = 0; i < this.drawnObjects.length; i++) {

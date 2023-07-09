@@ -14,30 +14,38 @@
  * using partial pivot method
  * @param {*} inputMatrixWithAugment augmenting matrix
  * @modifies matrixWithAugment to be in parital pivoted reduced echelon form
+ * @returns an array of the snapshot of the matrix at each step of gaussian elimation
  */
 function gaussianElimination(inputMatrixWithAugment) {
     //make local copy of matrixWithAugment
     let matrixWithAugment = JSON.parse(JSON.stringify(inputMatrixWithAugment))
+    let steps = []
+    steps.push(inputMatrixWithAugment)
+
 
     //tech dont need to do very last column i think, so -2 instead of -1
     for(let columb = 0; columb < matrixWithAugment.length - 2; columb++) {
         
         partialPivot(matrixWithAugment, columb, columb)
         let firstRowVal   = matrixWithAugment[columb][columb]
+        if (firstRowVal != 0) {
+            for(let row = columb+1; row < matrixWithAugment[0].length; row++) {
+                let leftMostValue = matrixWithAugment[columb][row]
+                
+                let multiple = leftMostValue / firstRowVal
+                if (firstRowVal == 0) {
+                    multiple == 0
+                }
+                
+                rowSubtractionWithMultiple(matrixWithAugment, multiple, columb, row)
+                //matrix[columb][row] = rowSubtractionWithMultiple(multiple, currentRow, firstRow)
 
-        for(let row = columb+1; row < matrixWithAugment[0].length; row++) {
-            let leftMostValue = matrixWithAugment[columb][row]
-            let multiple   = leftMostValue / firstRowVal
-            
-            rowSubtractionWithMultiple(matrixWithAugment, multiple, columb, row)
-            //matrix[columb][row] = rowSubtractionWithMultiple(multiple, currentRow, firstRow)
-
-            //perhaps store a copy of matrixWithAugment every time at this step?
+                //perhaps store a copy of matrixWithAugment every time at this step?
+                //save snapshot
+                let copy = JSON.parse(JSON.stringify(matrixWithAugment))
+                steps.push(copy)
+            }
         }
-
-        //save snapshot
-        let copy = JSON.parse(JSON.stringify(matrixWithAugment))
-        console.log(copy)
     }
 
     // get into reduced echelon form
@@ -45,19 +53,23 @@ function gaussianElimination(inputMatrixWithAugment) {
         let leftMostValue = matrixWithAugment[row][row]
         // make left most value 1
         for (let col = row; col < matrixWithAugment.length; col++) {
-            matrixWithAugment[col][row] = matrixWithAugment[col][row] / leftMostValue
+            if (leftMostValue == 0) {
+                matrixWithAugment[col][row] = 0
+            } else {
+                matrixWithAugment[col][row] = matrixWithAugment[col][row] / leftMostValue
+            }
         }
 
         //make all values above index (row, row) 0, and update the values in the augment row
         for (let rowsAbove = row - 1; rowsAbove >= 0; rowsAbove--) {
             matrixWithAugment[matrixWithAugment.length - 1][rowsAbove] -= matrixWithAugment[row][rowsAbove] * matrixWithAugment[matrixWithAugment.length - 1][row]
             matrixWithAugment[row][rowsAbove] = 0
+            //save snapshot
         }
-        
-        //save snapshot
         let copy = JSON.parse(JSON.stringify(matrixWithAugment))
-        console.log(copy)
+        steps.push(copy)
     }
+    return steps
 }
 
 

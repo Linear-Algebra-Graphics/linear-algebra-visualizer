@@ -17,6 +17,7 @@
         <script src="../GraphElements/LinearTransformation.js"></script>
         <script src="../GraphElements/ThreeDimCubes.js"></script>
         <script src="../GraphElements/Plane.js"></script>
+        <script src="../GraphElements/GaussianPlanes.js"></script>
 
     
         <script src="script.js" defer></script>
@@ -36,33 +37,35 @@
             <div id="graph-container">
                 <canvas id="graph" style="border:1px solid #000000;"></canvas>
             </div>
-            <div id="adjustment-buttons">
-                <label>Infinite Axis</label>
-                <input type="checkbox" id="infiniteAxis" ></input>
-                <label>Show Grid</label>
-                <input type="checkbox" id="showGrid" checked=""></input>
-                <label> zoom: </label>
-                <button id="zoomIn" marginLeft="10px">+</button>
-                <button id="zoomOut" marginLeft="10px"> - </button>
-                <button id="defaultZoom" marginLeft="10px"> default zoom </button>
-                <button id="defaultOrientation" marginLeft="10px"> default orientation</button>
-                <button id="darkMode">Dark Mode!</button>
+            <div class="matrixAndSlider" marginLeft="20px">
+                <h2>Vector Input</h2>
+                <div id="vector-input">
+                    <input id="x" size="5px" class="arrow-togglable" type="text" autocomplete="off"/>
+                    <input id="y" size="5px" class="arrow-togglable" type="text" autocomplete="off"/>
+                    <input id="z" size="5px" class="arrow-togglable" type="text" autocomplete="off"/>
+                    <input type="color" id="vector colors" value="#000000">
+                    <!-- <select id="vector colors" default="black">
+                        <option value="black">black</option>
+                        <option value="green">green</option>
+                        <option value="blue">blue</option>
+                        <option value="white">white</option>
+                    </select> -->
+                    <button id="graphButton" marginLeft="10px">graph!</button>
+                    <!-- <button id="showGrid" marginLeft="10px">show grid!</button> -->
+                </div>
+                <div id="adjustment-buttons">
+                    <label>Infinite Axis</label>
+                    <input type="checkbox" id="infiniteAxis" ></input>
+                    <label>Show Grid</label>
+                    <input type="checkbox" id="showGrid" checked=""></input>
+                    <label> zoom: </label>
+                    <button id="zoomIn" marginLeft="10px">+</button>
+                    <button id="zoomOut" marginLeft="10px"> - </button>
+                    <button id="defaultZoom" marginLeft="10px"> default zoom </button>
+                    <button id="defaultOrientation" marginLeft="10px"> default orientation</button>
+                    <button id="darkMode">Dark Mode!</button>
+                </div>
             </div>
-        </div>
-        <h2>Vector Input</h2>
-        <div id="vector-input">
-            <input id="x" size="5px" class="arrow-togglable" type="text" autocomplete="off"/>
-            <input id="y" size="5px" class="arrow-togglable" type="text" autocomplete="off"/>
-            <input id="z" size="5px" class="arrow-togglable" type="text" autocomplete="off"/>
-            <input type="color" id="vector colors" value="#000000">
-            <!-- <select id="vector colors" default="black">
-                <option value="black">black</option>
-                <option value="green">green</option>
-                <option value="blue">blue</option>
-                <option value="white">white</option>
-            </select> -->
-            <button id="graphButton" marginLeft="10px">graph!</button>
-            <!-- <button id="showGrid" marginLeft="10px">show grid!</button> -->
         </div>
     </body>
 </html>

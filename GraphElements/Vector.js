@@ -86,7 +86,11 @@ class Vector {
             let labelY = centerY - (scale * inBasisCords[1]) - labelYOffset
             
             if (this.label == "cords") {
-                this.graph.ctx.fillText("(" + formatNumber(transformedCords[0]) + "," + formatNumber(transformedCords[1]) + "," + formatNumber(transformedCords[2]) + ")", labelX, labelY)
+                //coordinates relative to non rotated basis
+                this.graph.ctx.fillText("(" + formatNumber(inBasisCords[0]) + "," + formatNumber(inBasisCords[1]) + "," + formatNumber(inBasisCords[2]) + ")", labelX, labelY)
+                
+                //coordinates relative to basis
+                //this.graph.ctx.fillText("(" + formatNumber(transformedCords[0]) + "," + formatNumber(transformedCords[1]) + "," + formatNumber(transformedCords[2]) + ")", labelX, labelY)
             } else {
                 this.graph.ctx.fillText(this.label, labelX, labelY)
             }
