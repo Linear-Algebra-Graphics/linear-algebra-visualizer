@@ -313,18 +313,18 @@ class GaussianPlanes {
         //WARNING< assumes that all planes do interesect, need to take care of [] return case!!!!
         // this affects the splitPlanes base case!!!
 
-        let intersect12 = this.getPlanePlaneIntersectLine(this.graph.changeBasisAndRotate(this.planesStdForm[0]), this.graph.changeBasisAndRotate(this.planesStdForm[1]))
-        let intersect13 = this.getPlanePlaneIntersectLine(this.graph.changeBasisAndRotate(this.planesStdForm[0]), this.graph.changeBasisAndRotate(this.planesStdForm[2]))
+        // let intersect12 = this.getPlanePlaneIntersectLine(this.graph.changeBasisAndRotate(this.planesStdForm[0]), this.graph.changeBasisAndRotate(this.planesStdForm[1]))
+        // let intersect13 = this.getPlanePlaneIntersectLine(this.graph.changeBasisAndRotate(this.planesStdForm[0]), this.graph.changeBasisAndRotate(this.planesStdForm[2]))
         let intersect23 = this.getPlanePlaneIntersectLine(this.graph.changeBasisAndRotate(this.planesStdForm[1]), this.graph.changeBasisAndRotate(this.planesStdForm[2]))
 
-        if (intersect12.length != 0) {
-            intersect12.point1 = this.graph.changeBasisZoomAndRotate(intersect12.point1)
-            intersect12.point2 = this.graph.changeBasisZoomAndRotate(intersect12.point2)
-        }
-        if (intersect13.length != 0) {
-            intersect13.point1 = this.graph.changeBasisZoomAndRotate(intersect13.point1)
-            intersect13.point2 = this.graph.changeBasisZoomAndRotate(intersect13.point2)
-        }
+        // if (intersect12.length != 0) {
+        //     intersect12.point1 = this.graph.changeBasisZoomAndRotate(intersect12.point1)
+        //     intersect12.point2 = this.graph.changeBasisZoomAndRotate(intersect12.point2)
+        // }
+        // if (intersect13.length != 0) {
+        //     intersect13.point1 = this.graph.changeBasisZoomAndRotate(intersect13.point1)
+        //     intersect13.point2 = this.graph.changeBasisZoomAndRotate(intersect13.point2)
+        // }
         if (intersect23.length != 0) {
             intersect23.point1 = this.graph.changeBasisZoomAndRotate(intersect23.point1)
             intersect23.point2 = this.graph.changeBasisZoomAndRotate(intersect23.point2)
