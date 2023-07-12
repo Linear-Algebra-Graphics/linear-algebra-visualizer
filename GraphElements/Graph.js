@@ -64,9 +64,14 @@ class Graph {
         this.infiniteAxis              = false
         
         debugger
-        //this.gaussianPlanes            = new GaussianPlanes(this, [[1,1,0],[0,1,1],[1,0,1]])
-        this.gaussianPlanes            = new GaussianPlanes(this, [[0.11208858678342297,0.46628566739352567,0.1253226725042749], 
-                                                                   [0.06832765222676973,0.11901830637423313,0.47629604432152406], [0,0,1]])
+        this.gaussianPlanes            = new GaussianPlanes(this, [[1,1,0],[0,1,1],[1,0,1]])
+        //this.gaussianPlanes            = new GaussianPlanes(this, [[-0.9090909090909091,-6.160992631418693e-17,9.273039376158777e-17], 
+        //                                                            [1.1133152719521392e-16,-0.5030832265848583,0.7572011279182723], 
+        //                                                            [0,0.7572011279182723,0.5030832265848583]])
+        // this.gaussianPlanes            = new GaussianPlanes(this, [[-0.9090909090909091,0,0], 
+        //                                                             [0,-0.5030832265848583,0.7572011279182723], 
+        //                                                             [0,0.7572011279182723,0.5030832265848583]])
+    
     }
 
     animate() {
@@ -404,7 +409,7 @@ class Graph {
 
     //BEGIN FOR TESTING ONLY
     changeBasisAndRotate(vector) {
-        let updatedVector = matrixVectorMultiplication(this.basis, vector)
+        let updatedVector = vector //matrixVectorMultiplication(this.basis, vector)
         
         updatedVector     = matrixVectorMultiplication(this.zRotationMatrix, updatedVector)
         updatedVector     = matrixVectorMultiplication(this.xRotationMatrix, updatedVector)

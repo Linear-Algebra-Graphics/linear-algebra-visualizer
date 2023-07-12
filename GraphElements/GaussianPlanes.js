@@ -62,22 +62,16 @@ class GaussianPlanes {
         if (intersectLines.length == 0 || intersectLinesIndex == intersectLines.length ) {
             //debugger
             let minZ = Number.MAX_VALUE
-            for (let i = 0; i < polygonLines.length; i++) {
-                let currZ = polygonLines[i].point1[2]
-                if (currZ == -0) {
-                    currZ = 0
-                }
-                minZ = Math.min(currZ, minZ)
-            }
-
             let maxZ = -1*Number.MAX_VALUE
             for (let i = 0; i < polygonLines.length; i++) {
                 let currZ = polygonLines[i].point1[2]
                 if (currZ == -0) {
                     currZ = 0
                 }
-                maxZ = Math.max(polygonLines[i].point1[2], maxZ)
+                minZ = Math.min(currZ, minZ)
+                maxZ = Math.max(currZ, maxZ)
             }
+
             output.push({polygon: new Polygon(this.graph, polygonLines, color, alpha, minZ), minZ: minZ, maxZ: maxZ})
 
         } else {
@@ -104,7 +98,7 @@ class GaussianPlanes {
                         if (vectorEquals(splitLines[0].point1, splitLines[0].point2)) {
                             linesWithSplit.set(pt3DToStr(splitLines[0].point1), splitLines[1])
                         } else {
-                            linesWithSplit.set(pt3DToStr(splitPt1), new Line(splitPt1, splitLines[1].point2))
+                            linesWithSplit.set(pt3DToStr(splitPt1), new Line(splitPt1, splitLines[1].point2, splitLines[0].inf))
                         }
                     } else {
                         linesWithSplit.set(pt3DToStr(splitPt1), splitLines[0])
@@ -119,13 +113,6 @@ class GaussianPlanes {
                 }
             }
 
-            if (linesWithSplit.length > 6) {
-                debugger
-            }
-
-            if (foundSplitPoints.length != 2) {
-                //debugger
-            }
             // This means the line intersects at a corner resulting in 4 points.
             // We cut it down to two because it doesn't matter.
             let splitPoints = foundSplitPoints
@@ -146,7 +133,7 @@ class GaussianPlanes {
             }
 
             //debugger
-            if (splitPoints.length == 2) {
+            if (splitPoints.length == 2 && !vectorEquals([splitPoints[0][0], splitPoints[0][1]], [splitPoints[1][0],splitPoints[1][1]])) {
                 //case where line does not split plane, ie standard view for example
                 //create two new shapes defined by lines.
                 //debugger
@@ -220,14 +207,18 @@ class GaussianPlanes {
                 rightPolygonLines.push(new Line(currPoint, splitPoints[0], false))
 
 
-                if (rightPolygonLines.length > 4 || leftPolygonLines.length > 4) {
+                if (rightPolygonLines.length < 3 || leftPolygonLines.length < 3) {
                     //debugger
                 }
 
                 intersectLinesIndex = intersectLinesIndex + 1
                 //debugger
-                this._splitPlanesHelper(leftPolygonLines, intersectLines, intersectLinesIndex, output, color, alpha)
-                this._splitPlanesHelper(rightPolygonLines, intersectLines, intersectLinesIndex, output, color, alpha)
+                if (leftPolygonLines.length > 2) {
+                    this._splitPlanesHelper(leftPolygonLines, intersectLines, intersectLinesIndex, output, color, alpha)
+                }
+                if (rightPolygonLines.length > 2) {
+                    this._splitPlanesHelper(rightPolygonLines, intersectLines, intersectLinesIndex, output, color, alpha)
+                }
             } else {
                 intersectLinesIndex = intersectLinesIndex + 1
                 this._splitPlanesHelper(polygonLines, intersectLines, intersectLinesIndex, output, color, alpha)
@@ -245,6 +236,15 @@ class GaussianPlanes {
         let cx = (plane1[1] * plane2[2]) - (plane1[2] * plane2[1])
         let cy = (plane1[2] * plane2[0]) - (plane1[0] * plane2[2])
         let cz = (plane1[0] * plane2[1]) - (plane1[1] * plane2[0])
+        if (numEqual(cx, 0, 12)) {
+            cx = 0
+        }
+        if (numEqual(cy, 0, 12)) {
+            cy = 0
+        }
+        if (numEqual(cz, 0, 12)) {
+            cz = 0
+        }
         let intersectVector = [cx, cy, cz]
 
         //find a point of intersection between two planes
@@ -306,6 +306,15 @@ class GaussianPlanes {
         // let colors = ["red", "green", "blue"]
         for (let i = 0; i < this.planesStdForm.length; i++) {
             planeLines[i] = getPlaneLines(this.graph, this.planesStdForm[i], 10)
+            // for (let j = 0; j < planeLines[i].length; j++) {
+            //     let point1 = planeLines[i][j].point1
+            //     let point2 = planeLines[i][j].point2
+            //     let vec = [point2[0] - point1[0], point2[1]-point1[1], point2[2]-point1[2]]
+            //     if (!numEqual(dotProduct(vec, this.planesStdForm[i]), 0, 12)) {
+            //         let v = dotProduct(vec, this.planesStdForm[i])
+            //         debugger
+            //     }
+            // }
 
         }
 
@@ -313,61 +322,80 @@ class GaussianPlanes {
         //WARNING< assumes that all planes do interesect, need to take care of [] return case!!!!
         // this affects the splitPlanes base case!!!
 
-        let intersect12 = this.getPlanePlaneIntersectLine(this.graph.changeBasisAndRotate(this.planesStdForm[0]), this.graph.changeBasisAndRotate(this.planesStdForm[1]))
-        let intersect13 = this.getPlanePlaneIntersectLine(this.graph.changeBasisAndRotate(this.planesStdForm[0]), this.graph.changeBasisAndRotate(this.planesStdForm[2]))
-        let intersect23 = this.getPlanePlaneIntersectLine(this.graph.changeBasisAndRotate(this.planesStdForm[1]), this.graph.changeBasisAndRotate(this.planesStdForm[2]))
+        let intersect12 = this.getPlanePlaneIntersectLine(this.planesStdForm[0], this.planesStdForm[1])
+        let intersect13 = this.getPlanePlaneIntersectLine(this.planesStdForm[0], this.planesStdForm[2])
+        let intersect23 = this.getPlanePlaneIntersectLine(this.planesStdForm[1], this.planesStdForm[2])
 
-        // if (intersect12.length != 0) {
-        //     intersect12.point1 = this.graph.changeBasisZoomAndRotate(intersect12.point1)
-        //     intersect12.point2 = this.graph.changeBasisZoomAndRotate(intersect12.point2)
-        // }
-        // if (intersect13.length != 0) {
-        //     intersect13.point1 = this.graph.changeBasisZoomAndRotate(intersect13.point1)
-        //     intersect13.point2 = this.graph.changeBasisZoomAndRotate(intersect13.point2)
-        // }
-        // if (intersect23.length != 0) {
-        //     intersect23.point1 = this.graph.changeBasisZoomAndRotate(intersect23.point1)
-        //     intersect23.point2 = this.graph.changeBasisZoomAndRotate(intersect23.point2)
-        // }
+        console.log("S")
+        console.log(intersect12)
+        console.log(intersect13)
+        console.log(intersect23)
+        console.log(this.graph.changeBasisZoomAndRotate(this.planesStdForm[0]) + ", " + this.graph.changeBasisZoomAndRotate(this.planesStdForm[1]) + ", " + this.graph.changeBasisZoomAndRotate(this.planesStdForm[2]))
+
+        console.log("E")
+
+        if (intersect12.length != 0) {
+            intersect12.point1 = this.graph.changeBasisAndRotate(intersect12.point1)
+            intersect12.point2 = this.graph.changeBasisAndRotate(intersect12.point2)
+        }
+        if (intersect13.length != 0) {
+            intersect13.point1 = this.graph.changeBasisAndRotate(intersect13.point1)
+            intersect13.point2 = this.graph.changeBasisAndRotate(intersect13.point2)
+        }
+        if (intersect23.length != 0) {
+            intersect23.point1 = this.graph.changeBasisAndRotate(intersect23.point1)
+            intersect23.point2 = this.graph.changeBasisAndRotate(intersect23.point2)
+        }
 
         // console.log("S")
         // console.log(intersect12)
         // console.log(intersect13)
         // console.log(intersect23)
+        // console.log(this.graph.changeBasisZoomAndRotate(this.planesStdForm[0]) + ", " + this.graph.changeBasisZoomAndRotate(this.planesStdForm[1]) + ", " + this.graph.changeBasisZoomAndRotate(this.planesStdForm[2]))
+
         // console.log("E")
 
         //debugger
         // console.log(intersect12)
         // console.log()
 
-
+        //debugger
         let polygons = []
         if (planeLines[0].length != 0) {
-            polygons = polygons.concat(this.splitPlanes(planeLines[0], [intersect12, intersect13], "red", 0.5))
+            polygons = polygons.concat(this.splitPlanes(planeLines[0], [intersect12, intersect13, intersect23].concat(planeLines[1]).concat(planeLines[2]), "red", 0.5))
         }
         if (planeLines[1].length != 0) {
-            polygons = polygons.concat(this.splitPlanes(planeLines[1], [intersect12, intersect23], "blue", 0.5))
+            polygons = polygons.concat(this.splitPlanes(planeLines[1], [intersect12, intersect13, intersect23].concat(planeLines[0]).concat(planeLines[2]), "blue", 0.5))
         }
         if (planeLines[2].length != 0) {
-            polygons = polygons.concat(this.splitPlanes(planeLines[2], [intersect13, intersect23], "green", 0.5))
+            polygons = polygons.concat(this.splitPlanes(planeLines[2], [intersect12, intersect13, intersect23].concat(planeLines[0]).concat(planeLines[1]), "green", 0.5))
         }
         
         //console.log(polygons)
         let sortedPolygons = this.sortPolygons(polygons)
+        let temp = []
+        for (let i = 0; i < sortedPolygons.length; i++) {
+            if (true|| sortedPolygons[i].polygon.color != "red" && sortedPolygons[i].polygon.color != "green") {
+                temp.push(sortedPolygons[i])
+            }
+        }
+        sortedPolygons = temp
 
 
-        console.log("S")  
-        console.log(sortedPolygons)
-        console.log(this.graph.changeBasisZoomAndRotate(this.planesStdForm[0]) + ", " + this.graph.changeBasisZoomAndRotate(this.planesStdForm[1]) + ", " + this.graph.changeBasisZoomAndRotate(this.planesStdForm[2]))
-        // for (let i = 0; i < polygons.length; i++) {
+        // console.log("S")  
+        // console.log(sortedPolygons)
+        // console.log(this.graph.changeBasisZoomAndRotate(this.planesStdForm[0]) + ", " + this.graph.changeBasisZoomAndRotate(this.planesStdForm[1]) + ", " + this.graph.changeBasisZoomAndRotate(this.planesStdForm[2]))
+        // // for (let i = 0; i < polygons.length; i++) {
         //     sortedPolygons[i].polygon.draw()
         // }
         for (let i = 0; i < sortedPolygons.length; i++) {
+
             for (let j = 0; j < sortedPolygons[i].polygon.lines.length; j++) {
                 sortedPolygons[i].polygon.lines[j].point1 = this.graph.applyZoom(sortedPolygons[i].polygon.lines[j].point1)
                 sortedPolygons[i].polygon.lines[j].point2 = this.graph.applyZoom(sortedPolygons[i].polygon.lines[j].point2)
             }
             sortedPolygons[i].polygon.draw()
+            
         }
         
     }
@@ -445,7 +473,7 @@ function getPlaneLines(graph, normal, sideLength) {
 
     let planeBasis = new Array(2)
 
-    if(a != 0) {
+    if(!numEqual(a, 0, 12)) {
         // x = -(b/a)y - (c/a)z   |-b/a -c/a|
         // y = y + 0z             |1       0|
         // z = 0y + z             |0       1|
@@ -453,22 +481,36 @@ function getPlaneLines(graph, normal, sideLength) {
         planeBasis[0] = [(-1 * b/a), 1, 0]
         planeBasis[1] = [(-1 * c/a), 0, 1]
         
-    } else if (b != 0) {
+    } else if (!numEqual(b, 0, 12)) {
         // x = x + 0z             |1       0|
         // y = -(a/b)x - (c/b)z   |-a/b -c/b|
         // z = 0x + z             |0       1|
         
         planeBasis[0] = [1,(-1 * a/b),0]
-        planeBasis[1] = [0,(-1 * b/c),1]
+        planeBasis[1] = [0,(-1 * c/b),1]
         
     } else {
         // x = x                  |1       0|
         // y = y                  |0       1|
         // z = -(a/c)x - (b/c)y   |-a/c -b/c|
 
-        planeBasis[0] = [1,0,-a/c]
-        planeBasis[1] = [0,1,-b/c]
+        //ax+by+cz=0
+        //cz=-ax-by
+        //z = (-a/c)x + (-b/c)y
+
+        planeBasis[0] = [1,0,(-1 * a)/c]
+        planeBasis[1] = [0,1,(-1 * b)/c]
     }
+
+    if (!numEqual(0, dotProduct(planeBasis[0], [a,b,c]),12)) {
+        let v = dotProduct(planeBasis[0], [a,b,c])
+        debugger
+    }
+    if (!numEqual(0, dotProduct(planeBasis[1], [a,b,c]),12)) {
+        let v = dotProduct(planeBasis[1], [a,b,c])
+        debugger
+    }
+
 
     let orthanormalBasis = GramSchmidt(planeBasis)
     let basisVec1 = graph.changeBasisAndRotate(orthanormalBasis[0])
@@ -567,8 +609,32 @@ class Line {
             let xMin = Math.min(this.point1[0], this.point2[0])
             let yMax = Math.max(this.point1[1], this.point2[1]) 
             let yMin = Math.min(this.point1[1], this.point2[1])
+
+            let xMaxOther = Math.max(otherLine.point1[0], otherLine.point2[0])
+            let xMinOther = Math.min(otherLine.point1[0], otherLine.point2[0])
+            let yMaxOther = Math.max(otherLine.point1[1], otherLine.point2[1]) 
+            let yMinOther = Math.min(otherLine.point1[1], otherLine.point2[1])
+
+            // if (this.inf) {
+            //     if (otherLine.inf) {
+
+            //     } else {
+
+            //     }
+            // } else {
+            //     if (otherLine.inf) {
+
+            //     } else {
+                    
+            //     }
+            // }
+            //otherLine.inf : true, 
+            //otherLine.inf : false, inbounds: true
+            //
+
             
-            if ((!(x > xMax || x < xMin) || numEqual(x, xMax, 12) || numEqual(x, xMin, 12)) && (!(y > yMax || y < yMin) || numEqual(y, yMax, 12) || numEqual(y, yMin, 12))) {
+            if ((true || otherLine.inf || (!(x > xMaxOther || x < xMinOther) || numEqual(x, xMaxOther, 12) || numEqual(x, xMinOther, 12)) && (!(y > yMaxOther || y < yMinOther) || numEqual(y, yMaxOther, 12) || numEqual(y, yMinOther, 12))) && 
+                (!(x > xMax || x < xMin) || numEqual(x, xMax, 12) || numEqual(x, xMin, 12)) && (!(y > yMax || y < yMin) || numEqual(y, yMax, 12) || numEqual(y, yMin, 12))) {
 
                     // if (color == "red") {
                     //     console.log("x: " + x + ", xMax: " + xMax +", xMin: " + xMin + " y: " + x + ", yMax: " + yMax +", yMin: " + yMin)
@@ -579,7 +645,7 @@ class Line {
 
                     //get z coord on line given x, y
                     let t = (x - this.point1[0]) / dx
-                    if (dx == 0) {
+                    if (numEqual(dx, 0, 12)) {
                         t = (y - this.point1[1]) / dy
                     }
 
@@ -639,6 +705,8 @@ class Polygon {
         this.graph.ctx.closePath()
         this.graph.ctx.fillStyle = this.color
         this.graph.ctx.fill()
+        // this.graph.ctx.strokeStyle = "black"
+        // this.graph.ctx.stroke()
         this.graph.ctx.globalAlpha = 1;
 
         let minZVector = this.lines[0].point1
@@ -652,23 +720,23 @@ class Polygon {
         let vecX = this.graph.centerX + this.graph.scale * vector[0]
         let vecY = this.graph.centerY - this.graph.scale * vector[1]
 
-        //Draw the dot
-        if (this.color == "blue") {
-            this.graph.ctx.fillStyle = this.color
-            this.graph.ctx.strokeStyle = this.color
-            this.graph.ctx.beginPath();
-                this.graph.ctx.arc(vecX, vecY, 10, 0, 2 * Math.PI);
-                this.graph.ctx.fill();
-            this.graph.ctx.stroke();
-        }
-        if (this.color == "red") {
-            this.graph.ctx.fillStyle = this.color
-            this.graph.ctx.strokeStyle = this.color
-            this.graph.ctx.beginPath();
-                this.graph.ctx.arc(vecX, vecY, 10, 0, 2 * Math.PI);
-                this.graph.ctx.fill();
-            this.graph.ctx.stroke();
-        }
+        // //Draw the dot
+        // if (this.color == "blue") {
+        //     this.graph.ctx.fillStyle = this.color
+        //     this.graph.ctx.strokeStyle = this.color
+        //     this.graph.ctx.beginPath();
+        //         this.graph.ctx.arc(vecX, vecY, 10, 0, 2 * Math.PI);
+        //         this.graph.ctx.fill();
+        //     this.graph.ctx.stroke();
+        // }
+        // if (this.color == "red") {
+        //     this.graph.ctx.fillStyle = this.color
+        //     this.graph.ctx.strokeStyle = this.color
+        //     this.graph.ctx.beginPath();
+        //         this.graph.ctx.arc(vecX, vecY, 10, 0, 2 * Math.PI);
+        //         this.graph.ctx.fill();
+        //     this.graph.ctx.stroke();
+        // }
     }
 }
 
