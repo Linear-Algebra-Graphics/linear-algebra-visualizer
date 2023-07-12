@@ -109,19 +109,28 @@ function matrixEquals(matrix1, matrix2) {
 }
 
 function vectorEquals(vector1, vector2) {
+    if (vector1 == undefined || vector2 == undefined) {
+        throw new Error("a vector is undefined")
+    }
     if (vector1.length != vector2.length) {
         return false;
     }
 
     let sumSquaredError = 0
+    let sumError = 0
     for (let i = 0; i < vector1.length; i++) {
-        if (vector1[i] !== vector2[i]) {
+        if (!numEqual(vector1[i], vector2[i], 12)) {
             return false;
         }
-        sumSquaredError += Math.pow((vector1[i] - vector2[i]), 2)
+        sumError += Math.abs(vector1[i] - vector2[i])
+        //sumSquaredError += Math.pow((vector1[i] - vector2[i]), 2)
     }
+    
+    return sumError < 0.00000000001
+}
 
-    return true && sumSquaredError < 0.0001
+function numEqual(num1, num2, precision) {
+    return (Math.abs(num1 - num2) < Math.pow(10, -1*precision))
 }
 
 

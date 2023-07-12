@@ -64,7 +64,10 @@ class Graph {
         this.infiniteAxis              = false
         
         debugger
-        this.gaussianPlanes            = new GaussianPlanes(this, [[1,1,0], [0,1,0], [0,0,1]])
+        //this.gaussianPlanes            = new GaussianPlanes(this, [[1,1,0],[0,1,1],[1,0,1]])
+        this.gaussianPlanes            = new GaussianPlanes(this, [[-0.0082410792763554,0.16793364208245917,0.46628566739352567], 
+                                                                   [0.24664225388404173,0.41315153212127087,0.11901830637423316], 
+                                                                   [-0.24894466875643084,0.4143105712614365,0.10984192999996613]])
     }
 
     animate() {
@@ -399,6 +402,22 @@ class Graph {
         updatedVector     = matrixVectorMultiplication([[this.currentZoom, 0, 0],[0, this.currentZoom, 0],[0, 0, this.currentZoom]], updatedVector)
         return updatedVector
     }
+
+    //BEGIN FOR TESTING ONLY
+    changeBasisAndRotate(vector) {
+        let updatedVector = matrixVectorMultiplication(this.basis, vector)
+        
+        updatedVector     = matrixVectorMultiplication(this.zRotationMatrix, updatedVector)
+        updatedVector     = matrixVectorMultiplication(this.xRotationMatrix, updatedVector)
+        updatedVector     = matrixVectorMultiplication(this.yRotationMatrix, updatedVector)
+        return updatedVector
+    }
+
+    applyZoom(vector) {
+        let updatedVector = matrixVectorMultiplication([[this.currentZoom, 0, 0],[0, this.currentZoom, 0],[0, 0, this.currentZoom]], vector)
+        return updatedVector
+    }
+    //END FOR TESTING PURPOSES ONLY
     
     /**
      * 
