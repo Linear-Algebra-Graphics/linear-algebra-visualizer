@@ -30,6 +30,13 @@ Fix numbers because they are totalloy broken
 
 Fix decieml numbers so looks right. Now its odd.
 
+gaussian Elim tab
+1. Have button switch center to intersection
+2. no solution case?? forget it until prof gives us gold
+
+
+perhaps sort all by z values before drawing for all of them?
+
 Transpose:
     Change name to transpsoeMatrix
     Make it work for non square matries
