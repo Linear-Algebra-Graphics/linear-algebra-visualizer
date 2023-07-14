@@ -87,10 +87,10 @@ class Vector {
             
             if (this.label == "cords") {
                 //coordinates relative to non rotated basis
-                this.graph.ctx.fillText("(" + formatNumber(inBasisCords[0]) + "," + formatNumber(inBasisCords[1]) + "," + formatNumber(inBasisCords[2]) + ")", labelX, labelY)
+                //this.graph.ctx.fillText("(" + formatNumber(inBasisCords[0]) + "," + formatNumber(inBasisCords[1]) + "," + formatNumber(inBasisCords[2]) + ")", labelX, labelY)
                 
                 //coordinates relative to basis
-                //this.graph.ctx.fillText("(" + formatNumber(transformedCords[0]) + "," + formatNumber(transformedCords[1]) + "," + formatNumber(transformedCords[2]) + ")", labelX, labelY)
+                this.graph.ctx.fillText("(" + formatNumber(transformedCords[0]) + "," + formatNumber(transformedCords[1]) + "," + formatNumber(transformedCords[2]) + ")", labelX, labelY)
             } else {
                 this.graph.ctx.fillText(this.label, labelX, labelY)
             }

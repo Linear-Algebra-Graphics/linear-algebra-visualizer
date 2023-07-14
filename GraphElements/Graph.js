@@ -63,8 +63,9 @@ class Graph {
         this.showGrid                  = true
         this.infiniteAxis              = false
         
-        debugger
-        this.gaussianPlanes            = new GaussianPlanes(this, [[1,0,0,0],[0,1,0,0],[0,0,1,0]])
+        
+        this.gaussianPlanes            = new GaussianPlanes(this, [[0,1,1,0],[1,0,1,0], [1,1,0,0],[1,0,0,0]])
+        // this.gaussianPlanes            = new GaussianPlanes(this, [[1,-2,3,0],[-4,5,-6,0],[7,-8,-9,0]])
         //this.gaussianPlanes            = new GaussianPlanes(this, [[-0.9090909090909091,-6.160992631418693e-17,9.273039376158777e-17], 
         //                                                            [1.1133152719521392e-16,-0.5030832265848583,0.7572011279182723], 
         //                                                            [0,0.7572011279182723,0.5030832265848583]])
