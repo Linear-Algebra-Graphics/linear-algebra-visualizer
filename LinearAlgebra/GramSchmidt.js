@@ -89,9 +89,9 @@ function vectorAdd(v1, v2) {
 }
 
 function scaleVector(v, c) {
-    let result = Array(v.length)
+    let result = new Array(v.length)
     
-    for (let i=0; i<v.length; i++) {
+    for (let i = 0; i < v.length; i++) {
         result[i] = v[i] * c
     }
     

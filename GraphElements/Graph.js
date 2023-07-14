@@ -63,8 +63,9 @@ class Graph {
         this.showGrid                  = true
         this.infiniteAxis              = false
         
+        //this.gaussianPlanes            = new GaussianPlanes(this, [[0,1,1,0],[1,0,1,0]]) this is the error edge case
         
-        this.gaussianPlanes            = new GaussianPlanes(this, [[0,1,1,0],[1,0,1,0], [1,1,0,0]])
+        this.gaussianPlanes            = new GaussianPlanes(this, [[0,1,1,0],[1,0,1,0],[1,0,0,0]])
         // this.gaussianPlanes            = new GaussianPlanes(this, [[1,-2,3,0],[-4,5,-6,0],[7,-8,-9,0]])
         //this.gaussianPlanes            = new GaussianPlanes(this, [[-0.9090909090909091,-6.160992631418693e-17,9.273039376158777e-17], 
         //                                                            [1.1133152719521392e-16,-0.5030832265848583,0.7572011279182723], 
@@ -401,14 +402,13 @@ class Graph {
         updatedVector     = matrixVectorMultiplication(this.xRotationMatrix, updatedVector)
         updatedVector     = matrixVectorMultiplication(this.yRotationMatrix, updatedVector)
 
-        updatedVector     = matrixVectorMultiplication([[this.currentZoom, 0, 0],[0, this.currentZoom, 0],[0, 0, this.currentZoom]], updatedVector)
+        updatedVector     = scaleVector(updatedVector, this.currentZoom)
         return updatedVector
     }
 
     //BEGIN FOR TESTING ONLY
     changeBasisAndRotate(vector) {
-        let updatedVector = vector //matrixVectorMultiplication(this.basis, vector)
-        
+        let updatedVector = matrixVectorMultiplication(this.basis, vector)
         updatedVector     = matrixVectorMultiplication(this.zRotationMatrix, updatedVector)
         updatedVector     = matrixVectorMultiplication(this.xRotationMatrix, updatedVector)
         updatedVector     = matrixVectorMultiplication(this.yRotationMatrix, updatedVector)
@@ -416,7 +416,7 @@ class Graph {
     }
 
     applyZoom(vector) {
-        let updatedVector = matrixVectorMultiplication([[this.currentZoom, 0, 0],[0, this.currentZoom, 0],[0, 0, this.currentZoom]], vector)
+        let updatedVector = scaleVector(vector, this.currentZoom)
         return updatedVector
     }
     //END FOR TESTING PURPOSES ONLY
