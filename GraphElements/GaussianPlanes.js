@@ -48,8 +48,6 @@ class GaussianPlanes {
         this.graph = graph
         this.planesStdForm = planesStdForm
         let transposed = transpose(this.planesStdForm)
-        // let steps = gaussianElimination(transposed)
-        // let reduced = steps[steps.length-1]
         let reduced = GaussianEliminationV2(transposed, true, false)
         let result = reduced[reduced.length - 1];
         if (result.length != 3) {
@@ -233,9 +231,6 @@ class GaussianPlanes {
 
         //find a point of intersection between two planes
         //[a,b,c,d]
-        // let gaussElimSteps = gaussianElimination(transpose([plane1, plane2]))
-        // let reducedEchelon = gaussElimSteps[gaussElimSteps.length - 1]
-
         let reducedEchelon = GaussianEliminationV2(transpose([plane1, plane2]), true, false)
 
         let point1 = new Array(3)
@@ -281,14 +276,11 @@ class GaussianPlanes {
         //get othonormal basis of two lines per plane 
         for (let i = 0; i < this.planesStdForm.length; i++) {
             let currPlaneLines = getPlaneLines(this.graph, this.planesStdForm[i], 10, this.intersection)
-            if (currPlaneLines.length != 0) {
-                planeLines.push(currPlaneLines)
-            }
+            planeLines.push(currPlaneLines)
         }
     
         let n = this.planesStdForm.length - 1
         let intersect_ij = []
-        //debugger
         for (let i = 0; i < this.planesStdForm.length - 1; i++) {
             for (let j = i + 1; j < this.planesStdForm.length; j++) {
                 let currIntersect = this.getPlanePlaneIntersectLine(this.planesStdForm[i], this.planesStdForm[j])
@@ -300,7 +292,6 @@ class GaussianPlanes {
             }
         }
 
-        
         //just an example colors array
         let colors = ["red", "blue", "green", "purple", "yellow", "orange"]
         let polygons = []
@@ -311,10 +302,6 @@ class GaussianPlanes {
                     let normal = vectorSubtract(intersect_ij[0].point1, intersect_ij[0].point2)
                     //not offset yet!!
                     intersectLines.push(new Line([0,0,0], [-1 * normal[1], normal[0], 0], true))
-                    //intersectLines.push(new Line([0,0,0], orthoToIntersects[1], true))
-                    // let randomVec = [Math.random(), Math.random(), Math.random()]
-                    // intersectLines.push(new Line([0,0,0], randomVec, true))
-
                 }
 
                 for (let j = 0; j < intersect_ij.length; j++) {
@@ -589,6 +576,7 @@ function getPlaneLines(graph, normal, sideLength, intersection) {
     // }
     
     //intersection is the solution of the system (if it exists)
+    console.log(intersection)
     intersection = graph.changeBasisAndRotate(intersection)
     corner1 = vectorAdd(corner1, intersection)
     corner2 = vectorAdd(corner2, intersection)
@@ -743,9 +731,10 @@ class Line {
 class Polygon {
     /**
      * 
-     * @param {*} vertices a set of R3 vertices that define the polygon
-     * @requires : something to do with vertex ordering so that canvas draws correctly, idk what this is
-     *             ABSOLUTELY Must be that vertices go either clockwise or counterclockwise around boundary of polygon!!!!
+     * @param {*} graph 
+     * @param {*} lines 
+     * @param {*} color 
+     * @param {*} alpha 
      */
     constructor(graph, lines, color, alpha) {
         this.graph = graph
@@ -808,6 +797,33 @@ class Polygon {
         //     this.graph.ctx.stroke();
         // }
     }
+}
+
+function LightenDarkenColor(col,amt) {
+    var usePound = false;
+    if ( col[0] == "#" ) {
+        col = col.slice(1);
+        usePound = true;
+    }
+
+    var num = parseInt(col,16);
+
+    var r = (num >> 16) + amt;
+
+    if ( r > 255 ) r = 255;
+    else if  (r < 0) r = 0;
+
+    var b = ((num >> 8) & 0x00FF) + amt;
+
+    if ( b > 255 ) b = 255;
+    else if  (b < 0) b = 0;
+    
+    var g = (num & 0x0000FF) + amt;
+
+    if ( g > 255 ) g = 255;
+    else if  ( g < 0 ) g = 0;
+
+    return (usePound?"#":"") + (g | (b << 8) | (r << 16)).toString(16);
 }
 
 
