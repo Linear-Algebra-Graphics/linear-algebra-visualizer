@@ -8,7 +8,7 @@ let vectorColors = document.getElementById("vector colors")
 linearTransformation = new LinearTransformation([[1,0,0],[0,1,0],[0,0,1]])
 
 displayWidth  = 600
-displayHeight = 500
+displayHeight = 600
 
 canvas.style.width = displayWidth + "px"
 canvas.style.height = displayHeight + "px"
