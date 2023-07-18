@@ -17,15 +17,18 @@ function numericMatrixToFracMatrix(matrix) {
     return fracMatrix
 }
 
+function GaussianEliminationV3(inputMatrix, steps, fracMode) {
+    if (fracMode == false) {
+        inputMatrix = numericMatrixToFracMatrix(inputMatrix)
+    }
 
-function GaussianEliminationV3(inputMatrix, steps, fractions) {
     //1) sort rows by least num zeros to left
     //2) find first non-zero value,
     //  if 1 do nothing, else divide whole row by first nonzero value - > make all left most values nonzero
     //3) delete everything below each leftMostValue
     //4) 
-    //let matrix = transpose(inputMatrix)
-    let matrix = orderByLeastNumZeros(transpose(inputMatrix))
+    let matrix = transpose(inputMatrix)
+    matrix = orderByLeastNumZeros(matrix)
     // console.log(matrix)
     // console.log(stringMatrixFromFrac(matrix))
 
@@ -37,9 +40,11 @@ function GaussianEliminationV3(inputMatrix, steps, fractions) {
     //keep track of these for step 3
     for (let row = 0; row < matrix.length; row++) {
         let index = numLeftZerosInRow(matrix, row)
-        
+        // 4 2 3 1
+        // 0 0 0 5
+        // Also wont ever divide by zero (We think)
         //check that this is not part of the augment values
-        if (index < matrix[row].length) {
+        if (index < matrix[row].length - 1) {
             //make the value 1 and divide all values to right by leftMostValue, this includes the augment values
             let leftMostValue = matrix[row][index]
 
@@ -53,7 +58,11 @@ function GaussianEliminationV3(inputMatrix, steps, fractions) {
                 }
             }
         }
+        
     }
+    
+    matrix = orderByLeastNumZeros(matrix)
+    // Matrix is now in row eclion form
 
     //console.log(stringMatrixFromFrac(matrix))
     
@@ -72,16 +81,31 @@ function GaussianEliminationV3(inputMatrix, steps, fractions) {
     // console.log(stringMatrixFromFrac(matrix))
     // console.log(stepList)
     // console.log(operations)
-    return stepList
+    matrix = orderByLeastNumZeros(matrix)
+    matrix = transpose(matrix)
+    if (fracMode == false) {
+        matrix = numericMatrixFromFrac(matrix)
+    }
+    
+    if (steps == false) {
+        return matrix
+    } else {
+        return stepList
+    }
+    
 
+    // ---FUNCTIONS---
+
+
+    
     function saveSnapshot() {
         if (steps == true) {
-            stepList.push(stringMatrixFromFrac(deepCopy(matrix)))
+            stepList.push(stringMatrixFromFrac(transpose(deepCopy(matrix))))
         }
     }
 
     /**
-     * divides entire row by value
+     * divides entire row by valuet
      * @param {*} row
      * @param {*} value 
      */
@@ -377,4 +401,26 @@ function subtractFracs(frac1, frac2) {
 function equalFrac(frac1, frac2) {
     let answer = (frac1.getNumerator() == frac2.getNumerator()) && (frac1.getDenominator() == frac2.getDenominator())
     return answer
+}
+
+/**
+ * 
+ * @param {*} matrix1 frac matrix
+ * @param {*} matrix2 frac matrix
+ * @returns 
+ */
+function fracMatricesEqual(matrix1, matrix2) {
+    if (matrix1.length != matrix2.length) {
+        return false
+    }
+
+    for (let i = 0; i < matrix1.length; i++) {
+        for (let j = 0; j < matrix1[i].length; j++) {
+            if (!equalFrac(matrix1[i][j], matrix2[i][j])) {
+                return false
+            }
+        }
+    }
+
+    return true
 }

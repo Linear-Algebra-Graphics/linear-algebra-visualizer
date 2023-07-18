@@ -48,7 +48,7 @@ class GaussianPlanes {
         this.graph = graph
         this.planesStdForm = planesStdForm
         let transposed = transpose(this.planesStdForm)
-        let reduced = GaussianEliminationV2(transposed, true, false)
+        let reduced = GaussianEliminationV3(transposed, false, false)
         let result = reduced[reduced.length - 1];
         if (result.length != 3) {
             result = [0, 0, 0]
@@ -231,7 +231,7 @@ class GaussianPlanes {
 
         //find a point of intersection between two planes
         //[a,b,c,d]
-        let reducedEchelon = GaussianEliminationV2(transpose([plane1, plane2]), true, false)
+        let reducedEchelon = GaussianEliminationV3(transpose([plane1, plane2]), false, false)
 
         let point1 = new Array(3)
         let point2 = new Array(3)
@@ -576,7 +576,6 @@ function getPlaneLines(graph, normal, sideLength, intersection) {
     // }
     
     //intersection is the solution of the system (if it exists)
-    console.log(intersection)
     intersection = graph.changeBasisAndRotate(intersection)
     corner1 = vectorAdd(corner1, intersection)
     corner2 = vectorAdd(corner2, intersection)

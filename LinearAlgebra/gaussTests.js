@@ -1,7 +1,3 @@
-function matrixEqual(matrix1, matrix2) {
-
-}
-
 class GaussTests {
     constructor() {
         this.inputList   = []
@@ -19,19 +15,21 @@ class GaussTests {
         console.log("Total tests: " + this.inputList.length)
         let testsPassedInARow = 0
         for (let i=0; i<this.inputList.length; i++) {
-            let result = GaussianEliminationV3(this.inputList[i], false, false)
-            let passed = matrixEqual(result, this.expectedResultList[i])
+            let result = GaussianEliminationV3(this.inputList[i], false, true)
+            let passed = fracMatricesEqual(result, this.expectedResultList[i])
             if (passed == true) {
                 testsPassedInARow++
             } else {
-                console.log("%c \u2713 " + "("  + testsPassedInARow  + ")" + " Tests passed", "color: green; background: black;")
+                if (testsPassedInARow != 0) {
+                    console.log("%c \u2713 " + "("  + testsPassedInARow  + ")" + " Tests passed", "color: green; background: black;")
+                }
                 console.log("%c \u2717 " + this.testNameList[i] + " Failed", "color: red; background: black;")
                 console.log("Input: ")
-                console.log(this.inputList[i])
+                console.log(stringMatrixFromFrac(this.inputList[i]))
                 console.log("Expected: ")
-                console.log(this.expectedResultList[i])
+                console.log(stringMatrixFromFrac(this.expectedResultList[i]))
                 console.log("Actual: ")
-                console.log(result)
+                console.log(stringMatrixFromFrac(result))
                 testsPassedInARow = 0
                 if(stopOnFirstFailed == true) {
                     break
@@ -46,17 +44,17 @@ class GaussTests {
     runTest(testNumber) {
         console.log("Test: " + testNumber)
         let result = GaussianEliminationV3(this.inputList[testNumber], false)
-        passed = matrixEqual(result, this.expectedResultList[testNumber])
+        passed = fracMatricesEqual(result, this.expectedResultList[testNumber])
         if (passed == true) {
             console.log("%c \u2713 " + message + " Passed", "color: green; background: black;")
         } else {
             console.log("%c \u2717  " + message + " Failed", "color: red; background: black;")
             console.log("Input: ")
-            console.log(this.inputList[testNumber])
+            console.log(stringMatrixFromFrac(this.inputList[i]))
             console.log("Expected: ")
-            console.log(this.expectedResultList[testNumber])
+            console.log(stringMatrixFromFrac(this.expectedResultList[i]))
             console.log("Actual: ")
-            console.log(this.inputList[testNumber])
+            console.log(stringMatrixFromFrac(result))
         }
         
     }
@@ -131,7 +129,7 @@ gaussTests.add(
         [new Frac(1,1), new Frac(0,1), new Frac(0,1)],
         [new Frac(0,1), new Frac(1,1), new Frac(0,1)],
         [new Frac(0,1), new Frac(0,1), new Frac(1,1)],
-        [new Frac(-19,4), new Frac(69,28), new Frac(99,28)]
+        [new Frac(19,8), new Frac(3,7), new Frac(-87,56)]
     ],
     "3x4 independent - no Fractions"
 )
@@ -147,25 +145,15 @@ gaussTests.add(
     [
         [new Frac(1,1), new Frac(0,1), new Frac(0,1), new Frac(0,1)],
         [new Frac(3,1), new Frac(0,1), new Frac(0,1), new Frac(0,1)],
-        [new Frac(0,1), new Frac(1,1), new Frac(1,1), new Frac(0,1)],
+        [new Frac(0,1), new Frac(1,1), new Frac(0,1), new Frac(0,1)],
         [new Frac(0,1), new Frac(0,1), new Frac(1,1), new Frac(0,1)],
         [new Frac(0,1), new Frac(0,1), new Frac(0,1), new Frac(0,1)]
     ],
-    ""
+    "4 x 5"
 )
 
 gaussTests.runTests()
 
-
-// tests.add(
-//     [
-
-//     ],
-//     [
-
-//     ],
-//     ""
-// )
 
 // tests.add(
 //     [
