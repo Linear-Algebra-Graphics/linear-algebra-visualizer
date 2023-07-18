@@ -100,7 +100,11 @@ function GaussianEliminationV3(inputMatrix, steps, fracMode) {
     
     function saveSnapshot() {
         if (steps == true) {
-            stepList.push(stringMatrixFromFrac(transpose(deepCopy(matrix))))
+            if (fracMode == true) {
+                stepList.push(transpose(deepCopy(matrix)))
+            } else {
+                stepList.push(numericMatrixFromFrac(transpose(deepCopy(matrix))))
+            }
         }
     }
 
@@ -302,10 +306,12 @@ class Frac {
     }
 
     toString() {
-        if (this.denominator == 1) {
-            return "" + this.numerator
+        if (this.getNumerator() == 0) {
+            return "0"
+        } else if (this.getDenominator() == 1) {
+            return "" + this.getNumerator()
         } else {
-            return "" + this.getNumerator() + "/" + this.getDenominator()
+            return this.getNumerator() + "/" + this.getDenominator()
         }
     }
 

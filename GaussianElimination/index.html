@@ -5,9 +5,10 @@
         <script src="../LinearAlgebra/matrixMult.js"></script>
         <script src="../LinearAlgebra/SVD.js"></script>
         <script src="../LinearAlgebra/det.js"></script>
-        <script src="../LinearAlgebra/GuassianElimination.js"></script>
+        <!-- <script src="../LinearAlgebra/GaussianElimination.js"></script>
+        <script src="../LinearAlgebra/GuassianElimination_broken.js"></script> -->
         <script src="../LinearAlgebra/GaussianEliminationV3.js"></script>
-        <script src="../LinearAlgebra/GaussianEliminationV2.js"></script>
+
         <script src="../LinearAlgebra/GramSchmidt.js"></script>
         
 
@@ -23,38 +24,45 @@
 
     
         <script src="script.js" defer></script>
-
+        
+        <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="../style.css">
         <link rel="stylesheet" href="../navigationBar.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <title>Change of basis Example</title>
+
     </head>
     <body>
         <div class="topnav">
             <a href="..\LinearTransformation\index.html">Linear Transformation</a>
             <a class="active" href="">Gaussian Eliminatioon</a>
         </div>
-        Long Live Guassia!
-        <div class="box">
-            <title>Change of basis Example</title>
+
+        
+        <div class="container">
+            <div class="canvas-and-settings">
+                <canvas id="graph" style="border:1px solid #000000;"></canvas>
+                <div>
+                    <button type="button" id="add-augmented">Add augmented matrix</button> 
+                    <button type="button" id="remove-augmented">remove last matrix</button> 
+                    <button type="button" id="clear">clear</button> 
+                    <button type="button" id="animate">animate</button> 
+                    <button type="button" id="solve">solve</button>
+                </div>
+            </div>
+            <div class="matrix-container">
+                
+    
+            </div>
+    
+        </div>
+
+        <!-- <div class="box">
             <div id="graph-container">
                 <canvas id="graph" style="border:1px solid #000000;"></canvas>
             </div>
             <div class="matrixAndSlider" marginLeft="20px">
-                <h2>Vector Input</h2>
-                <div id="vector-input">
-                    <input id="x" size="5px" class="arrow-togglable" type="text" autocomplete="off"/>
-                    <input id="y" size="5px" class="arrow-togglable" type="text" autocomplete="off"/>
-                    <input id="z" size="5px" class="arrow-togglable" type="text" autocomplete="off"/>
-                    <input type="color" id="vector colors" value="#000000">
-                    <!-- <select id="vector colors" default="black">
-                        <option value="black">black</option>
-                        <option value="green">green</option>
-                        <option value="blue">blue</option>
-                        <option value="white">white</option>
-                    </select> -->
-                    <button id="graphButton" marginLeft="10px">graph!</button>
-                    <!-- <button id="showGrid" marginLeft="10px">show grid!</button> -->
-                </div>
                 <div id="adjustment-buttons">
                     <label>Infinite Axis</label>
                     <input type="checkbox" id="infiniteAxis" ></input>
@@ -68,6 +76,6 @@
                     <button id="darkMode">Dark Mode!</button>
                 </div>
             </div>
-        </div>
+        </div> -->
     </body>
 </html>

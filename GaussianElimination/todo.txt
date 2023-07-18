@@ -1,0 +1,17 @@
+Add fraction support
+Make colors better
+
+Add control pannel
+
+Add minimzation
+Add clear
+
+ADD BUTTONS FOR ROW OPPERATIONS
+
+FIX NAME LENGTH STUFF
+
+Make so after doing adding matrix for solved gaussian
+can't add anything else?
+Also change the last name to finished or something?
+
+make unselected darker? make everything in matrix steps editable?
