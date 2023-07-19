@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        
+        <script src="../../LinearAlgebra/matrixMult.js"></script>
+        <script src="../../LinearAlgebra/SVD.js"></script>
+        <script src="../../LinearAlgebra/det.js"></script>
+        <script src="../../LinearAlgebra/GaussianEliminationV2.js"></script>
+        
+
+
+        <script src="../../GraphElements/Vector.js"></script>
+        <script src="../../GraphElements/Axis.js"></script>
+        <script src="../../GraphElements/Grid.js"></script>
+        <script src="../../GraphElements/Graph.js"></script>
+        <script src="../../GraphElements/LinearTransformation.js"></script>
+        <script src="../../GraphElements/Shapes.js"></script>
+
+
+        <script src="../../GraphElements/GaussianPlanes.js"></script>
+        <script src="../../LinearAlgebra/GramSchmidt.js"></script>
+
+        
+
+        
+        <script src="script.js" defer></script>
+
+        <link rel="stylesheet" href="../../style.css">
+        <link rel="stylesheet" href="style.css">
+
+        <link rel="stylesheet" href="../../navigationBar.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    </head>
+    <body>
+        <div class="topnav">
+            <a href="../../LinearTransformation/index.html">Linear Transformation</a>
+            <div class="dropdown">
+                <button class="dropbtn">Dropdown
+                  <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content">
+                  <a href="#">Link 1</a>
+                  <a href="#">Link 2</a>
+                  <a href="#">Link 3</a>
+                </div>
+              </div>
+            <a href="../../GaussianElimination/index.html">Gaussian Elimination</a>
+        </div>
+        <div class="container">
+
+            <div class="canvas-and-settings">
+                <canvas id="graph" style="border:1px solid #000000;"></canvas>
+                <div>
+                    <label>Infinite Axis</label>
+                    <input type="checkbox" id="infiniteAxis" ></input>
+                    <label>Show Grid</label>
+                    <input type="checkbox" id="showGrid" checked=""></input>
+                    <label> zoom: </label>
+                    <button id="zoomIn" marginLeft="10px">+</button>
+                    <button id="zoomOut" marginLeft="10px"> - </button>
+                    <button id="defaultZoom" marginLeft="10px"> default zoom </button>
+                    <button id="defaultOrientation" marginLeft="10px"> default orientation</button>
+                    <button id="darkMode">Dark Mode!</button>
+                </div>
+            </div>
+            
+            <div class="matrix-container">
+                
+    
+            </div>
+    
+        </div>
+    </body>
+</html>
