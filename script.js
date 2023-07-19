@@ -1,0 +1,1 @@
+document.location.href = "LinearTransformation/index.html";

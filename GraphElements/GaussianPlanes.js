@@ -324,32 +324,44 @@ class GaussianPlanes {
         }
         
         let sortedPolygons = this.sortPolygons(polygons)
+        console.log(sortedPolygons)
         
         //draw planes   
         for (let i = 0; i < sortedPolygons.length; i++) {
-
             for (let j = 0; j < sortedPolygons[i].polygon.lines.length; j++) {
+
                 let point1 = sortedPolygons[i].polygon.lines[j].point1
                 let point2 = sortedPolygons[i].polygon.lines[j].point2
+
                 sortedPolygons[i].polygon.lines[j].point1 = this.graph.applyZoom(point1)
                 sortedPolygons[i].polygon.lines[j].point2 = this.graph.applyZoom(point2)
             }
             sortedPolygons[i].polygon.draw(true, false)
         }
 
+
         //draw outlines
         for (let i = 0; i < planeLines.length; i++) {
             if (planeLines[i].length != 0) {
-                
                 for (let j = 0; j < planeLines[i].length; j++) {
                     planeLines[i][j].point1 = this.graph.applyZoom(planeLines[i][j].point1)
                     planeLines[i][j].point2 = this.graph.applyZoom(planeLines[i][j].point2)
                 }
                 // console.log(planeLines)
-                let planePolygon = new Polygon(this.graph, planeLines[i], "red", 1)
+                let planePolygon = new Polygon(this.graph, planeLines[i], "black", 1)
                 planePolygon.draw(false, true)
             }
         }
+        
+
+        //draw dot at solution
+        let inBasisSolution = this.graph.changeBasisZoomAndRotate(this.intersection)
+        this.graph.ctx.fillStyle = "black"
+        this.graph.ctx.strokeStyle = "black"
+        this.graph.ctx.beginPath();
+            this.graph.ctx.arc(this.graph.centerX + this.graph.scale * inBasisSolution[0], this.graph.centerY - this.graph.scale * inBasisSolution[1], 6, 0, 2 * Math.PI);
+            this.graph.ctx.fill();
+        this.graph.ctx.stroke();
     }
 
     /**
@@ -531,7 +543,7 @@ function getPlaneLines(graph, normal, sideLength, intersection) {
     let d = normal[3]
 
     if(a == 0 && b == 0 && c == 0) {
-        throw new Error("Normal vector is [0,0,0]")
+        return []
     }
 
     let planeBasis = getPlaneVectors2D([a, b, c])
@@ -672,7 +684,6 @@ class Line {
      *          [line(this.point1, splitPoint), line(splitPoint, this.point2)] if a splitPoint exists
      */
     splitWithLine2D(otherLine, color) {
-        //debugger
         const a1 = this.point2[1] - this.point1[1]//line1.abc[0]
         const b1 = this.point1[0] - this.point2[0] //line1.abc[1]
         const c1 = (this.point1[1] * (this.point2[0] - this.point1[0])) - (this.point1[0] * (this.point2[1] - this.point1[1])) //line1.abc[2]
@@ -797,33 +808,5 @@ class Polygon {
         // }
     }
 }
-
-function LightenDarkenColor(col,amt) {
-    var usePound = false;
-    if ( col[0] == "#" ) {
-        col = col.slice(1);
-        usePound = true;
-    }
-
-    var num = parseInt(col,16);
-
-    var r = (num >> 16) + amt;
-
-    if ( r > 255 ) r = 255;
-    else if  (r < 0) r = 0;
-
-    var b = ((num >> 8) & 0x00FF) + amt;
-
-    if ( b > 255 ) b = 255;
-    else if  (b < 0) b = 0;
-    
-    var g = (num & 0x0000FF) + amt;
-
-    if ( g > 255 ) g = 255;
-    else if  ( g < 0 ) g = 0;
-
-    return (usePound?"#":"") + (g | (b << 8) | (r << 16)).toString(16);
-}
-
 
 

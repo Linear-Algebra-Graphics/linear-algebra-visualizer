@@ -94,13 +94,15 @@ class Axis {
        }
        
        if (this.zeroZeroDot) {
-            // puts a dot at (0, 0)
+            //puts a dot at (0, 0)
             this.graph.ctx.fillStyle   = this.zeroZeroDotColor
             this.graph.ctx.strokeStyle = this.zeroZeroDotColor
             this.graph.ctx.beginPath();
                 this.graph.ctx.arc(this.graph.centerX, this.graph.centerY, this.zeroZeroDotSize, 0, 2 * Math.PI);
                 this.graph.ctx.fill();
             this.graph.ctx.stroke();
+
+            //this.graph.drawDotFromVector([0,0], this.zeroZeroDotColor, this.zeroZeroDotSize)
 
         }
 

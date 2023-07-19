@@ -26,14 +26,18 @@ function GaussianEliminationV3(inputMatrix, steps, fracMode) {
     //2) find first non-zero value,
     //  if 1 do nothing, else divide whole row by first nonzero value - > make all left most values nonzero
     //3) delete everything below each leftMostValue
-    //4) 
+    //4)
+
+
     let matrix = transpose(inputMatrix)
+
+    let stepList    = []
+    let operations = []
+
     matrix = orderByLeastNumZeros(matrix)
     // console.log(matrix)
     // console.log(stringMatrixFromFrac(matrix))
 
-    let stepList    = []
-    let operations = []
 
     //make leftMost be 1
 
@@ -49,7 +53,9 @@ function GaussianEliminationV3(inputMatrix, steps, fracMode) {
             let leftMostValue = matrix[row][index]
 
             //console.log(leftMostValue.getNumericalValue())
-            divideRow(row, leftMostValue)
+            if (leftMostValue != 1) {
+                divideRow(row, leftMostValue)
+            }
 
             for (let rowBelow = row + 1; rowBelow < matrix.length; rowBelow++) {
                 if (matrix[rowBelow][index].getNumerator() != 0) {
@@ -259,6 +265,13 @@ function deepCopy(matrix) {
     return newMatrix
 }
 
+function isLetterOrFloat(val) {
+    return (val.length === 1 && val.match(/[a-z]/i)) || (!val.isInteger())
+}
+
+function isLetter(val) {
+    return (val.length === 1 && val.match(/[a-z]/i))
+}
 
 class Frac {
     constructor(numerator, denominator) {
