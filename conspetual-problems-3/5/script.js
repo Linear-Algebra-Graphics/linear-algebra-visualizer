@@ -15,52 +15,13 @@ canvas.style.height = displayHeight + "px"
 canvas.width = displayWidth * 2
 canvas.height = displayHeight * 2
 
-// canvas.width = displayWidth 
-// canvas.height = displayHeight
+// canvas.width = displayWidth   
+// canvas.height = displayHeight 
 
 let test_graph = new Graph(canvas);
-
-
-//add mouse support
-let x = 0;
-let y = 0;
-
-let delta_x = 0
-let delta_y = 0
-
-canvas.addEventListener('mousemove', function(e) {    // return null
-
-    // console.log("mouse on canvas!")
-    if (mouseIsDown) {
-        // this 20 is the offset of canvas
-        x = - delta_x + (e.clientX -20);
-        y = - delta_y + (e.clientY -20);
-    } else {
-        delta_x = (e.clientX -20) - x
-        delta_y = (e.clientY -20) - y
-    }
-    // console.log("(" + x + ", " + y + ")")
-    // console.log("(" + e.clientX + ", " + e.clientY + ")")
-});
-
-
-let mouseIsDown = false
-
-
-document.addEventListener('mousedown', function(event) {
-    
-    if (event.button === 0) {
-        mouseIsDown = true
-    }
-});
-
-document.addEventListener('mouseup', function(event) {
-
-    if (event.button === 0) {
-        mouseIsDown = false
-    } 
-});
-
+test_graph.currentZoom = 3
+test_graph.defaultZoom = 3
+test_graph.linearTransformation = linearTransformation
 
 canvas.addEventListener("wheel", event => {
     const delta = Math.sign(event.deltaY);
@@ -75,7 +36,6 @@ canvas.addEventListener("wheel", event => {
       // console.log("Decreasing scale by 10%")
     }
 });
-
 
 document.getElementById("zoomIn").addEventListener("click", function() {
     test_graph.zoomIn()
@@ -124,29 +84,173 @@ document.getElementById("darkMode").addEventListener("click", function() {
     }
 })
 
-document.getElementById("defaultOrientation").addEventListener("click", function() {
-    // Resets to default state of x and y
-    x = 0
-    y = 0
-})
-
-
 test_graph.draw()
 
-
-
 setInterval(function() {
-
-    test_graph.rotateAboutZ(2 * Math.PI * (x) / displayWidth)
-
-    test_graph.rotateAboutX(2 * Math.PI * (y) / displayHeight)
-
 
     test_graph.draw()
 }, 1000/60)
 
+let selectedQuestion = document.getElementsByClassName("question-link")[0]
+selectCorrectProblem("5a", selectedQuestion)
 
-//test_graph.infiniteAxis = false
+// if(window.location.hash) {
+//     let problem = window.location.hash.split("#")
+//     selectCorrectProblem(problem)
+// } else {
+//     selectedQuestion = document.getElementsByClassName("question-link")[0]
+//     selectedQuestion.previousElementSibling.classList.remove("hidden")
+//     window.location.hash = "#2a"
+// }
+
+document.getElementsByClassName("question-container")[0].addEventListener("click", function(event) {
+    const current = event.target
+    // console.log(current)
+    if (current.classList.contains("question-link")) {
+        let problem = event.target.href[event.target.href.length-2] + event.target.href[event.target.href.length-1]
+        selectCorrectProblem(problem, event.target)
+    }
+})
+
+function selectCorrectProblem(input, link) {
+    let button = input
+    // console.log(button)
+    selectedQuestion.previousElementSibling.classList.add("hidden")
+    selectedQuestion = link
+    selectedQuestion.previousElementSibling.classList.remove("hidden")
+
+    if (button == "5a") {
+        test_graph.drawnObjects = []
+        let targetShape = new Square2d(test_graph, [[0,0,0],[1,2,0],[2,2,0],[1,0,0]], "black", "gray")
+        let unitSquare  = new Square2d(test_graph, [[0,0,0],[0,1,0],[1,1,0],[1,0,0]], "purple", "purple")
+        unitSquare.setTransformation(linearTransformation)
+
+        test_graph.addObject(targetShape)
+        test_graph.addObject(unitSquare)
+    } else
+    if (button == "5c") {
+        test_graph.drawnObjects = []
+        let targetShape = new Square2d(test_graph, [[0,0,0],[0,1,0],[1,1,0],[1,0,0]], "black", "gray")
+        let unitSquare  = new Square2d(test_graph, [[0,0,0],[0,1,0],[1,1,0],[1,0,0]], "purple", "purple")
+        unitSquare.setTransformation(linearTransformation)
+
+        test_graph.addObject(targetShape)
+        test_graph.addObject(unitSquare)
+    } else
+    if (button == "5d") {
+        test_graph.drawnObjects = []
+        let targetShape = new Square2d(test_graph, [[1,0,0],[2,2,0],[3,2,0],[2,0,0]], "black", "gray")
+        let unitSquare  = new Square2d(test_graph, [[0,0,0],[0,1,0],[1,1,0],[1,0,0]], "purple", "purple")
+        unitSquare.setTransformation(linearTransformation)
+
+        test_graph.addObject(targetShape)
+        test_graph.addObject(unitSquare)
+    } else
+    if (button == "5e") {
+        test_graph.drawnObjects = []
+        let unitSquare  = new Square2d(test_graph, [[0,0,0],[0,1,0],[1,1,0],[1,0,0]], "purple", "purple")
+        
+        unitSquare.setTransformation(linearTransformation)
+        test_graph.addObject(unitSquare)
+        
+        test_graph.addObject(new Dot(test_graph, [0,0,0], "black", 7.5))
+        test_graph.addObject(new Dot(test_graph, [1,0,0], "black", 7.5))
+    }
+}
+
+let defaultMatrix = document.createElement("div")
+
+defaultMatrix.innerHTML = `
+<div class="name-bar">
+    <button type="button" class="apply-button">Apply</button> 
+    <div class="label"></div>
+</div>
+<div class="values">
+    <div class="line"></div>
+
+    <div class="column">
+        <input class="matrix-value" type="text" value="1">
+        <input class="matrix-value" type="text" value="0">
+    </div>
+    <div class="column">
+        <input class="matrix-value" type="text" value="0">
+        <input class="matrix-value" type="text" value="1">
+    </div>
+
+    <div class="line"></div>
+</div>
+`
+
+defaultMatrix.className = "matrix"
+
+let origonalMatrix = defaultMatrix.cloneNode(true)
+origonalMatrix.getElementsByClassName("label")[0].innerHTML  = "Transformation:"
+
+document.getElementsByClassName("matrix-container")[0].appendChild(origonalMatrix)
 
 
-//test_graph.addObject(new ThreeDimCube(test_graph))
+document.getElementsByClassName("apply-button")[0].addEventListener("click", function() {
+    let transformationMatrix = readMatrixDONOTUSE()
+    // console.log(transformationMatrix)
+    linearTransformation.setTransformation(transformationMatrix)
+    document.getElementById("area-number").innerHTML = Math.abs(det3x3(readMatrixDONOTUSE()))
+})
+
+
+/**
+ * ONLY works for 2x2 inputs, but always RETURNS 3x3
+ * @returns the only matrix on the screen. Always returns 3x3 even though its 2x2
+ */
+function readMatrixDONOTUSE() {
+    let fractionFormat = false
+    //debugger
+    matrix = [[undefined,undefined,undefined],[undefined,undefined,undefined],[undefined,undefined,undefined],[undefined,undefined,undefined]]
+    
+    let selectedMatrix = document.getElementsByClassName("matrix")[0]
+    let columbs = selectedMatrix.getElementsByClassName("values")[0].getElementsByClassName("column")
+    for (let c = 0; c < columbs.length; c++) {
+        let values = columbs[c].getElementsByTagName("input")
+        for(let v = 0; v < values.length; v++) {
+            
+            let fracAnswer
+
+            const regex = /^(-*)(((\d*\.*\d*)\/(\d*\.*\d*))|\d*\.*\d*)$/;
+            let regexGroups = (values[v].value).match(regex)
+            
+            let minusSigns  = regexGroups[1]
+
+            let neg = 1
+
+            if (minusSigns % 2 != 0) {
+                neg = -1
+            }
+
+            let number      = regexGroups[2]
+            
+            let split = number.split("/")
+            
+            if(split.length == 2) {
+                if (parseFloat(split[1]) != 0) {
+                    fracAnswer = new Frac(parseFloat(neg*split[0]), parseFloat(split[1]))
+                } else {
+                    return null;
+                }
+            } else if(split.length == 1) {
+                fracAnswer = new Frac(parseFloat(neg*split[0]), 1)
+            } else {
+                return null
+            }
+
+            if (fractionFormat == true) {
+                matrix[c][v] = fracAnswer
+            } else {
+                matrix[c][v] = fracAnswer.getNumericalValue()
+            }
+                        
+        }
+    }
+
+    let realMatrix = [[matrix[0][0],matrix[0][1],0 ],[matrix[1][0],matrix[1][1],0], [0,0,1]]
+
+    return realMatrix
+}

@@ -324,7 +324,7 @@ class GaussianPlanes {
         }
         
         let sortedPolygons = this.sortPolygons(polygons)
-        console.log(sortedPolygons)
+        //console.log(sortedPolygons)
         
         //draw planes   
         for (let i = 0; i < sortedPolygons.length; i++) {

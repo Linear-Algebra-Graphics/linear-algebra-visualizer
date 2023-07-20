@@ -40,3 +40,5 @@ perhaps sort all by z values before drawing for all of them?
 Transpose:
     Change name to transpsoeMatrix
     Make it work for non square matries
+
+Use factory functions!!!!!

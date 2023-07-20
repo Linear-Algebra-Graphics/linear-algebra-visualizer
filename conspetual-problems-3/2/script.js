@@ -19,6 +19,8 @@ canvas.height = displayHeight * 2
 // canvas.height = displayHeight 
 
 let test_graph = new Graph(canvas);
+test_graph.currentZoom = 3
+test_graph.defaultZoom = 3
 test_graph.linearTransformation = linearTransformation
 
 canvas.addEventListener("wheel", event => {
@@ -34,7 +36,6 @@ canvas.addEventListener("wheel", event => {
       // console.log("Decreasing scale by 10%")
     }
 });
-
 
 document.getElementById("zoomIn").addEventListener("click", function() {
     test_graph.zoomIn()
@@ -90,100 +91,79 @@ setInterval(function() {
     test_graph.draw()
 }, 1000/60)
 
-if(window.location.hash) {
-    if (window.location.hash == "#2a") {
-        selectedQuestion = document.getElementsByClassName("question-link")[0]
-        selectedQuestion.previousElementSibling.classList.remove("hidden")
-    } else
-    if (window.location.hash == "#2b") {
-        selectedQuestion = document.getElementsByClassName("question-link")[1]
-        selectedQuestion.previousElementSibling.classList.remove("hidden")
-    } else
-    if (window.location.hash == "#2c") {
-        selectedQuestion = document.getElementsByClassName("question-link")[2]
-        selectedQuestion.previousElementSibling.classList.remove("hidden")
-    } else
-    if (window.location.hash == "#2d") {
-        selectedQuestion = document.getElementsByClassName("question-link")[3]
-        selectedQuestion.previousElementSibling.classList.remove("hidden")
-    } else {
-        selectedQuestion = document.getElementsByClassName("question-link")[0]
-        selectedQuestion.previousElementSibling.classList.remove("hidden")
-        window.location.hash = "#2a"
-    }
-} else {
-    selectedQuestion = document.getElementsByClassName("question-link")[0]
-    selectedQuestion.previousElementSibling.classList.remove("hidden")
-    window.location.hash = "#2a"
-}
-
+let selectedQuestion = document.getElementsByClassName("question-link")[0]
+selectCorrectProblem("2a", selectedQuestion)
+// if(window.location.hash) {
+//     let problem = window.location.hash.split("#")
+//     selectCorrectProblem(problem)
+// } else {
+//     selectedQuestion = document.getElementsByClassName("question-link")[0]
+//     selectedQuestion.previousElementSibling.classList.remove("hidden")
+//     window.location.hash = "#2a"
+// }
 
 document.getElementsByClassName("question-container")[0].addEventListener("click", function(event) {
     const current = event.target
     // console.log(current)
     if (current.classList.contains("question-link")) {
-
-        selectedQuestion.previousElementSibling.classList.add("hidden")
-
-        selectedQuestion = current
-
-        selectedQuestion.previousElementSibling.classList.remove("hidden")
-
-        window.location.hash
-        if (window.location.hash == "#2a") {
-            test_graph.drawnObjects = []
-
-            let targetShape = new Square2d(test_graph, [[0,0,0],[0,1,0],[1,1,0],[1,0,0]], "black", "gray")
-            let unitSquare  = new Square2d(test_graph, [[0,0,0],[0,1,0],[1,1,0],[1,0,0]], "purple", "purple")
-            unitSquare.setTransformation(linearTransformation)
-            targetShape.setTransformation(new LinearTransformation([[2,1,0],[0,0,0],[0,0,1]]))
-
-            test_graph.addObject(targetShape)
-            test_graph.addObject(unitSquare)
-        } else
-        if (window.location.hash == "#2b") {
-            test_graph.drawnObjects = []
-            let targetShape = new Square2d(test_graph, [[0,0,0],[0,1,0],[1,1,0],[1,0,0]], "black", "gray")
-            let unitSquare  = new Square2d(test_graph, [[0,0,0],[0,1,0],[1,1,0],[1,0,0]], "purple", "purple")
-            unitSquare.setTransformation(linearTransformation)
-            targetShape.setTransformation(new LinearTransformation([[2,1,0],[0,0,0],[0,0,1]]))
-
-            test_graph.addObject(targetShape)
-            test_graph.addObject(unitSquare)
-        } else
-        if (window.location.hash == "#2c") {
-            test_graph.drawnObjects = []
-            let targetShape = new Square2d(test_graph, [[0,0,0],[0,1,0],[1,1,0],[1,0,0]], "black", "gray")
-            let unitSquare  = new Square2d(test_graph, [[0,0,0],[0,1,0],[1,1,0],[1,0,0]], "purple", "purple")
-            unitSquare.setTransformation(linearTransformation)
-            targetShape.setTransformation(new LinearTransformation([[2,1,0],[0,0,0],[0,0,1]]))
-
-            test_graph.addObject(targetShape)
-            test_graph.addObject(unitSquare)
-        } else
-        if (window.location.hash == "#2d") {
-            test_graph.drawnObjects = []
-            let targetShape = new Square2d(test_graph, [[0,0,0],[0,1,0],[1,1,0],[1,0,0]], "red", "red")
-            let unitSquare  = new Square2d(test_graph, [[0,0,0],[0,1,0],[1,1,0],[1,0,0]], "purple", "purple")
-            unitSquare.setTransformation(linearTransformation)
-            targetShape.setTransformation(new LinearTransformation([[2,1,0],[0,0,0],[0,0,1]]))
-
-            test_graph.addObject(targetShape)
-            test_graph.addObject(unitSquare)
-        }
-
-
-
-
+        let problem = event.target.href[event.target.href.length-2] + event.target.href[event.target.href.length-1]
+        selectCorrectProblem(problem, event.target)
     }
-
 })
+
+function selectCorrectProblem(input, link) {
+    let button = input
+    console.log(button)
+    selectedQuestion.previousElementSibling.classList.add("hidden")
+    selectedQuestion = link
+    selectedQuestion.previousElementSibling.classList.remove("hidden")
+
+    if (button == "2a") {
+        test_graph.drawnObjects = []
+
+        let targetShape = new Square2d(test_graph, [[0,0,0],[0,1,0],[1,1,0],[1,0,0]], "black", "gray")
+        let unitSquare  = new Square2d(test_graph, [[0,0,0],[0,1,0],[1,1,0],[1,0,0]], "purple", "purple")
+        unitSquare.setTransformation(linearTransformation)
+        targetShape.setTransformation(new LinearTransformation([[1,1,0],[-1,1,0],[0,0,1]]))
+
+        test_graph.addObject(targetShape)
+        test_graph.addObject(unitSquare)
+    } else
+    if (button == "2b") {
+        test_graph.drawnObjects = []
+        let targetShape = new Square2d(test_graph, [[1,1,0],[2,1,0],[2,2,0],[1,2,0]], "black", "gray")
+        let unitSquare  = new Square2d(test_graph, [[0,0,0],[0,1,0],[1,1,0],[1,0,0]], "purple", "purple")
+        unitSquare.setTransformation(linearTransformation)
+
+        test_graph.addObject(targetShape)
+        test_graph.addObject(unitSquare)
+    } else
+    if (button == "2c") {
+        test_graph.drawnObjects = []
+        let targetShape = new Square2d(test_graph, [[0,0,0],[1,0,0],[1,-1,0],[0,-1,0]], "black", "gray")
+        let unitSquare  = new Square2d(test_graph, [[0,0,0],[0,1,0],[1,1,0],[1,0,0]], "purple", "purple")
+        unitSquare.setTransformation(linearTransformation)
+
+        test_graph.addObject(targetShape)
+        test_graph.addObject(unitSquare)
+    } else
+    if (button == "2d") {
+        test_graph.drawnObjects = []
+        let targetShape = new Square2d(test_graph, [[0,0,0],[0,1,0],[1,1,0],[1,0,0]], "black", "gray")
+        let unitSquare  = new Square2d(test_graph, [[0,0,0],[0,1,0],[1,1,0],[1,0,0]], "purple", "purple")
+        unitSquare.setTransformation(linearTransformation)
+        targetShape.setTransformation(new LinearTransformation([[2,1,0],[0,0,0],[0,0,1]]))
+
+        test_graph.addObject(targetShape)
+        test_graph.addObject(unitSquare)
+    }
+}
 
 let defaultMatrix = document.createElement("div")
 
 defaultMatrix.innerHTML = `
 <div class="name-bar">
-    <button type="button" class="clear-button">-</button> 
+    <button type="button" class="apply-button">Apply</button> 
     <div class="label"></div>
 </div>
 <div class="values">
@@ -205,12 +185,20 @@ defaultMatrix.innerHTML = `
 defaultMatrix.className = "matrix"
 
 let origonalMatrix = defaultMatrix.cloneNode(true)
-origonalMatrix.getElementsByClassName("label")[0].innerHTML  = "Linear Transformation (Matrix):"
+origonalMatrix.getElementsByClassName("label")[0].innerHTML  = "Transformation:"
 
 document.getElementsByClassName("matrix-container")[0].appendChild(origonalMatrix)
 
+
+document.getElementsByClassName("apply-button")[0].addEventListener("click", function() {
+    let transformationMatrix = readMatrixDONOTUSE()
+    console.log(transformationMatrix)
+    linearTransformation.setTransformation(transformationMatrix)
+})
+
+
 /**
- *
+ * ONLY works for 2x2 inputs, but always RETURNS 3x3
  * @returns the only matrix on the screen. Always returns 3x3 even though its 2x2
  */
 function readMatrixDONOTUSE() {

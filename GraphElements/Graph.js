@@ -34,6 +34,7 @@ class Graph {
         this.backgroundColor           = "white"
         // I matrix is default
         this.basis                     = [[1,0,0],[0,1,0],[0,0,1]]
+        this.defaultZoom               = 1
         this.currentZoom               = 1
         this.zoomIncrement             = 1.1
         
@@ -130,9 +131,9 @@ class Graph {
         
         
         this.basis = matrixMultiplication(transitionR, transitionS)
-        this.addObject(new Dot(this, matrixVectorMultiplication(this.basis, [1,0,0]), "blue"))
-        this.addObject(new Dot(this, matrixVectorMultiplication(this.basis, [0,1,0]), "red"))
-        this.addObject(new Dot(this, matrixVectorMultiplication(this.basis, [0,0,1]), "green"))
+        this.addObject(new Dot(this, matrixVectorMultiplication(this.basis, [1,0,0]), "blue", 3))
+        this.addObject(new Dot(this, matrixVectorMultiplication(this.basis, [0,1,0]), "red", 3))
+        this.addObject(new Dot(this, matrixVectorMultiplication(this.basis, [0,0,1]), "green", 3))
     }
 
 
@@ -265,7 +266,7 @@ class Graph {
      */
     setDefaultZoom() {
         //should be animation back to default zoom
-        this.currentZoom = 1
+        this.currentZoom = this.defaultZoom
     }
 
     /**
@@ -626,13 +627,14 @@ function findTwoClosesPoints(dis_points) {
 }
 
 class Dot {
-    constructor(graph, vector, color) { 
+    constructor(graph, vector, color, radius) { 
         this.graph  = graph
         this.vector = vector
         this.color  = color
+        this.radius = radius
     }
 
     draw() {
-        this.graph.drawDotFromVector(this.vector, this.color, 3)
+        this.graph.drawDotFromVector(this.vector, this.color, this.radius)
     }
 }

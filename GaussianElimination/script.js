@@ -21,9 +21,12 @@ canvas.height = displayHeight * 2
 let test_graph = new Graph(canvas);
 test_graph.showGaussianPlanes = true
 
+test_graph.currentZoom = .7
+test_graph.defaultZoom = .7
+
 //add mouse support
-let x = 95//41;
-let y = -97//-213;
+let x = 387//95//41;
+let y = -114//-213;
 
 let delta_x = 0
 let delta_y = 0
@@ -469,9 +472,9 @@ document.addEventListener("click", function() {
         //test_graph.gaussianPlanesIndex = selectedMatrix
         // console.log("active element " + current)
     }
-
 })
 
+selectMatrix(0)
 
 
 document.getElementById("add-augmented").addEventListener("click", function() {
@@ -533,4 +536,3 @@ document.getElementById("animate").addEventListener("click", function() {
         }
     }
 })
-

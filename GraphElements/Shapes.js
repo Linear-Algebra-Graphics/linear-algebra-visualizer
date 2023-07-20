@@ -54,22 +54,22 @@ class Square2d {
 
         // let point1 = vectorAdd(vectorMultiplication(this.graph.changeBasisZoomAndRotate(this.vertices[0]), this.scale), centercords)
         let point1 = matrixVectorMultiplication(this.linearTransformation.matrix, this.vertices[0])
-        point1     = this.graph.changeBasisZoomAndRotate(this.vertices[0])
+        point1     = this.graph.changeBasisZoomAndRotate(point1)
         point1     = scaleVector(point1, this.graph.scale)
         point1     = [this.graph.centerX + point1[0], this.graph.centerY - point1[1]]
 
         let point2 = matrixVectorMultiplication(this.linearTransformation.matrix, this.vertices[1])
-        point2     = this.graph.changeBasisZoomAndRotate(this.vertices[1])
+        point2     = this.graph.changeBasisZoomAndRotate(point2)
         point2     = scaleVector(point2, this.graph.scale)
         point2     = [this.graph.centerX + point2[0], this.graph.centerY - point2[1]]
 
         let point3 = matrixVectorMultiplication(this.linearTransformation.matrix, this.vertices[2])
-        point3     = this.graph.changeBasisZoomAndRotate(this.vertices[2])
+        point3     = this.graph.changeBasisZoomAndRotate(point3)
         point3     = scaleVector(point3, this.graph.scale)
         point3     = [this.graph.centerX + point3[0], this.graph.centerY - point3[1]]
         
         let point4 = matrixVectorMultiplication(this.linearTransformation.matrix, this.vertices[3])
-        point4     = this.graph.changeBasisZoomAndRotate(this.vertices[3])
+        point4     = this.graph.changeBasisZoomAndRotate(point4)
         point4     = scaleVector(point4, this.graph.scale)
         point4     = [this.graph.centerX + point4[0], this.graph.centerY - point4[1]]
 
