@@ -15,10 +15,11 @@ canvas.style.height = displayHeight + "px"
 canvas.width = displayWidth * 2
 canvas.height = displayHeight * 2
 
-// canvas.width = displayWidth 
-// canvas.height = displayHeight
+// canvas.width = displayWidth   
+// canvas.height = displayHeight 
 
 let test_graph = new Graph(canvas);
+test_graph.linearTransformation=linearTransformation
 
 canvas.addEventListener("wheel", event => {
     const delta = Math.sign(event.deltaY);
@@ -89,8 +90,51 @@ setInterval(function() {
     test_graph.draw()
 }, 1000/60)
 
+if(window.location.hash) {
+    if (window.location.hash == "#2a") {
+        selectedQuestion = document.getElementsByClassName("question-link")[0]
+        selectedQuestion.previousElementSibling.classList.remove("hidden")
+    } else
+    if (window.location.hash == "#2b") {
+        selectedQuestion = document.getElementsByClassName("question-link")[1]
+        selectedQuestion.previousElementSibling.classList.remove("hidden")
+    } else
+    if (window.location.hash == "#2c") {
+        selectedQuestion = document.getElementsByClassName("question-link")[2]
+        selectedQuestion.previousElementSibling.classList.remove("hidden")
+    } else
+    if (window.location.hash == "#2d") {
+        selectedQuestion = document.getElementsByClassName("question-link")[3]
+        selectedQuestion.previousElementSibling.classList.remove("hidden")
+    } else {
+        selectedQuestion = document.getElementsByClassName("question-link")[0]
+        selectedQuestion.previousElementSibling.classList.remove("hidden")
+        window.location.hash = "#2a"
+    }
+} else {
+    selectedQuestion = document.getElementsByClassName("question-link")[0]
+    selectedQuestion.previousElementSibling.classList.remove("hidden")
+    window.location.hash = "#2a"
+}
 
-//test_graph.infiniteAxis = false
+
+document.getElementsByClassName("question-container")[0].addEventListener("click", function(event) {
+    const current = event.target
+    // console.log(current)
+    if (current.classList.contains("question-link")) {
+
+        selectedQuestion.previousElementSibling.classList.add("hidden")
+
+        selectedQuestion = current
+
+        selectedQuestion.previousElementSibling.classList.remove("hidden")
+
+    }
+
+})
+
+test_graph.addObject(new Square2d(test_graph, [[0,0,0],[0,1,0],[1,1,0],[1,0,0]], "black", "gray"))
+
+test_graph.addObject(new Square2d(test_graph, [[1,1,0],[2,1,0],[2,2,0],[1,2,0]], "purple", "purple"))
 
 
-//test_graph.addObject(new ThreeDimCube(test_graph))

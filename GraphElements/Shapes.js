@@ -29,13 +29,13 @@ class TrianglularPlane {
 //    5
 //    6
 
-class Cube2d {
+class Square2d {
     constructor(graph, vertices, outsideColor, insideColor) {
         this.graph        = graph
         this.vertices     = vertices
         this.outsideColor = outsideColor
         this.insideColor  = insideColor
-
+        this.linearTransformation = new LinearTransformation([[1,0,0],[0,1,0],[0,0,1]])
     }
 
     draw() {
@@ -62,7 +62,6 @@ class Cube2d {
         point4     = scaleVector(point4, this.graph.scale)
         point4     = [this.graph.centerX + point4[0], this.graph.centerY - point4[1]]
 
-        this.graph.ctx.globalAlpha = 0.5;
 
         this.graph.ctx.lineWidth = 4
         this.graph.ctx.strokeStyle = this.outsideColor
@@ -75,6 +74,8 @@ class Cube2d {
             this.graph.ctx.lineTo(point4[0], point4[1])
             this.graph.ctx.lineTo(point1[0], point1[1])
             this.graph.ctx.closePath();
+            this.graph.ctx.globalAlpha = 0.5;
+
             this.graph.ctx.fill();
             
         this.graph.ctx.stroke()
