@@ -776,36 +776,6 @@ class Polygon {
         if (outline) {this.graph.ctx.stroke()}
         
         this.graph.ctx.globalAlpha = 1;
-
-
-        // let minZVector = this.lines[0].point1
-        // for (let i = 1; i < this.lines.length; i++) {
-        //     if (this.lines[i].point1[2] < minZVector[2]) {
-        //         minZVector = this.lines[i].point1
-        //     }
-        // }
-
-        // let vector = minZVector
-        // let vecX = this.graph.centerX + this.graph.scale * vector[0]
-        // let vecY = this.graph.centerY - this.graph.scale * vector[1]
-
-        // //Draw the dot
-        // if (this.color == "blue") {
-        //     this.graph.ctx.fillStyle = this.color
-        //     this.graph.ctx.strokeStyle = this.color
-        //     this.graph.ctx.beginPath();
-        //         this.graph.ctx.arc(vecX, vecY, 10, 0, 2 * Math.PI);
-        //         this.graph.ctx.fill();
-        //     this.graph.ctx.stroke();
-        // }
-        // if (this.color == "red") {
-        //     this.graph.ctx.fillStyle = this.color
-        //     this.graph.ctx.strokeStyle = this.color
-        //     this.graph.ctx.beginPath();
-        //         this.graph.ctx.arc(vecX, vecY, 10, 0, 2 * Math.PI);
-        //         this.graph.ctx.fill();
-        //     this.graph.ctx.stroke();
-        // }
     }
 }
 

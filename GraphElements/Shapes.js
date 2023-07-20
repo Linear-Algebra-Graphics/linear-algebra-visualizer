@@ -1,10 +1,16 @@
 
-class TrianglularPlane {
+class TriangularPlane {
     constructor(graph, vertices, color) {
         this.graph = graph
         this.vertices = vertices
         this.color = color
+        this.linearTransformatio = new LinearTransformation([[1,0,0],[0,1,0],[0,0,1]])
     }
+
+    setTransformation(linearTransformation) {
+        this.linearTransformation = linearTransformation
+    }
+
 
     draw() {
         let vertex1 = this.graph.changeBasisZoomAndRotate(this.vertices[0])
@@ -35,7 +41,12 @@ class Square2d {
         this.vertices     = vertices
         this.outsideColor = outsideColor
         this.insideColor  = insideColor
+        
         this.linearTransformation = new LinearTransformation([[1,0,0],[0,1,0],[0,0,1]])
+    }
+
+    setTransformation(linearTransformation) {
+        this.linearTransformation = linearTransformation
     }
 
     draw() {

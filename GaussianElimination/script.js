@@ -143,8 +143,7 @@ let defaultMatrix = document.createElement("div")
 defaultMatrix.innerHTML = `
 <div class="name-bar">
     <button type="button" class="clear-button">-</button> 
-    <div class="label">
-    </div>
+    <div class="label"></div>
     <button type="button" class="select-button" id="">select</button> 
     <button type="button" class="clear-button">clear</button> 
 </div>
