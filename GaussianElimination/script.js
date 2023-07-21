@@ -514,7 +514,7 @@ document.getElementById("solve").addEventListener("click", function() {
                 if (i == fracSteps.length - 1) {
                     isSolving = false
                 }
-            }, i*250)      
+            }, i*100)      
         }
     }
 })
