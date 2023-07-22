@@ -154,25 +154,25 @@ defaultMatrix.innerHTML = `
     <div class="line"></div>
 
     <div class="column">
-        <input class="matrix-value" type="text" value="5">
-        <input class="matrix-value" type="text" value="0">
-        <input class="matrix-value" type="text" value="3">
+        <input class="matrix-value" type="text" value="2/3">
+        <input class="matrix-value" type="text" value="1/6">
+        <input class="matrix-value" type="text" value="1/2">
     </div>
     <div class="column">
-        <input class="matrix-value" type="text" value="4">
-        <input class="matrix-value" type="text" value="2">
+        <input class="matrix-value" type="text" value="1/3">
+        <input class="matrix-value" type="text" value="1/2">
+        <input class="matrix-value" type="text" value="0">
+    </div>
+    <div class="column">
+        <input class="matrix-value" type="text" value="25/60">
+        <input class="matrix-value" type="text" value="25/60">
         <input class="matrix-value" type="text" value="1">
-    </div>
-    <div class="column">
-        <input class="matrix-value" type="text" value="7">
-        <input class="matrix-value" type="text" value="2">
-        <input class="matrix-value" type="text" value="0">
     </div>
     <div class="line-gray"></div>
     <div class="column">
-        <input class="matrix-value" type="text" value="2">
-        <input class="matrix-value" type="text" value="3">
-        <input class="matrix-value" type="text" value="5">
+        <input class="matrix-value" type="text" value="15">
+        <input class="matrix-value" type="text" value="10">
+        <input class="matrix-value" type="text" value="11">
     </div>
 
     <div class="line"></div>
