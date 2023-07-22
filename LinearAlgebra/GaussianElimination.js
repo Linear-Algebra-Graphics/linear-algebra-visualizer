@@ -17,7 +17,18 @@ function numericMatrixToFracMatrix(matrix) {
     return fracMatrix
 }
 
-function GaussianEliminationV3(inputMatrix, steps, fracMode) {
+/**
+ * Preforms Gaussian Elimination on the input matrix.
+ * @param {*} inputMatrix Matix that gets reduced.
+ * @requirments Must be either all Frac or all number. Must also be in columb row form.
+ * @param {boolean} steps Set to true to return a snapshot of the matrix after every row opperation.
+ * @param {boolean} fracMode Set to false if you give an inputMatrix of floats not Frac.
+ * @returns {Frac[][]} Row reduced Frac matrix.
+ * @returns {Frac[][][]} List of the steps to the row reduced Frac matrix.
+ * @returns {number[][]} Row reduced number matrix.
+ * @returns {number[][][]} List of the steps to the row reduced numbe rmatrix.
+ */
+function gaussianEliminationV3(inputMatrix, steps, fracMode) {
     if (fracMode == false) {
         inputMatrix = numericMatrixToFracMatrix(inputMatrix)
     }
@@ -34,7 +45,7 @@ function GaussianEliminationV3(inputMatrix, steps, fracMode) {
     let stepList    = []
     let operations = []
 
-    matrix = orderByLeastNumZeros(matrix)
+    orderByLeastNumZeros()
     // console.log(matrix)
     // console.log(stringMatrixFromFrac(matrix))
 
@@ -67,7 +78,7 @@ function GaussianEliminationV3(inputMatrix, steps, fracMode) {
         
     }
     
-    matrix = orderByLeastNumZeros(matrix)
+    orderByLeastNumZeros()
     // Matrix is now in row eclion form
 
     //console.log(stringMatrixFromFrac(matrix))
@@ -87,7 +98,7 @@ function GaussianEliminationV3(inputMatrix, steps, fracMode) {
     // console.log(stringMatrixFromFrac(matrix))
     // console.log(stepList)
     // console.log(operations)
-    matrix = orderByLeastNumZeros(matrix)
+    orderByLeastNumZeros()
     matrix = transpose(matrix)
     if (fracMode == false) {
         matrix = numericMatrixFromFrac(matrix)
@@ -149,14 +160,54 @@ function GaussianEliminationV3(inputMatrix, steps, fracMode) {
         // ADD ONE TO OPPERATIONS
     }
 
+
+    function swapRows(row1, row2) {
+        
+        let temp = matrix[row1]
+        matrix[row1] = matrix[row2]
+        matrix[row2] = temp
+        
+        saveSnapshot()
+        
+        if (steps == true) {
+            operations.push("row" + row1 + " <-> " + "row" +row2)
+        }
+        
+    }
+    
+    /**
+     * Sorts the matrix from top to bottom row in order of ascending number of zeros on the left.
+     */
+    // Uses selection sort.
+    function orderByLeastNumZeros() {
+        for (let i = 0; i < matrix.length; i++) {
+            let zeros = numLeftZerosInRow(matrix, i)
+            
+            let swapIndex = null
+            
+            for (let j = i + 1; j < matrix.length; j++) {
+                if (zeros > numLeftZerosInRow(matrix, j)) {
+                    swapIndex = j
+                }
+            }
+
+            if (swapIndex != null) {
+                swapRows(i, swapIndex)
+            }
+        }
+
+    }
+
 }
+
 
 /**
  * sorts a matrix from top to bottom row in order of ascending number of zeros on the left
  * @param {*} matrix input matrix of fracs to be sorted in row col form
  * @returns a new matrix that is sorted
+ * @deprecated
  */
-function orderByLeastNumZeros(matrix) {
+function orderByLeastNumZeros_old(matrix) {
     let rowWithNumZeros = new Array(matrix.length)
     for (let row = 0; row < matrix.length; row++) {
         let numZeros = numLeftZerosInRow(matrix, row)
@@ -175,9 +226,9 @@ function orderByLeastNumZeros(matrix) {
 
 /**
  * 
- * @param {*} matrix a matrix of fracs
- * @param {*} row the row to check
- * @returns the number of continuous zeros on the left of the row
+ * @param {Frac[][]} matrix a matrix of fracs
+ * @param {Number} row the row to check
+ * @returns {Number} the number of continuous zeros on the left of the row
  *          eg: row = [0,0,0,1,2,0,5] returns 3
  */
 function numLeftZerosInRow(matrix, row) {
@@ -193,8 +244,9 @@ function numLeftZerosInRow(matrix, row) {
 }
 
 /**
- * 
- * @param {*} matrix a matrix row col form
+ * gets the Number matrix of a Frac matrix
+ * @param {Frac[][]} matrix a Frac matrix
+ * @returns {Number[][]} input matrix in with all Frac's in Number form
  */
 function numericMatrixFromFrac(matrix) {
     if (matrix.length == 0) {
@@ -219,8 +271,9 @@ function numericMatrixFromFrac(matrix) {
 }
 
 /**
- * 
- * @param {*} matrix a matrix row col form
+ * converts a Frac matrix to the same matrix where each element is the Frac.toString()
+ * @param {Frac[][]} matrix a matrix
+ * @returns {String[][]} 
  */
 function stringMatrixFromFrac(matrix) {
     if (matrix.length == 0) {
@@ -244,6 +297,11 @@ function stringMatrixFromFrac(matrix) {
     return numericalMatrix
 }
 
+/**
+ * creates a new object that is a copy of the input matrix
+ * @param {Frac[][]} matrix 
+ * @returns {Frac[][]} output matrix such that matrixEqual(output, matrix) = true
+ */
 function deepCopy(matrix) {
     if (matrix.length == 0) {
         console.log("trying to deepCopy an empty matrix!")
@@ -265,10 +323,20 @@ function deepCopy(matrix) {
     return newMatrix
 }
 
+/**
+ * 
+ * @param {any} val 
+ * @returns {Boolean}
+ */
 function isLetterOrFloat(val) {
     return (val.length === 1 && val.match(/[a-z]/i)) || (!val.isInteger())
 }
 
+/**
+ * checks if val is a alphabetic character
+ * @param {any} val 
+ * @returns {Boolean} 
+ */
 function isLetter(val) {
     return (val.length === 1 && val.match(/[a-z]/i))
 }

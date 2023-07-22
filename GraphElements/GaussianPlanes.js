@@ -40,15 +40,21 @@
  * 5) sort by lowest z coordinate
  * 6) draw in order
  * 
+ * Ignore everything above
  */
 
 
 class GaussianPlanes {
+    /**
+     * creates a new instance of the planes defined by a augmentted matrix system
+     * @param {*} graph the graph on which the planes exist
+     * @param {Number[][]} planesStdForm an array of planes defined as [a, b, c, d] => ax + by + cz = d
+     */
     constructor(graph, planesStdForm) {
         this.graph = graph
         this.planesStdForm = planesStdForm
         let transposed = transpose(this.planesStdForm)
-        let reduced = GaussianEliminationV3(transposed, false, false)
+        let reduced = gaussianEliminationV3(transposed, false, false)
         let result = reduced[reduced.length - 1];
         if (result.length != 3) {
             result = [0, 0, 0]
@@ -58,11 +64,11 @@ class GaussianPlanes {
 
     /**
      * splits all planes defined by the list of stdForm planes 
-     * @param {*} polygonLines the lines of the current polygon, is an array of Line Objects
-     * @param {*} intersectLines an array of Line Objects that may intersect with polygonLines
-     * @param {*} color the color in any representation
-     * @param {*} alpha a numerical value such that  0 <= alpha <= 1
-     * @returns an array of all polygons from splitting on all intersectLines
+     * @param {Line[]} polygonLines the lines of the current polygon, is an array of Line Objects
+     * @param {Line[]} intersectLines an array of Line Objects that may intersect with polygonLines
+     * @param {String} color the color in any representation
+     * @param {Number} alpha a numerical value such that  0 <= alpha <= 1
+     * @returns {Polygon[]} an array of all polygons from splitting on all intersectLines
      */
     splitPlanes(polygonLines, intersectLines, color, alpha) {
         let output = []
@@ -71,8 +77,6 @@ class GaussianPlanes {
     }
 
     //helper recursive function
-    //@param intersectLinesIndex is the index in the array of intersectLines, 
-    //                           ie the current intersect line considered
     _splitPlanesHelper(polygonLines, intersectLines, intersectLinesIndex, output, color, alpha) {
         if (intersectLines.length == 0 || intersectLinesIndex == intersectLines.length ) {
             //base case, there are no intersection lines, so no more splits can be found
@@ -91,6 +95,7 @@ class GaussianPlanes {
                 maxZ = Math.max(currZ, maxZ)
             }
             output.push({polygon: new Polygon(this.graph, polygonLines, color, alpha), minZ: minZ, maxZ: maxZ})
+
         } else {
             //recursive case
 
@@ -214,10 +219,10 @@ class GaussianPlanes {
     //plane is defined by (a, b, c, d) => ax + by + cz = d, rn it is only (a, b, c) for simplicity
     /**
      * find the line of intersection between two 2D planes
-     * @param {*} plane1 normal vector [a, b, c]
-     * @param {*} plane2 normal vector [a, b, c]
+     * @param {Number[]} plane1 normal vector [a, b, c]
+     * @param {Number[]} plane2 normal vector [a, b, c]
      * @requires : both planes are of the same dimension, R3 only rn
-     * @returns a Line Object of the intersection line
+     * @returns {Line} the intersection line
      */
     getPlanePlaneIntersectLine(plane1, plane2) {
         //debugger
@@ -231,7 +236,7 @@ class GaussianPlanes {
 
         //find a point of intersection between two planes
         //[a,b,c,d]
-        let reducedEchelon = GaussianEliminationV3(transpose([plane1, plane2]), false, false)
+        let reducedEchelon = gaussianEliminationV3(transpose([plane1, plane2]), false, false)
 
         let point1 = new Array(3)
         let point2 = new Array(3)
@@ -365,16 +370,13 @@ class GaussianPlanes {
     }
 
     /**
-     * sorts polygons by smallest to largest minimum Z value
+     * sorts record of polygons by smallest to largest minimum Z value
      * then for all polygons with same minimum Z, sorts by smallest to largest maximum Z value
-     * @param {} polygons a list of {polygon: Polygon, minZ: minZ: maxZ: maxZ}
+     * @param {{polygon: Polygon, minZ: Number, maxZ: Number}} polygons a list of {polygon: Polygon, minZ: minZ: maxZ: maxZ}
      *                    wherre Polygon is a Polygon Object, and minZ, maxZ are numerical values
-     * @returns a sorted array of polygons, first by minZ then by maxZ
+     * @returns {{polygon: Polygon, minZ: Number, maxZ: Number}} a sorted array of the input records, first by minZ then by maxZ
      */
     sortPolygons(polygons) {
-        //debugger
-        //NOT SORTING PROPERLY FOR SOME WEIRD REASON?????!!!
-        //7,-7 is failing
         let sortedPolygons = polygons.sort(function(a, b) {
             if (!numEqual(a.minZ, b.minZ, 12)) {
                 return a.minZ - b.minZ
@@ -402,118 +404,24 @@ class GaussianPlanes {
             }
         })
 
-        // let sortedPolygons = partialSortByMinZ(polygons, 0, polygons.length)
-        
-        // //need to store all equal minZ polygons by maxZ now //
-        // let start = 0 
-        // let end = 0
-        // let i = 0
-        // while (i <= polygons.length) {
-        //     if (i != polygons.length && numEqual(polygons[start].minZ, polygons[i].minZ, 12)) {
-        //         end = i
-        //     } else {
-        //         sortedPolygons = partialSortByMaxZ(sortedPolygons, start, end + 1)
-        //         start = i
-        //         end = i
-        //     }
-        //     i++
-        // }
-        // start = 0
-        // end = 0
-        // i = 0
-        // while (i <= polygons.length) {
-        //     if (i != polygons.length && numEqual(polygons[start].minZ, polygons[i].minZ, 12) && numEqual(polygons[start].maxZ, polygons[i].maxZ, 12)) {
-        //         end = i
-        //     } else {
-        //         sortedPolygons = partialSortByPointZ(sortedPolygons, start, end + 1)
-        //         start = i
-        //         end = i
-        //     }
-        //     i++
-        // }
-
         return sortedPolygons
     }
 }
 
-
-/**
- * sorts the input arr from index [start, end) by smallest to largest minZ value
- * @param {*} arr input array, each element is a record with a minZ field
- * @param {*} start a numerical value
- * @param {*} end a numerical value
- * @requires : start < end
- * @returns the arr with index start inclusive to end exclusive sorted
- */
-function partialSortByMinZ(arr, start, end) {
-    if (start >= end) {
-        throw new Error("start index >= end index!!")
-    }
-    let preSorted = arr.slice(0, start)
-    let postSorted = arr.slice(end);
-    let sorted = arr.slice(start, end).sort(function(a, b) {return a.minZ - b.minZ});
-    arr.length = 0;
-    arr.push.apply(arr, preSorted.concat(sorted).concat(postSorted));
-    return arr;
-}
-
-/**
- * sorts the input arr from index [start, end) by smallest to largest maxZ value
- * @param {*} arr input array, each element is a record with a maxZ field
- * @param {*} start a numerical value
- * @param {*} end a numerical value
- * @requires : start < end
- * @returns the arr with index start inclusive to end exclusive sorted
- */
-function partialSortByMaxZ(arr, start, end) {
-    if (start >= end) {
-        throw new Error("start index >= end index!!")
-    }
-    let preSorted = arr.slice(0, start)
-    let postSorted = arr.slice(end);
-    let sorted = arr.slice(start, end).sort(function(a, b) {return a.maxZ - b.maxZ});
-    arr.length = 0;
-    arr.push.apply(arr, preSorted.concat(sorted).concat(postSorted));
-    return arr;
-}
-
-function partialSortByPointZ(arr, start, end) {
-    if (start >= end) {
-        throw new Error("start index >= end index!!")
-    }
-    let preSorted = arr.slice(0, start)
-    let postSorted = arr.slice(end);
-    let sorted = arr.slice(start, end).sort(function(a, b) {
-        for (let i = 0; i < a.polygon.lines.length; i++) {
-            let pointA = a.polygon.lines[i].point1
-            for (let j = 0; j < b.polygon.lines.length; j++) {
-                let pointB = b.polygon.lines[j].point1
-                if (vectorEquals([pointA[0], pointA[1]], [pointB[0], pointB[1]]) && !numEqual(pointA[2], pointB[2], 12)) {
-                    return pointA[2] - pointB[2]
-                }
-            }
-        }
-        return 0
-    });
-    arr.length = 0;
-    arr.push.apply(arr, preSorted.concat(sorted).concat(postSorted));
-    return arr;
-}
-
 /**
  * turns a 3D point [x, y, z] into the string "x,y,z"
- * @param {*} point an array of [x, y, z]
- * @returns the string "x,y,z"
+ * @param {Number[]} point an array of [x, y, z]
+ * @returns {String} the string "x,y,z"
  */
 function pt3DToStr(point) {
     return "" + point[0] + "," + point[1] + "," + point[2]
 }
 
 /**
- * 
- * @param {*} plane1 ax+by+cz = d => [a,b,c,d]
- * @param {*} plane2 ax+by+cz = d => [a,b,c,d]
- * @returns intersection vector [dx, dy, dz]
+ * finds the R3 intersection vector between two R2 planes
+ * @param {Number[]} plane1 ax+by+cz = d => [a,b,c,d]
+ * @param {Number[]} plane2 ax+by+cz = d => [a,b,c,d]
+ * @returns {Number[]} intersection vector [dx, dy, dz]
  */
 function planePlaneIntersectVector3D(plane1, plane2) {
     // calculate crossproduct => vector perp to both normals => intersetion vector
@@ -535,7 +443,17 @@ function planePlaneIntersectVector3D(plane1, plane2) {
     return [cx, cy, cz]
 }
 
-//gets in basis zoomed and rotated!!!! change func name later
+/**
+ * takes normal vector defining plane in standard view form, and 
+ * finds the plane lines in the basis, zoom and rotation of the current view on the graph
+ * @param {*} graph the graph on which the plane exists
+ * @param {Number[]} normal a vector [a, b, c, d] => ax + by + cz = d
+ * @param {Number} sideLength the sidelengths of the plane
+ * @param {Number[]} intersection this is the solution to the matrix system, and where the plane is to be centered around
+ *                         relative to the [0,0,0] center of the graph
+ * @returns {Line[]} [] if the plane is not visible
+ *                   [line1, line2, line3, line4] defining a 4 sided plane if plane is visible
+ */
 function getPlaneLines(graph, normal, sideLength, intersection) {
     let a = normal[0]
     let b = normal[1]
@@ -543,7 +461,7 @@ function getPlaneLines(graph, normal, sideLength, intersection) {
     let d = normal[3]
 
     if(a == 0 && b == 0 && c == 0) {
-        return []
+        throw new Error("normal vector is [0,0,0]")
     }
 
     let planeBasis = getPlaneVectors2D([a, b, c])
@@ -570,7 +488,7 @@ function getPlaneLines(graph, normal, sideLength, intersection) {
     let offsetVec = [offsetX, offsetY, offsetZ]
     offsetVec = graph.changeBasisAndRotate(offsetVec)
 
-    let orthanormalBasis = GramSchmidt(planeBasis)
+    let orthanormalBasis = gramSchmidt(planeBasis)
     let basisVec1 = graph.changeBasisAndRotate(orthanormalBasis[0])
     let basisVec2 = graph.changeBasisAndRotate(orthanormalBasis[1])
 
@@ -615,6 +533,11 @@ function getPlaneLines(graph, normal, sideLength, intersection) {
     }
 }
 
+/**
+ * calculates vectors defining the R2 plane of a normal vector
+ * @param {Number[]} normal a vector with entries [a, b, c, ...] where [a,b,c] define a normal vector
+ * @returns two vectors non parrallel vectors definint the plane with input normal vector
+ */
 function getPlaneVectors2D(normal) {
     let a = normal[0]
     let b = normal[1]
@@ -652,23 +575,23 @@ function getPlaneVectors2D(normal) {
         planeBasis[1] = [0,1,(-1 * b)/c]
     }
 
-    if (!numEqual(0, dotProduct(planeBasis[0], [a,b,c]),12)) {
-        let v = dotProduct(planeBasis[0], [a,b,c])
-        debugger
-    }
-    if (!numEqual(0, dotProduct(planeBasis[1], [a,b,c]),12)) {
-        let v = dotProduct(planeBasis[1], [a,b,c])
-        debugger
-    }
     return planeBasis
 }
 
 
 
 /**
- * this is a line
+ * this is a line (no kidding!!)
  */
 class Line {
+    /**
+     * creates a new instance of a Line
+     * @param {Number[]} point1 a point in Rn where n >= 2
+     * @param {Number[]} point2 a point in Rn where n >= 2
+     * @param {Boolean} inf indicates if line extends infinitely
+     *                      if true, infinite line!!
+     *                      if false, line is bounded by point1 and point2
+     */
     constructor(point1, point2, inf) {
         this.point1 = point1
         this.point2 = point2
@@ -678,10 +601,10 @@ class Line {
 
     /**
      * splits obj with otherLine
-     * @param {*} otherLine the line to split obj with
-     * @param {*} color a truly useless param
-     * @returns [] if otherLine does not split obj, 
-     *          [line(this.point1, splitPoint), line(splitPoint, this.point2)] if a splitPoint exists
+     * @param {Line} otherLine the line to split obj with
+     * @param {String} color a truly useless param
+     * @returns {Line[]} [] if otherLine does not split obj, 
+     *                   [line(this.point1, splitPoint), line(splitPoint, this.point2)] if a splitPoint exists
      */
     splitWithLine2D(otherLine, color) {
         const a1 = this.point2[1] - this.point1[1]//line1.abc[0]
@@ -740,11 +663,11 @@ class Line {
  */
 class Polygon {
     /**
-     * 
+     * creates a new instance of a polygon shape
      * @param {*} graph 
-     * @param {*} lines 
-     * @param {*} color 
-     * @param {*} alpha 
+     * @param {Line[]} lines lines defining polygon, are in order of a circuit around the polygon
+     * @param {String} color 
+     * @param {Number} alpha value betwen 0 and 1
      */
     constructor(graph, lines, color, alpha) {
         this.graph = graph
@@ -755,10 +678,11 @@ class Polygon {
     }
 
     /**
-     * draws this polygon
+     * draws this polygon on its graph
+     * @param {Boolean} fill if true, polygon is filled with this.color, else no fill
+     * @param {Boolean} outline if true, polygon is outlined with black
      */
     draw(fill, outline) {
-        //debugger
         let line = this.lines[0]
 
         this.graph.ctx.globalAlpha = this.alpha;

@@ -22,14 +22,6 @@
  *
  */
 function SVD (a, withu, withv, eps, tol) {
-
-    
-    // Our matricies have the index be the columbs, not the rows.
-    //a = transpose(a)
-
-
-
-
     // Define default parameters
     withu = withu !== undefined ? withu : true
     withv = withv !== undefined ? withv : true
@@ -322,30 +314,5 @@ function SVD (a, withu, withv, eps, tol) {
       if (q[i] < eps) q[i] = 0
     }
 
-
-    // Our matricies have the index be the columbs, not the rows.
-    // We also need to update Q to be be matrix rather than a list of numbers.
-
-    // Initalize qMatrix.
-
-    // qMatrix = new Array(u.length);
-
-    // for (i=0; i<outputMatrix.length; i++) {
-    //     qMatrix[i] = (new Array(v.length)).fill(0)
-    // }
-
-    // // Set the diagonal
-    // for (i=0; i<q.length; i++) {
-    //     qMatrix[i][i] = q[i]
-    // }
-
-    
-
-    // ut = transpose(u)
-    
-    // vt = transpose(v)
-
-
-//     return [ ut, qMatrix, vt ]
     return [q, u, v]
 }

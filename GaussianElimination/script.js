@@ -42,8 +42,7 @@ canvas.addEventListener('mousemove', function(e) {    // return null
         delta_x = (e.clientX -20) - x
         delta_y = (e.clientY -20) - y
     }
-    // console.log("(" + x + ", " + y + ")")
-    // console.log("(" + e.clientX + ", " + e.clientY + ")")
+
 });
 
 
@@ -70,62 +69,12 @@ canvas.addEventListener("wheel", event => {
 
     if (delta==-1) {
       test_graph.zoomIn()
-      // console.log("Increasing scale by 10%")
     }
 
     if (delta==1) {
       test_graph.zoomOut()
-      // console.log("Decreasing scale by 10%")
     }
 });
-
-
-
-
-// document.getElementById("zoomIn").addEventListener("click", function() {
-//     test_graph.zoomIn()
-// })
-
-// document.getElementById("zoomOut").addEventListener("click", function() {
-//     test_graph.zoomOut()
-// })
-
-// document.getElementById("defaultZoom").addEventListener("click", function() {
-//     test_graph.setDefaultZoom()
-// })
-
-// darkMode = false
-// document.getElementById("darkMode").addEventListener("click", function() {
-//     if(darkMode == false ) {
-//         test_graph.backgroundColor = "black"
-//         document.getElementsByTagName("body")[0].style.backgroundColor = "black"
-//         document.getElementsByTagName("body")[0].style.color = "white"
-        
-//         test_graph.Grid.colorDark = "#6F7378"
-//         test_graph.Grid.colorLight = "#292C33"
-//         test_graph.Axis.zeroZeroDotColor = "#292C33"
-        
-//         darkMode = true
-//         document.getElementById("darkMode").innerText = "Light Mode!"
-//     } else {
-//         test_graph.backgroundColor = "white"
-//         document.getElementsByTagName("body")[0].style.backgroundColor = "white"
-//         document.getElementsByTagName("body")[0].style.color = "black"
-        
-//         test_graph.Grid.colorDark = "#BFBFBD"
-//         test_graph.Grid.colorLight = "#E6E6E3"
-//         test_graph.Axis.zeroZeroDotColor = "black"
-    
-//         darkMode = false
-//         document.getElementById("darkMode").innerText = "Dark Mode!"
-//     }
-// })
-
-// document.getElementById("defaultOrientation").addEventListener("click", function() {
-//     // Resets to default state of x and y
-//     x = 0
-//     y = 0
-// })
 
 
 test_graph.draw()
@@ -189,17 +138,6 @@ origonalMatrix.getElementsByClassName("name-bar")[0].classList.add("selected")
 
 document.getElementsByClassName("matrix-container")[0].appendChild(origonalMatrix)
 
-// console.log("heelp")
-
-// let inputMatrices = document.getElementsByClassName("matrix")
-// let matrixToInputs = new Map()
-
-// for (let i = 0; i < inputMatrices.length; i++) {
-//     let values = inputMatrices[i].getElementsByClassName("value")
-//     let columns = values.getElementsByClassName("column")
-//     console.log(columns)
-// }
-
 document.addEventListener("keydown", (event) => {
     const inputField = document.activeElement
     if (inputField.className == "matrix-value") {
@@ -226,9 +164,9 @@ document.addEventListener("keydown", (event) => {
         }
         let indexInText = event.target.selectionStart
         
-        console.log("W")
-        console.log(inputTextLength)
-        console.log(indexInText)
+        // console.log("W")
+        // console.log(inputTextLength)
+        // console.log(indexInText)
     
         // console.log("textLength " + (inputTextLength))
         // console.log("index "  + indexInText)
@@ -265,65 +203,6 @@ document.addEventListener("keydown", (event) => {
         }
     }
 })
-
-// let inputMatrices = document.getElementsByClassName("matrix")
-// let matrixToInputs = new Map()
-// console.log(inputMatrices.length)
-
-// for (let i = 0; i < inputMatrices.length; i++) {
-//     let values = inputMatrices[i].getElementsByClassName("values")
-//     for (let j = 0; j < values.length; j++) {
-//         let columns = values[j].getElementsByClassName("column")
-//         for (let k = 0; k < columns.length; k++) {
-//             let column = columns[k].getElementsByTagName("input")
-//             for (let l = 0; l < column.length; l++) {
-//                 let inputField = column[l]
-
-//                 inputField.addEventListener("keydown", (event) => {
-//                     let inputTextLength = inputField.value.length
-//                     if (isNaN(inputTextLength)) {
-//                         inputTextLength = 0
-//                     }
-//                     let indexInText = event.target.selectionStart
-
-//                     // console.log("textLength " + (inputTextLength))
-//                     // console.log("index "  + indexInText)
-//                     switch (event.key) {
-//                         case "ArrowLeft":
-//                             let rowLeft = k - 1
-//                             if (rowLeft >= 0 && indexInText == 0) {
-//                                 // console.log(columns[rowLeft].getElementsByTagName("input"))
-//                                 columns[rowLeft].getElementsByTagName("input")[l].focus()
-//                             }
-                            
-//                             break
-//                         case "ArrowRight":
-//                             let rowRight = k + 1
-//                             // console.log(indexInText + ", " + inputTextLength)
-//                             if (rowRight < columns.length && indexInText == inputTextLength) {
-//                                 columns[rowRight].getElementsByTagName("input")[l].focus()
-//                             }
-//                             break
-//                         case "ArrowUp":
-//                             let rowUp = l - 1
-//                             if (rowUp >= 0) {
-//                                 column[rowUp].focus()
-//                             }
-//                             break
-//                         case "ArrowDown":
-//                             let rowDown = l + 1 
-//                             if (rowDown < column.length) {
-//                                 column[rowDown].focus()
-//                             }
-//                             break
-//                         default:
-//                             break
-//                     }
-//                 })
-//             }
-//         }
-//     }
-// }
 
 /**
  * reads a matrix and gets it into fraction form, this col row form
@@ -447,10 +326,8 @@ function selectMatrix(matrixNumber) {
         console.log("HELP !!!")
     }
 
-    console.log(transpose(selectedMatrixValues))
     test_graph.gaussianPlanes = new GaussianPlanes(test_graph, transpose(selectedMatrixValues))
     selectedMatrix = matrixNumber
-    console.log(selectedMatrix)
 }
 
 
@@ -458,19 +335,12 @@ let numberOfmatrices = 1;
 let selectedMatrix   = 0;
 
 document.addEventListener("click", function() {
-    //debugger
     const current = document.activeElement
 
     if (current.classList.contains("select-button")) {
-        console.log(current)
 
         const matrixIndex = parseInt((current.id)[0])
         selectMatrix(matrixIndex)
-        
-
-
-        //test_graph.gaussianPlanesIndex = selectedMatrix
-        // console.log("active element " + current)
     }
 })
 
@@ -499,18 +369,15 @@ document.getElementById("solve").addEventListener("click", function() {
         isSolving = true
         //debugger
         let fracMatrix = readMatrix(numberOfmatrices-1, true)
-        let fracSteps  = GaussianEliminationV3(fracMatrix, true, true)
+        let fracSteps  = gaussianEliminationV3(fracMatrix, true, true)
         
         let matrix    = numericMatrixFromFrac(fracMatrix)
-        let numSteps  = GaussianEliminationV3(matrix, true, false)
+        let numSteps  = gaussianEliminationV3(matrix, true, false)
 
-        // test_graph.gaussianPlanes = new Array(numSteps.length)
         
         for(let i = 0; i < fracSteps.length; i++) {
             setTimeout(function() {
                 addMatrix(fracSteps[i], true, true)
-                // test_graph.gaussianPlanes = new GaussianPlanes(test_graph, transpose(numSteps[i]))
-                // test_graph.gaussianPlanesIndex = i
                 if (i == fracSteps.length - 1) {
                     isSolving = false
                 }

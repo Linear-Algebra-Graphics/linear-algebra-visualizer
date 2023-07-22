@@ -101,38 +101,7 @@ class Axis {
                 this.graph.ctx.arc(this.graph.centerX, this.graph.centerY, this.zeroZeroDotSize, 0, 2 * Math.PI);
                 this.graph.ctx.fill();
             this.graph.ctx.stroke();
-
-            //this.graph.drawDotFromVector([0,0], this.zeroZeroDotColor, this.zeroZeroDotSize)
-
         }
 
-    }
-    
-    /**
-     * Is this function useless? it probably is, but 
-     * we may keep it as a mascot!
-     * Change the size of the axis
-     * @param {*} size 
-     * @param {*} arrow 
-     */
-    setAxis(size, arrow) {
-        // Update the cords
-        this._xAxis.cords = [size, 0, 0]
-        this._xAxis.cords = [0, size, 0]
-        this._xAxis.cords = [0, 0, size]
-
-        this._xAxisNeg.cords = [-1*size, 0, 0]
-        this._yAxisNeg.cords = [0, -1*size, 0]
-        this._zAxisNeg.cords = [0, 0, -1*size]
-
-        
-        // Update the arrows
-        this._xAxis.arrow = arrow
-        this._xAxis.arrow = arrow
-        this._xAxis.arrow = arrow
-
-        this._xAxisNeg.arrow = arrow
-        this._yAxisNeg.arrow = arrow
-        this._zAxisNeg.arrow = arrow
     }
 }

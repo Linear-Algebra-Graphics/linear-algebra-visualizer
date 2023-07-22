@@ -4,7 +4,7 @@
  * @requires : basis is linearly independent
  * @returns an orthonormal representation of the input basis
  */
-function GramSchmidt (basis) {
+function gramSchmidt (basis) {
     //make local copy of basis 
     let basisCopy = JSON.parse(JSON.stringify(basis))
 
@@ -27,10 +27,10 @@ function GramSchmidt (basis) {
 
 /**
  * Projects b onto u
- * @param {*} b a vector
- * @param {*} u a vector 
- * @requires b and u are both vectors in Rn 
- * @returns the projection of b onto u
+ * @param {Number[]} b a vector
+ * @param {Number[]} u a vector 
+ * @requires : b and u are both vectors in Rn 
+ * @returns {Number[]} the projection of b onto u
  */
 function ProjectOntoVector(b, u) {
     // P = (uu^t) / (u^t u)

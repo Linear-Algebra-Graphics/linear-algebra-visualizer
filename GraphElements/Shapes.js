@@ -1,5 +1,11 @@
 
 class TriangularPlane {
+    /**
+     * creates a new instance of a triangular plane
+     * @param {*} graph 
+     * @param {Number[][]} vertices 
+     * @param {String} color 
+     */
     constructor(graph, vertices, color) {
         this.graph = graph
         this.vertices = vertices
@@ -36,6 +42,13 @@ class TriangularPlane {
 //    6
 
 class Square2d {
+    /**
+     * creates a new instance of a 2 dimensional 4 sided plane
+     * @param {*} graph 
+     * @param {Number[][]} vertices 
+     * @param {String} outsideColor 
+     * @param {String} insideColor 
+     */
     constructor(graph, vertices, outsideColor, insideColor) {
         this.graph        = graph
         this.vertices     = vertices
@@ -99,7 +112,13 @@ class Square2d {
 
 
 class CenteredThreeDimCube {
-
+    
+    /**
+     * creates a new instance of a 3 dimensional cube
+     * @param {*} graph 
+     * @param {String} color 
+     * @param {String} cubeType either centered or unit
+     */
     constructor(graph, color, cubeType){
         this.graph  = graph
         this.color = color

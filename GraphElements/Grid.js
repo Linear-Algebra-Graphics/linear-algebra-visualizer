@@ -260,11 +260,11 @@ class Grid {
      * each grid line is defined by the vector gridVector
      * 
      * accounts for merging or splitting grid lines at enough zoom
-     * @param {*} isPositiveAxis boolean value that indicates if half axis is positive
-     * @param {*} axis vector defining axis along which grid lines are drawn
-     * @param {*} gridVector vector defining grid lines
-     * @param {*} iterations numberic value of scalings applied to inter grid line distance
-     * @param {*} divide boolean value, true if distance needs to be smaller, else false
+     * @param {boolean} isPositiveAxis boolean value that indicates if half axis is positive
+     * @param {number[]} axis vector defining axis along which grid lines are drawn
+     * @param {number[]} gridVector vector defining grid lines
+     * @param {number} iterations numberic value of scalings applied to inter grid line distance
+     * @param {boolean} divide boolean value, true if distance needs to be smaller, else false
      */
     drawHalfAxisGridInf(isPositiveAxis, axis, gridVector, iterations, divide) {
         let x = this.graph.centerX
@@ -358,11 +358,11 @@ class Grid {
 
     /**
      * adds a grid number offset from the x, y location
-     * @param {*} x x coordinate
-     * @param {*} y y coordinate
-     * @param {*} axis vector defining the line x, y is on
-     * @param {*} gridVector vector perp to axis along which the number is added
-     * @param {*} isPositiveAxis boolean value of whether the axis is positive or negative
+     * @param {number} x x coordinate
+     * @param {number} y y coordinate
+     * @param {number[]} axis vector defining the line x, y is on
+     * @param {number[]} gridVector vector perp to axis along which the number is added
+     * @param {boolean} isPositiveAxis boolean value of whether the axis is positive or negative
      */
     _addGridNumber(x, y, axis, gridVector, isPositiveAxis) {
         // grid numbers
@@ -404,7 +404,7 @@ class Grid {
 /**
  * formats number to string, turns in to scientific notation 
  * if value > PLACEHOLDER or value < PLACEHOLDER
- * @param {*} dist a numeric float value 
+ * @param {number} dist a numeric float value 
  * @return returns dist formatted as a string
  */
 function formatNumber(dist) {

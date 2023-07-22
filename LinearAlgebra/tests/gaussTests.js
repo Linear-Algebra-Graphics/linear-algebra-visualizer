@@ -15,7 +15,7 @@ class GaussTests {
         console.log("Total tests: " + this.inputList.length)
         let testsPassedInARow = 0
         for (let i=0; i<this.inputList.length; i++) {
-            let result = GaussianEliminationV3(this.inputList[i], false, true)
+            let result = gaussianEliminationV3(this.inputList[i], false, true)
             let passed = fracMatricesEqual(result, this.expectedResultList[i])
             if (passed == true) {
                 testsPassedInARow++
@@ -43,7 +43,7 @@ class GaussTests {
 
     runTest(testNumber) {
         console.log("Test: " + testNumber)
-        let result = GaussianEliminationV3(this.inputList[testNumber], false)
+        let result = gaussianEliminationV3(this.inputList[testNumber], false)
         passed = fracMatricesEqual(result, this.expectedResultList[testNumber])
         if (passed == true) {
             console.log("%c \u2713 " + message + " Passed", "color: green; background: black;")

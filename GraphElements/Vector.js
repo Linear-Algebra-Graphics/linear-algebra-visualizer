@@ -2,10 +2,10 @@ class Vector {
     /**
      * creates an instance of a vector
      * @param {*} graph graph on which vector is drawn
-     * @param {*} cords coordinates (x, y, z) of vector
-     * @param {*} color color of vector
-     * @param {*} arrow true if vector has arrow at the end
-     * @param {*} label case ""      : no label 
+     * @param {Number[]} cords coordinates (x, y, z) of vector
+     * @param {String} color color of vector
+     * @param {Boolean} arrow true if vector has arrow at the end
+     * @param {String} label case ""      : no label 
      *                  case "cords" : shows coordinates in (x, y, z) format
      *                  case other   : whatever label "other" is
      */
@@ -19,6 +19,10 @@ class Vector {
         this.linearTransformation = new LinearTransformation([[1,0,0],[0,1,0],[0,0,1]])
     }
 
+    /**
+     * 
+     * @param {LinearTransformation} linearTransformation 
+     */
     setTransformation(linearTransformation) {
         this.linearTransformation = linearTransformation
     }
@@ -104,10 +108,10 @@ class Vector {
      * 
      * draws line from endpoint of vector 1 to endpoint of vector 2
      * w.r.t the standard (nontransformed) basis
-     * @param {*} vector1 
-     * @param {*} vector2 
-     * @param {*} color 
-     * @param {*} lineWidth 
+     * @param {Number[]} vector1 
+     * @param {Number[]} vector2 
+     * @param {String} color 
+     * @param {Number} lineWidth 
      */
     _drawArrowLine(vector1, vector2, color, lineWidth) {    
         // First apply the basis, then the applied matrix. Not sure if this is the correct order for all situations...
