@@ -19,6 +19,7 @@ canvas.height = displayHeight * 2
 // canvas.height = displayHeight
 
 let test_graph = new Graph(canvas);
+test_graph.Axis = new Axis(test_graph, "black", "black", "black", "black")
 test_graph.showGaussianPlanes = true
 
 test_graph.currentZoom = .7
