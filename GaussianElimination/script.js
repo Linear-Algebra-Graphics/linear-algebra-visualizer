@@ -101,6 +101,13 @@ defaultMatrix.innerHTML = `
     <button type="button" class="clear-button">clear</button> 
 </div>
 <div class="values">
+
+    <div class="colorccolumn">
+        <div class="square plane1"></div>
+        <div class="square plane2"></div>
+        <div class="square plane3"></div>
+    </div>
+
     <div class="line"></div>
 
     <div class="column">
@@ -204,6 +211,21 @@ document.addEventListener("keydown", (event) => {
         }
     }
 })
+
+checkPlaneCheckBoxes = [true, true, true]
+
+checkPlaneCheckBoxesFunction = function () {
+    let plane1boolean = document.getElementById("plane1-checkbox").checked
+    let plane2boolean = document.getElementById("plane2-checkbox").checked
+    let plane3boolean = document.getElementById("plane3-checkbox").checked
+
+    checkPlaneCheckBoxes = [plane1boolean, plane2boolean, plane3boolean]
+    test_graph.gaussianPlanes.planesToDraw = checkPlaneCheckBoxes
+}
+
+document.getElementsByClassName("check-boxes")[0].addEventListener("click", checkPlaneCheckBoxesFunction)
+
+
 
 /**
  * reads a matrix and gets it into fraction form, this col row form
@@ -328,6 +350,7 @@ function selectMatrix(matrixNumber) {
     }
 
     test_graph.gaussianPlanes = new GaussianPlanes(test_graph, transpose(selectedMatrixValues))
+    test_graph.gaussianPlanes.planesToDraw = checkPlaneCheckBoxes
     selectedMatrix = matrixNumber
 }
 
@@ -373,8 +396,6 @@ document.getElementById("solve").addEventListener("click", function() {
         let fracSteps  = gaussianEliminationV3(fracMatrix, true, true)
         
         let matrix    = numericMatrixFromFrac(fracMatrix)
-        let numSteps  = gaussianEliminationV3(matrix, true, false)
-
         
         for(let i = 0; i < fracSteps.length; i++) {
             setTimeout(function() {
@@ -400,7 +421,7 @@ document.getElementById("animate").addEventListener("click", function() {
                 if (i == matrices.length - 1) {
                     isAnimating = false
                 }
-            }, i*2000)
+            }, i*500)
         }
     }
 })

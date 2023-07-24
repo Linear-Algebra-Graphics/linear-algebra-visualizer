@@ -23,6 +23,7 @@
         <script src="script.js" defer></script>
 
         <!-- CSS imports -->
+        <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="../style.css">
         <link rel="stylesheet" href="../navigationBar.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -36,7 +37,26 @@
             <a href="..\Problems\index.html">Problems</a>
             <a class="active" href="">Gaussian Elimination</a>
         </div>
-
+            <div class="matrix" style="width: 200px;">
+                <div class="name-bar">
+                    <button type="button" class="clear-button">-</button> 
+                    <div class="label">Plane </div>
+                </div>
+                <div class="check-boxes">
+                    <div class="plane-checkbox-container plane1">
+                        <input type="checkbox" id="plane1-checkbox" checked>
+                        <div>Show plane</div>
+                    </div>
+                    <div class="plane-checkbox-container plane2">
+                        <input type="checkbox" id="plane2-checkbox" checked>
+                        <div>Show plane</div>
+                    </div>
+                    <div class="plane-checkbox-container plane3">
+                        <input type="checkbox" id="plane3-checkbox" checked>
+                        <div>Show plane</div>
+                    </div>
+                </div>
+            </div>
         
         <div class="container">
             <div class="canvas-and-settings">
@@ -50,8 +70,7 @@
                 </div>
             </div>
             <div class="matrix-container">
-                
-    
+
             </div>
     
         </div>

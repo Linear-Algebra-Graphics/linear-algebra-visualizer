@@ -60,6 +60,10 @@ class GaussianPlanes {
             result = [0, 0, 0]
         }
         this.intersection = result
+
+        // boolean array of the size of the number of rows in the augmented matrix, indicates if row is to be drawn or not
+        this.planesToDraw = [true, true, true] 
+        this.showSolutionPoint = true
     }
 
     /**
@@ -272,8 +276,8 @@ class GaussianPlanes {
         return new Line(point1, point2, true)
     }
 
-    /**
-     * draws the planes 
+    /** 
+     * draws the planes from the augmented matrix defined by this.planesStdForm
      */
     draw() {
         let planeLines = []
@@ -298,7 +302,7 @@ class GaussianPlanes {
         }
 
         //just an example colors array
-        let colors = ["red", "blue", "green", "purple", "yellow", "orange"]
+        let colors = ["blue", "red", "green", "purple", "yellow", "orange"]
         let polygons = []
         for (let i = 0; i < planeLines.length; i++) {
             if (planeLines[i].length != 0) {
@@ -330,24 +334,36 @@ class GaussianPlanes {
         
         let sortedPolygons = this.sortPolygons(polygons)
         //console.log(sortedPolygons)
+
+
+
+        let planesToDrawColors = new Set()
+        //get all the colors of the planes to be drawn
+        for (let i = 0; i < this.planesToDraw.length; i++) {
+            if (this.planesToDraw[i]) {
+                planesToDrawColors.add(colors[i])
+            }
+        }
         
         //draw planes   
         for (let i = 0; i < sortedPolygons.length; i++) {
-            for (let j = 0; j < sortedPolygons[i].polygon.lines.length; j++) {
+            if (planesToDrawColors.has(sortedPolygons[i].polygon.color)){
+                for (let j = 0; j < sortedPolygons[i].polygon.lines.length; j++) {
 
-                let point1 = sortedPolygons[i].polygon.lines[j].point1
-                let point2 = sortedPolygons[i].polygon.lines[j].point2
-
-                sortedPolygons[i].polygon.lines[j].point1 = this.graph.applyZoom(point1)
-                sortedPolygons[i].polygon.lines[j].point2 = this.graph.applyZoom(point2)
+                    let point1 = sortedPolygons[i].polygon.lines[j].point1
+                    let point2 = sortedPolygons[i].polygon.lines[j].point2
+    
+                    sortedPolygons[i].polygon.lines[j].point1 = this.graph.applyZoom(point1)
+                    sortedPolygons[i].polygon.lines[j].point2 = this.graph.applyZoom(point2)
+                }
+                sortedPolygons[i].polygon.draw(true, false)
             }
-            sortedPolygons[i].polygon.draw(true, false)
         }
 
 
         //draw outlines
         for (let i = 0; i < planeLines.length; i++) {
-            if (planeLines[i].length != 0) {
+            if (planeLines[i].length != 0 && this.planesToDraw[i]) {
                 for (let j = 0; j < planeLines[i].length; j++) {
                     planeLines[i][j].point1 = this.graph.applyZoom(planeLines[i][j].point1)
                     planeLines[i][j].point2 = this.graph.applyZoom(planeLines[i][j].point2)
@@ -358,15 +374,16 @@ class GaussianPlanes {
             }
         }
         
-
-        //draw dot at solution
-        let inBasisSolution = this.graph.changeBasisZoomAndRotate(this.intersection)
-        this.graph.ctx.fillStyle = "black"
-        this.graph.ctx.strokeStyle = "black"
-        this.graph.ctx.beginPath();
-            this.graph.ctx.arc(this.graph.centerX + this.graph.scale * inBasisSolution[0], this.graph.centerY - this.graph.scale * inBasisSolution[1], 6, 0, 2 * Math.PI);
-            this.graph.ctx.fill();
-        this.graph.ctx.stroke();
+        if (this.showSolutionPoint) {
+            //draw dot at solution
+            let inBasisSolution = this.graph.changeBasisZoomAndRotate(this.intersection)
+            this.graph.ctx.fillStyle = "black"
+            this.graph.ctx.strokeStyle = "black"
+            this.graph.ctx.beginPath();
+                this.graph.ctx.arc(this.graph.centerX + this.graph.scale * inBasisSolution[0], this.graph.centerY - this.graph.scale * inBasisSolution[1], 6, 0, 2 * Math.PI);
+                this.graph.ctx.fill();
+            this.graph.ctx.stroke();
+        }
     }
 
     /**
@@ -460,8 +477,8 @@ function getPlaneLines(graph, normal, sideLength, intersection) {
     let c = normal[2]
     let d = normal[3]
 
-    if(a == 0 && b == 0 && c == 0) {
-        throw new Error("normal vector is [0,0,0]")
+    if (a == 0 && b == 0 && c == 0) {
+        return []
     }
 
     let planeBasis = getPlaneVectors2D([a, b, c])

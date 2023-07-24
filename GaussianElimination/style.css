@@ -1,0 +1,37 @@
+.check-boxes {
+    margin-top: 5px;
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+}
+
+.plane-checkbox-container {
+    display: flex;
+    padding-right: 30px;
+}
+
+.plane1 {
+    background-color: rgb(80, 80, 255);
+}
+
+.plane2 {
+    background-color: rgb(255, 80, 80);
+}
+
+.plane3 {
+    background-color: rgb(56, 189, 56);
+}
+
+.square {
+    width: 25px;
+    height: 25px;
+}
+
+.colorccolumn {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    justify-content: space-evenly;
+}

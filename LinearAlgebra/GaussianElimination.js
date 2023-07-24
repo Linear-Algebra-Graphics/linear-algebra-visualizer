@@ -42,7 +42,7 @@ function gaussianEliminationV3(inputMatrix, steps, fracMode) {
 
     let matrix = transpose(inputMatrix)
 
-    let stepList    = []
+    let stepList   = []
     let operations = []
 
     orderByLeastNumZeros()
