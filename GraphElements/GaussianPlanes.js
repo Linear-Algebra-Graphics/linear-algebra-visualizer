@@ -50,7 +50,7 @@ class GaussianPlanes {
      * @param {*} graph the graph on which the planes exist
      * @param {Number[][]} planesStdForm an array of planes defined as [a, b, c, d] => ax + by + cz = d
      */
-    constructor(graph, planesStdForm) {
+    constructor(graph, planesStdForm, planeColors) {
         this.graph = graph
         this.planesStdForm = planesStdForm
         let transposed = transpose(this.planesStdForm)
@@ -64,6 +64,7 @@ class GaussianPlanes {
         // boolean array of the size of the number of rows in the augmented matrix, indicates if row is to be drawn or not
         this.planesToDraw = [true, true, true] 
         this.showSolutionPoint = true
+        this.planeColors = planeColors
     }
 
     /**
@@ -260,7 +261,7 @@ class GaussianPlanes {
 
             if (col == 3) {
                 // no solution
-                return []
+                return null
             } else if (col != 3) {
                 //console.log("should be 1: " + reducedEchelon[col][row])
                 point1[col] = reducedEchelon[reducedEchelon.length - 1][row]
@@ -289,14 +290,16 @@ class GaussianPlanes {
         }
     
         let n = this.planesStdForm.length - 1
+        //either use an adjacency list of adjacency matrix in the future for this
         let intersect_ij = []
         for (let i = 0; i < this.planesStdForm.length - 1; i++) {
             for (let j = i + 1; j < this.planesStdForm.length; j++) {
                 let currIntersect = this.getPlanePlaneIntersectLine(this.planesStdForm[i], this.planesStdForm[j])
-                if (currIntersect.length != 0) {
+                if (currIntersect != null) {
                     currIntersect.point1 = this.graph.changeBasisAndRotate(currIntersect.point1)
                     currIntersect.point2 = this.graph.changeBasisAndRotate(currIntersect.point2)
                 }
+                //we keep this outside the if because ij represents intersection between ith and jth plane
                 intersect_ij.push(currIntersect)
             }
         }
@@ -314,7 +317,7 @@ class GaussianPlanes {
                 }
 
                 for (let j = 0; j < intersect_ij.length; j++) {
-                    if (intersect_ij[j].length != 0) {
+                    if (intersect_ij[j] != null) {
                         intersectLines.push(intersect_ij[j])
                     }
                 }
@@ -327,8 +330,8 @@ class GaussianPlanes {
                 for (let j = 0; j < planeLinesCopy.length; j++) {
                     planeLinesCopy[j] = new Line(planeLines[i][j].point1, planeLines[i][j].point2, false)
                 }
-
-                polygons = polygons.concat(this.splitPlanes(planeLinesCopy, intersectLines, colors[i], 0.6))
+            
+                polygons = polygons.concat(this.splitPlanes(planeLinesCopy, intersectLines, this.planeColors[i], 0.6))
             }
         }
         
@@ -341,7 +344,7 @@ class GaussianPlanes {
         //get all the colors of the planes to be drawn
         for (let i = 0; i < this.planesToDraw.length; i++) {
             if (this.planesToDraw[i]) {
-                planesToDrawColors.add(colors[i])
+                planesToDrawColors.add(this.planeColors[i])
             }
         }
         
@@ -383,7 +386,7 @@ class GaussianPlanes {
                 this.graph.ctx.arc(this.graph.centerX + this.graph.scale * inBasisSolution[0], this.graph.centerY - this.graph.scale * inBasisSolution[1], 6, 0, 2 * Math.PI);
                 this.graph.ctx.fill();
             this.graph.ctx.stroke();
-        }
+        }   
     }
 
     /**
@@ -634,7 +637,7 @@ class Line {
         const det = (a1 * b2) - (a2 * b1)
 
         //check if lines are parrallel
-        if (det != 0) {
+        if (!numEqual(det, 0, 12)) {
             let x = ((b1 * c2) - (b2 * c1)) / det
             let y = ((a2 * c1) - (a1 * c2)) / det
 

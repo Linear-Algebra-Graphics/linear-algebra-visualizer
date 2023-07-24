@@ -42,3 +42,5 @@ Transpose:
     Make it work for non square matries
 
 Use factory functions!!!!!
+
+Should we animate between gaussian elimination steps???

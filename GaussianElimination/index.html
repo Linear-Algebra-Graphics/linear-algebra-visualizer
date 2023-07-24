@@ -37,29 +37,21 @@
             <a href="..\Problems\index.html">Problems</a>
             <a class="active" href="">Gaussian Elimination</a>
         </div>
-            <div class="matrix" style="width: 200px;">
-                <div class="name-bar">
-                    <button type="button" class="clear-button">-</button> 
-                    <div class="label">Plane </div>
-                </div>
-                <div class="check-boxes">
-                    <div class="plane-checkbox-container plane1">
-                        <input type="checkbox" id="plane1-checkbox" checked>
-                        <div>Show plane</div>
-                    </div>
-                    <div class="plane-checkbox-container plane2">
-                        <input type="checkbox" id="plane2-checkbox" checked>
-                        <div>Show plane</div>
-                    </div>
-                    <div class="plane-checkbox-container plane3">
-                        <input type="checkbox" id="plane3-checkbox" checked>
-                        <div>Show plane</div>
-                    </div>
-                </div>
-            </div>
         
         <div class="container">
             <div class="canvas-and-settings">
+                <div class="check-boxes">
+                    <div>Plane visability: </div>
+                    <div class="plane-checkbox-container plane1">
+                        <input type="checkbox" class= "plane-checkbox" id="plane1-checkbox" checked>
+                    </div>
+                    <div class="plane-checkbox-container plane2">
+                        <input type="checkbox" class= "plane-checkbox" id="plane2-checkbox" checked>
+                    </div>
+                    <div class="plane-checkbox-container plane3">
+                        <input type="checkbox" class= "plane-checkbox" id="plane3-checkbox" checked>
+                    </div>
+                </div>
                 <canvas id="graph" style="border:1px solid #000000;"></canvas>
                 <div>
                     <button type="button" id="add-augmented">Add augmented matrix</button> 

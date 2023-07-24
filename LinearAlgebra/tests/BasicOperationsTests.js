@@ -58,3 +58,40 @@ checkEqual(numEqual(1.00000000001, 1, 12), false, "num equals 7")
 checkEqual(numEqual(14, 16, 2), false, "num equals 8")
 
 //vectorLength tests
+checkEqual(numEqual(vectorLength([0.5,0.9,2.3]), 2.51992063367, 12), true, "vector length 1")
+checkEqual(numEqual(vectorLength([-5,-0.92,4.5,2]), 7.07788103884, 12), true, "vector length 2")
+checkEqual(numEqual(vectorLength([-3,-1.2,12,2,-6]), 13.9441744108, 12), true, "vector length 3")
+checkEqual(numEqual(vectorLength([-3,-1.2,-6]), 6.81469001496, 12), true, "vector length 4")
+checkEqual(numEqual(vectorLength([0,0,0,0]), 0, 12), true, "vector length 5")
+
+//normalizeVector tests
+checkEqual(vectorEquals(normalizeVector([3,2,-1]), [0.801784,0.534522,-0.267261]), true, "normalize vector 1")
+checkEqual(vectorEquals(normalizeVector([-7,2,5,4]), [-0.721995,0.206284,0.515711,0.412568]), true, "normalize vector 2")
+checkEqual(vectorEquals(normalizeVector([0,0,0,0]), [0,0,0,0]), true, "normalize vector 3")
+
+//getYIntersept tests
+checkEqual(numEqual(getYIntersept(1.4, 7, 12), 21.8, 12), true, "getYIntersept 1")
+checkEqual(numEqual(getYIntersept(0.5, 23, 3), 14.5, 12), true, "getYIntersept 2")
+checkEqual(numEqual(getYIntersept(5, -0.2, 7), 6, 12), true, "getYIntersept 3")
+checkEqual(numEqual(getYIntersept(7,-0.2,-11), -12.4, 12), true, "getYIntersept 4")
+
+//getXIntersept tests
+checkEqual(numEqual(getXIntersept(1.4, 7, 12), 21.8, 12), true, "getXIntersept 1")
+checkEqual(numEqual(getXIntersept(0.5, 23, 3), 14.5, 12), true, "getXIntersept 2")
+checkEqual(numEqual(getXIntersept(5, -0.2, 7), 6, 12), true, "getXIntersept 3")
+checkEqual(numEqual(getXIntersept(7,-0.2,-11), -12.4, 12), true, "getXIntersept 4")
+
+//transpose tests
+checkEqual(matrixEquals(transpose([[1,2],[3,4]]), [[1,3],[2,4]]), true, "transpose 1")
+checkEqual(matrixEquals(transpose([[1,2],[3,4],[5,6]]),[[1,3,5],[2,4,6]] ), true, "transpose 2")
+checkEqual(matrixEquals(transpose([[1,2],[3,4],[5,6],[7,8]]),[[1,3,5,7],[2,4,6,8]]), true, "transpose 3")
+
+//vectorSubtract tests
+
+//vectorAdd tests
+
+//scaleVector tests
+
+//det3x3
+
+//

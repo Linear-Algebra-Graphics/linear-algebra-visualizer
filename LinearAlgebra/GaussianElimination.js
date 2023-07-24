@@ -21,12 +21,12 @@ function numericMatrixToFracMatrix(matrix) {
  * Preforms Gaussian Elimination on the input matrix.
  * @param {*} inputMatrix Matix that gets reduced.
  * @requirments Must be either all Frac or all number. Must also be in columb row form.
- * @param {boolean} steps Set to true to return a snapshot of the matrix after every row opperation.
+ * @param {boolean} steps Set to true to return a snapshot of the matrix after every row opperation. Also returns all row opperations.
  * @param {boolean} fracMode Set to false if you give an inputMatrix of floats not Frac.
- * @returns {Frac[][]} Row reduced Frac matrix.
- * @returns {Frac[][][]} List of the steps to the row reduced Frac matrix.
- * @returns {number[][]} Row reduced number matrix.
- * @returns {number[][][]} List of the steps to the row reduced numbe rmatrix.
+ * @returns {Frac[][]} if steps == false && fracMode == true: Row reduced Frac matrix.
+ * @returns {{steps: Frac[][][], operations: String[]}} if steps == true && fracMode == true: List of the steps to the row reduced Frac matrix. Also returns all row opperations.
+ * @returns {number[][]} if steps == false && fracMode == false: Row reduced number matrix.
+ * @returns {{steps: number[][][], operations: String[]}} if steps == true && fracMode == false: List of the steps to the row reduced numbe rmatrix.  Also returns all row opperations.
  */
 function gaussianEliminationV3(inputMatrix, steps, fracMode) {
     if (fracMode == false) {
@@ -42,8 +42,9 @@ function gaussianEliminationV3(inputMatrix, steps, fracMode) {
 
     let matrix = transpose(inputMatrix)
 
-    let stepList   = []
-    let operations = []
+    let stepList     = []
+    let operations   = []
+    let effectedRows = []
 
     orderByLeastNumZeros()
     // console.log(matrix)
@@ -107,9 +108,11 @@ function gaussianEliminationV3(inputMatrix, steps, fracMode) {
     if (steps == false) {
         return matrix
     } else {
-        return stepList
+        return {steps: stepList, operations: operations, effectedRows: effectedRows}
     }
     
+
+
 
     // ---FUNCTIONS---
 
@@ -137,16 +140,39 @@ function gaussianEliminationV3(inputMatrix, steps, fracMode) {
 
         saveSnapshot()
         if (steps) {
-            operations.push("row" + row + " = (" + divideFracs(new Frac(1, 1), value).toString() + ")row" + row)
+            // Because division numerator and denominator switch
+            let numerator   = value.getDenominator()
+            let denominator = value.getNumerator()
+            row = row + 1
+
+            let stepString = ""
+
+            if (numerator == 1) {
+                stepString = "R"+(row+1)
+            } else {
+                stepString = numerator+" * R"+ row
+            }
+
+            if (denominator == 1) {
+                stepString = stepString
+            } else {
+                stepString += "/(" + denominator + ")"
+            }
+
+
+
+            // R1/3   -> R1
+            operations.push(stepString + " &rArr; " + "R" + row)
+            effectedRows.push([row])
         }
         // ADD ONE TO OPPERATIONS
     }
     
     /**
      * does row1 - scale*row2 
-     * @param {*} rows1 a Frac
-     * @param {*} row2 a Frac
-     * @param {*} scale a Frac
+     * @param {Number} row1 a Frac
+     * @param {Number} row2 a Frac
+     * @param {Frac} scale a Frac
      */
     function subtractScaledRowFromRow(row1, row2, scale) {
         for (let col = 0; col < matrix[row1].length; col++) {
@@ -155,7 +181,29 @@ function gaussianEliminationV3(inputMatrix, steps, fracMode) {
         }
         saveSnapshot()
         if (steps) {
-            operations.push("row" + row1 + " = row" + row1 + "-(" + scale.toString() + ")row" + row2)
+            // Because division numerator and denominator switch
+            let numerator   = scale.getNumerator()
+            let denominator = scale.getDenominator()
+            row1 = row1 + 1
+            row2 = row2 + 1
+
+            let stepString = ""
+
+            if (numerator == 1) {
+                stepString = "R"+row2
+            } else {
+                stepString = numerator+" * R"+row2
+            }
+
+            if (denominator == 1) {
+                stepString = stepString
+            } else {
+                stepString += "/" + denominator
+            }
+
+            // R1 - R2 -> R1
+            operations.push("R"+row1 + " - " + stepString + " &rArr; " + "R"+row1)
+            effectedRows.push([row1, row2])
         }
         // ADD ONE TO OPPERATIONS
     }
@@ -166,11 +214,14 @@ function gaussianEliminationV3(inputMatrix, steps, fracMode) {
         let temp = matrix[row1]
         matrix[row1] = matrix[row2]
         matrix[row2] = temp
+        row1=row1+1
+        row2=row2+1
         
         saveSnapshot()
         
         if (steps == true) {
-            operations.push("row" + row1 + " <-> " + "row" +row2)
+            operations.push("R" + row1 + " &hArr; " + "R" + row2)
+            effectedRows.push([row1, row2])
         }
         
     }

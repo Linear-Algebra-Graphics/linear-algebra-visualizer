@@ -92,6 +92,14 @@ setInterval(function() {
     test_graph.draw()
 }, 1000/60)
 
+
+let defaultRowOperation = document.createElement("div")
+defaultRowOperation.innerHTML = `
+`
+
+defaultRowOperation.className = "row-operation"
+
+
 let defaultMatrix = document.createElement("div")
 defaultMatrix.innerHTML = `
 <div class="name-bar">
@@ -300,7 +308,7 @@ function writeMatrix(HTMLMatrix, matrix, fractionFormat) {
 }
 
 function addMatrix(matrix, locked, fractionFormat) {
-    HTMLMatrix = defaultMatrix.cloneNode(true)
+    let HTMLMatrix = defaultMatrix.cloneNode(true)
 
     HTMLMatrix.getElementsByClassName("label")[0].innerHTML  = "Step: " + (numberOfmatrices)
     HTMLMatrix.getElementsByClassName("select-button")[0].id = (numberOfmatrices) + "select"
@@ -319,6 +327,16 @@ function addMatrix(matrix, locked, fractionFormat) {
     if (matrix != null) {
 
     }
+}
+
+function addRowOperation(rowOpperation) {
+    let HTMLRowOperation = defaultRowOperation.cloneNode(true)
+    HTMLRowOperation.innerHTML = `
+    <div>` + rowOpperation + `</div>
+    <button class="opp-button1" id="`+numberOfmatrices+`" type="button">1</button>
+    <button class="opp-button2" id="`+numberOfmatrices+`" type="button">2</button>
+    `
+    document.getElementsByClassName("matrix-container")[0].appendChild(HTMLRowOperation)
 }
 
 function removeMatrix() {
@@ -349,7 +367,7 @@ function selectMatrix(matrixNumber) {
         console.log("HELP !!!")
     }
 
-    test_graph.gaussianPlanes = new GaussianPlanes(test_graph, transpose(selectedMatrixValues))
+    test_graph.gaussianPlanes = new GaussianPlanes(test_graph, transpose(selectedMatrixValues), ["blue", "red", "green", "purple", "yellow", "orange"])
     test_graph.gaussianPlanes.planesToDraw = checkPlaneCheckBoxes
     selectedMatrix = matrixNumber
 }
@@ -365,6 +383,29 @@ document.addEventListener("click", function() {
 
         const matrixIndex = parseInt((current.id)[0])
         selectMatrix(matrixIndex)
+    }
+
+    if (current.classList.contains("opp-button1")) {
+
+        const matrixIndex = parseInt((current.id)[0])
+        let selectedMatrixValues = readMatrix(matrixIndex, false)
+        let rows = transpose(selectedMatrixValues)
+        let effectedRows = []
+        newRows = [
+            rows[effectedRows[0]],
+            rows[effectedRows[1]]
+        ]
+
+        test_graph.gaussianPlanes = new GaussianPlanes(test_graph, newRows, ["blue", "red", "green", "purple", "yellow", "orange"])
+        test_graph.gaussianPlanes.planesToDraw = checkPlaneCheckBoxes
+        selectedMatrix = matrixNumber        
+    }
+
+    if (current.classList.contains("opp-button2")) {
+
+        test_graph.gaussianPlanes = new GaussianPlanes(test_graph, transpose(selectedMatrixValues), ["blue", "red", "green", "purple", "yellow", "orange"])
+        test_graph.gaussianPlanes.planesToDraw = checkPlaneCheckBoxes
+        selectedMatrix = matrixNumber
     }
 })
 
@@ -393,17 +434,24 @@ document.getElementById("solve").addEventListener("click", function() {
         isSolving = true
         //debugger
         let fracMatrix = readMatrix(numberOfmatrices-1, true)
-        let fracSteps  = gaussianEliminationV3(fracMatrix, true, true)
-        
-        let matrix    = numericMatrixFromFrac(fracMatrix)
+        let gaussianElimResult = gaussianEliminationV3(fracMatrix, true, true);
+
+        let fracSteps     = gaussianElimResult.steps
+        let rowOperations = gaussianElimResult.operations
+        let effectedRows  = gaussianElimResult.effectedRows
+
+        console.log(fracSteps)
+        console.log(rowOperations)
         
         for(let i = 0; i < fracSteps.length; i++) {
             setTimeout(function() {
+                addRowOperation(rowOperations[i])
                 addMatrix(fracSteps[i], true, true)
+
                 if (i == fracSteps.length - 1) {
                     isSolving = false
                 }
-            }, i*100)      
+            }, i*100)
         }
     }
 })

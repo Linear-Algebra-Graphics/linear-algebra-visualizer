@@ -16,7 +16,7 @@
     flex-wrap: wrap;
     justify-content: left;
     align-content: flex-start;
-    gap: 10px 20px;
+    gap: 10px 2px;
     margin: 10px;
     background-color: #CCDDD3;
 }
