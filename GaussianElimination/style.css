@@ -1,48 +1,30 @@
-.check-boxes {
-    margin-top: 5px;
+/* * {
+
+} */
+
+
+.operation {
     display: flex;
-    gap: 5px;
-    flex-direction: row;
-    align-items: center;
-    position: absolute;
-    padding-left: 10px;
+    flex-direction: column;
 }
 
-.plane-checkbox {
-    width: 1.2rem;
-    height: 1.2rem;
-    margin: 0px;
-}
-
-.plane-checkbox-container {
-    width: 2rem;
-    height: 2rem;
+.operation-buttons {
     display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    border-radius: 6px;
-    border: 1px solid black;
-
+    justify-content: center;
 }
 
-.plane1 {
-    background-color: rgb(80, 80, 255);
+.operation-buttons.selected {
+    background: green;
 }
 
-.plane2 {
-    background-color: rgb(255, 80, 80);
+.operation-text {
+    display: flex;
+    justify-content: center;
 }
 
-.plane3 {
-    background-color: rgb(56, 189, 56);
-}
 
-.square {
-    width: 25px;
-    height: 25px;
-}
 
-.colorccolumn {
+.color-column {
     margin-top: 5px;
     margin-bottom: 5px;
     display: flex;
@@ -51,9 +33,151 @@
     justify-content: space-evenly;
 }
 
-.row-operation {
-    font-size: 1rem;
+.color-column input[type='checkbox'] {
+    width: 20px;
+    height: 20px;
+    margin: 4px 10px 4px 10px;
+    accent-color: rgb(83, 83, 83);
+}
+
+.color-box {
+    border-radius: 4px;
+}
+
+.container {
+    display: flex;
+}
+
+.canvas-and-settings {
+    margin: 10px;
+}
+
+.matrix-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    flex-wrap: wrap;
+    justify-content: left;
+    align-content: flex-start;
+    gap: 10px 2px;
+    margin: 10px;
+    /* background-color: #CCDDD3; */
 }
+
+.matrix {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    border: 2px solid rgba(0, 0, 0, 0);
+    border-radius: 5px;
+}
+
+.values {
+    position:relative;
+    display: flex;
+    flex-direction: row;
+    gap: 3px;
+    padding: 3px;
+    background-color: #AFC2D5;
+    justify-content: space-evenly;
+}
+
+.locked {
+    position: absolute;
+    cursor: not-allowed;
+    display: block;
+    background-color: rgba(0,0,0,.3);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.matrix.selected .name-bar {
+    background: rgba(48,168,77,1);
+    background: linear-gradient(140deg, rgba(48,168,77,1) 0%, rgba(36,187,174,1) 100%);
+    background-size: 400% 400%;
+    background-position: 50% 50%;
+}
+
+.column {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.line {
+    border-left: 2px solid black;
+}
+
+.line-gray {
+    margin-top: 4%;
+    margin-bottom: 4%;
+    border: 1px solid gray;
+}
+
+
+input[type="text"] {
+    width: 3rem;
+    height: 1.5rem;
+}
+
+table {
+    border: 1px dashed black
+}
+
+.matrix .name-bar {
+    display: flex;
+    justify-content: flex-end;
+    text-align: center;
+    background: lightseagreen;
+    border-radius: 3px 3px 0px 0px;
+}
+
+.label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%
+}
+
+/* input:hover {
+    cursor: not-allowed;
+} */
+
+.matrix button {
+    margin: 3px;
+}
+
+.operation button {
+    margin: 3px;
+}
+
+
+/* .previosStep {
+    background-color: green
+}
+
+.selected {
+    background-color: green
+} */
+
+.locked:hover {
+    cursor: not-allowed;
+}
+
+.color1 {
+    background-color: rgb(80, 80, 255);
+}
+
+.color2 {
+    background-color: rgb(255, 80, 80);
+}
+
+.color3 {
+    background-color: rgb(56, 189, 56);
+}
+

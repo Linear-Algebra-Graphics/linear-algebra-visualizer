@@ -92,17 +92,9 @@ setInterval(function() {
     test_graph.draw()
 }, 1000/60)
 
-
-let defaultRowOperation = document.createElement("div")
-defaultRowOperation.innerHTML = `
-`
-
-defaultRowOperation.className = "row-operation"
-
-
 let defaultMatrix = document.createElement("div")
 defaultMatrix.innerHTML = `
-<div class="name-bar">
+<div class="name-bar selected">
     <button type="button" class="clear-button">-</button> 
     <div class="label"></div>
     <button type="button" class="select-button" id="">select</button> 
@@ -110,10 +102,16 @@ defaultMatrix.innerHTML = `
 </div>
 <div class="values">
 
-    <div class="colorccolumn">
-        <div class="square plane1"></div>
-        <div class="square plane2"></div>
-        <div class="square plane3"></div>
+    <div class="color-column">
+        <div class="color-box">
+            <input type="checkbox">
+        </div>
+        <div class="color-box">
+            <input type="checkbox">
+        </div>
+        <div class="color-box">
+            <input type="checkbox">
+        </div>
     </div>
 
     <div class="line"></div>
@@ -152,7 +150,35 @@ origonalMatrix.getElementsByClassName("select-button")[0].id = "0select"
 origonalMatrix.id                                            = "0matrix"
 origonalMatrix.getElementsByClassName("name-bar")[0].classList.add("selected")
 
+let checkBoxes = origonalMatrix.querySelectorAll(".color-box")
+for (let i=0; i<checkBoxes.length; i++) {
+    checkBoxes[i].classList.add("color"+(i+1))
+}
+
+
 document.getElementsByClassName("matrix-container")[0].appendChild(origonalMatrix)
+
+/* <div class="operation">
+<div class="operation-text">test</div>
+<div class="operation-buttons">
+    <button type="button" class="select-button">select</button> 
+    <button type="button" class="">1</button>
+    <button type="button" class="">2</button> 
+</div>
+</div> */
+
+let defaultRowOperation    = document.createElement("div")
+defaultRowOperation.innerHTML = `
+<div class="operation-text"></div>
+<div class="operation-buttons">
+    <button type="button" class="select-button">select</button> 
+    <button type="button" class="">1</button>
+    <button type="button" class="">2</button> 
+</div>
+`
+
+defaultRowOperation.className = "operation"
+
 
 document.addEventListener("keydown", (event) => {
     const inputField = document.activeElement
@@ -231,9 +257,6 @@ checkPlaneCheckBoxesFunction = function () {
     test_graph.gaussianPlanes.planesToDraw = checkPlaneCheckBoxes
 }
 
-document.getElementsByClassName("check-boxes")[0].addEventListener("click", checkPlaneCheckBoxesFunction)
-
-
 
 /**
  * reads a matrix and gets it into fraction form, this col row form
@@ -307,12 +330,18 @@ function writeMatrix(HTMLMatrix, matrix, fractionFormat) {
     }
 }
 
-function addMatrix(matrix, locked, fractionFormat) {
+function addMatrix(matrix, locked, fractionFormat, rowOrderList) {
     let HTMLMatrix = defaultMatrix.cloneNode(true)
 
     HTMLMatrix.getElementsByClassName("label")[0].innerHTML  = "Step: " + (numberOfmatrices)
     HTMLMatrix.getElementsByClassName("select-button")[0].id = (numberOfmatrices) + "select"
     HTMLMatrix.id                                            = (numberOfmatrices) + "matrix"
+
+    let colorBoxes = HTMLMatrix.getElementsByClassName("color-box")
+    // console.log(colorBoxes)
+    for (let i=0; i<colorBoxes.length; i++) {
+        colorBoxes[i].classList.add("color"+rowOrderList[numberOfmatrices-1][i])
+    }
 
     if (locked == true) {
         div = document.createElement("div")
@@ -329,13 +358,20 @@ function addMatrix(matrix, locked, fractionFormat) {
     }
 }
 
+/* <div class="operation-text">test</div>
+<div class="operation-buttons">
+    <button type="button" class="select-button">select</button> 
+    <button type="button" class="">1</button>
+    <button type="button" class="">2</button> 
+</div>
+` */
+
+
 function addRowOperation(rowOpperation) {
+
     let HTMLRowOperation = defaultRowOperation.cloneNode(true)
-    HTMLRowOperation.innerHTML = `
-    <div>` + rowOpperation + `</div>
-    <button class="opp-button1" id="`+numberOfmatrices+`" type="button">1</button>
-    <button class="opp-button2" id="`+numberOfmatrices+`" type="button">2</button>
-    `
+    HTMLRowOperation.getElementsByClassName("operation-text")[0].innerHTML = rowOpperation
+
     document.getElementsByClassName("matrix-container")[0].appendChild(HTMLRowOperation)
 }
 
@@ -409,7 +445,7 @@ document.addEventListener("click", function() {
     }
 })
 
-selectMatrix(0)
+// selectMatrix(0)
 
 
 document.getElementById("add-augmented").addEventListener("click", function() {
@@ -439,14 +475,14 @@ document.getElementById("solve").addEventListener("click", function() {
         let fracSteps     = gaussianElimResult.steps
         let rowOperations = gaussianElimResult.operations
         let effectedRows  = gaussianElimResult.effectedRows
+        let rowOrderList  = gaussianElimResult.rowOrderList
 
-        console.log(fracSteps)
-        console.log(rowOperations)
-        
+        console.log(gaussianElimResult)
+
         for(let i = 0; i < fracSteps.length; i++) {
             setTimeout(function() {
-                addRowOperation(rowOperations[i])
-                addMatrix(fracSteps[i], true, true)
+                addRowOperation(rowOperations[i], effectedRows)
+                addMatrix(fracSteps[i], true, true, rowOrderList)
 
                 if (i == fracSteps.length - 1) {
                     isSolving = false

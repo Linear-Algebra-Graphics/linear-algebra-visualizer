@@ -1,0 +1,59 @@
+.check-boxes {
+    margin-top: 5px;
+    display: flex;
+    gap: 5px;
+    flex-direction: row;
+    align-items: center;
+    position: absolute;
+    padding-left: 10px;
+}
+
+.plane-checkbox {
+    width: 1.2rem;
+    height: 1.2rem;
+    margin: 0px;
+}
+
+.plane-checkbox-container {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    border-radius: 6px;
+    border: 1px solid black;
+
+}
+
+.plane1 {
+    background-color: rgb(80, 80, 255);
+}
+
+.plane2 {
+    background-color: rgb(255, 80, 80);
+}
+
+.plane3 {
+    background-color: rgb(56, 189, 56);
+}
+
+.square {
+    width: 25px;
+    height: 25px;
+}
+
+.colorccolumn {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    justify-content: space-evenly;
+}
+
+.row-operation {
+    font-size: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}

@@ -46,6 +46,14 @@ function gaussianEliminationV3(inputMatrix, steps, fracMode) {
     let operations   = []
     let effectedRows = []
 
+    let rowOrderList = []
+
+    let tempArray = []
+    for (let i=0; i<matrix.length; i++) {
+        tempArray.push(i+1)
+    }
+    rowOrderList.push(tempArray)
+    
     orderByLeastNumZeros()
     // console.log(matrix)
     // console.log(stringMatrixFromFrac(matrix))
@@ -108,7 +116,7 @@ function gaussianEliminationV3(inputMatrix, steps, fracMode) {
     if (steps == false) {
         return matrix
     } else {
-        return {steps: stepList, operations: operations, effectedRows: effectedRows}
+        return {steps: stepList, operations: operations, effectedRows: effectedRows, rowOrderList: rowOrderList}
     }
     
 
@@ -164,6 +172,7 @@ function gaussianEliminationV3(inputMatrix, steps, fracMode) {
             // R1/3   -> R1
             operations.push(stepString + " &rArr; " + "R" + row)
             effectedRows.push([row])
+            rowOrderList.push(rowOrderList[rowOrderList.length-1])
         }
         // ADD ONE TO OPPERATIONS
     }
@@ -204,6 +213,7 @@ function gaussianEliminationV3(inputMatrix, steps, fracMode) {
             // R1 - R2 -> R1
             operations.push("R"+row1 + " - " + stepString + " &rArr; " + "R"+row1)
             effectedRows.push([row1, row2])
+            rowOrderList.push(rowOrderList[rowOrderList.length-1])
         }
         // ADD ONE TO OPPERATIONS
     }
@@ -222,6 +232,12 @@ function gaussianEliminationV3(inputMatrix, steps, fracMode) {
         if (steps == true) {
             operations.push("R" + row1 + " &hArr; " + "R" + row2)
             effectedRows.push([row1, row2])
+            let currentRowOrder = rowOrderList[rowOrderList.length-1]
+
+            let temp2 = currentRowOrder[row1-1]
+            currentRowOrder[row1-1] = currentRowOrder[row2-1]
+            currentRowOrder[row2-1] = temp2
+            rowOrderList.push(currentRowOrder)
         }
         
     }
