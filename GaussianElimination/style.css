@@ -169,15 +169,15 @@ table {
     cursor: not-allowed;
 }
 
-.color1 {
+.row0 {
     background-color: rgb(80, 80, 255);
 }
 
-.color2 {
+.row1 {
     background-color: rgb(255, 80, 80);
 }
 
-.color3 {
+.row2 {
     background-color: rgb(56, 189, 56);
 }
 

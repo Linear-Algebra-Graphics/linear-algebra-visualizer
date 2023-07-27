@@ -44,15 +44,9 @@ function gaussianEliminationV3(inputMatrix, steps, fracMode) {
 
     let stepList     = []
     let operations   = []
-    let effectedRows = []
 
     let rowOrderList = []
 
-    let tempArray = []
-    for (let i=0; i<matrix.length; i++) {
-        tempArray.push(i+1)
-    }
-    rowOrderList.push(tempArray)
     
     orderByLeastNumZeros()
     // console.log(matrix)
@@ -94,7 +88,7 @@ function gaussianEliminationV3(inputMatrix, steps, fracMode) {
     
     for (let row = matrix.length - 1; row >= 1; row--) {
         let index = numLeftZerosInRow(matrix, row)
-        if (index < matrix[row].length) {
+        if (index < matrix[row].length - 1) {
             for (let rowAbove = row - 1; rowAbove >= 0; rowAbove--) {
                 let scale = matrix[rowAbove][index]
                 if (scale.getNumerator() != 0) {
@@ -116,7 +110,7 @@ function gaussianEliminationV3(inputMatrix, steps, fracMode) {
     if (steps == false) {
         return matrix
     } else {
-        return {steps: stepList, operations: operations, effectedRows: effectedRows, rowOrderList: rowOrderList}
+        return {steps: stepList, operations: operations, rowOrderList: rowOrderList}
     }
     
 
@@ -149,30 +143,38 @@ function gaussianEliminationV3(inputMatrix, steps, fracMode) {
         saveSnapshot()
         if (steps) {
             // Because division numerator and denominator switch
-            let numerator   = value.getDenominator()
-            let denominator = value.getNumerator()
-            row = row + 1
+            // let numerator   = value.getDenominator()
+            // let denominator = value.getNumerator()
+            // row = row + 1
 
-            let stepString = ""
+            // let stepString = ""
 
-            if (numerator == 1) {
-                stepString = "R"+(row+1)
-            } else {
-                stepString = numerator+" * R"+ row
-            }
+            // if (numerator == 1) {
+            //     stepString = "R"+(row+1)
+            // } else {
+            //     stepString = numerator+" * R"+ row
+            // }
 
-            if (denominator == 1) {
-                stepString = stepString
-            } else {
-                stepString += "/(" + denominator + ")"
-            }
-
-
+            // if (denominator == 1) {
+            //     stepString = stepString
+            // } else {
+            //     stepString += "/(" + denominator + ")"
+            // }
 
             // R1/3   -> R1
-            operations.push(stepString + " &rArr; " + "R" + row)
-            effectedRows.push([row])
-            rowOrderList.push(rowOrderList[rowOrderList.length-1])
+            operations.push({type:"divide", row: row, value: value})
+
+            let currentRowOrder
+            if (rowOrderList.length == 0) {
+                currentRowOrder = []
+                for (let i = 0; i < matrix.length; i++) {
+                    currentRowOrder.push(i)
+                }
+            } else {
+                currentRowOrder = rowOrderList[rowOrderList.length-1]
+            }
+
+            rowOrderList.push(currentRowOrder)
         }
         // ADD ONE TO OPPERATIONS
     }
@@ -181,39 +183,51 @@ function gaussianEliminationV3(inputMatrix, steps, fracMode) {
      * does row1 - scale*row2 
      * @param {Number} row1 a Frac
      * @param {Number} row2 a Frac
-     * @param {Frac} scale a Frac
+     * @param {Frac} value a Frac
      */
-    function subtractScaledRowFromRow(row1, row2, scale) {
+    function subtractScaledRowFromRow(row1, row2, value) {
         for (let col = 0; col < matrix[row1].length; col++) {
-            let subtractedFrac = multiplyFracs(matrix[row2][col], scale)
+            let subtractedFrac = multiplyFracs(matrix[row2][col], value)
             matrix[row1][col] = subtractFracs(matrix[row1][col], subtractedFrac)
         }
         saveSnapshot()
         if (steps) {
             // Because division numerator and denominator switch
-            let numerator   = scale.getNumerator()
-            let denominator = scale.getDenominator()
-            row1 = row1 + 1
-            row2 = row2 + 1
+            // let numerator   = scale.getNumerator()
+            // let denominator = scale.getDenominator()
+            // row1 = row1 + 1
+            // row2 = row2 + 1
 
-            let stepString = ""
+            // let stepString = ""
 
-            if (numerator == 1) {
-                stepString = "R"+row2
-            } else {
-                stepString = numerator+" * R"+row2
-            }
+            // if (numerator == 1) {
+            //     stepString = "R"+row2
+            // } else {
+            //     stepString = numerator+" * R"+row2
+            // }
 
-            if (denominator == 1) {
-                stepString = stepString
-            } else {
-                stepString += "/" + denominator
-            }
+            // if (denominator == 1) {
+            //     stepString = stepString
+            // } else {
+            //     stepString += "/" + denominator
+            // }
 
             // R1 - R2 -> R1
-            operations.push("R"+row1 + " - " + stepString + " &rArr; " + "R"+row1)
-            effectedRows.push([row1, row2])
-            rowOrderList.push(rowOrderList[rowOrderList.length-1])
+            //operations.push("R"+row1 + " - " + stepString + " &rArr; " + "R"+row1)
+            operations.push({type: "subtract", row1: row1, row2: row2, value: value})
+            //effectedRows.push([row1, row2])
+
+            let currentRowOrder
+            if (rowOrderList.length == 0) {
+                currentRowOrder = []
+                for (let i = 0; i < matrix.length; i++) {
+                    currentRowOrder.push(i)
+                }
+            } else {
+                currentRowOrder = rowOrderList[rowOrderList.length-1]
+            }
+
+            rowOrderList.push(currentRowOrder)
         }
         // ADD ONE TO OPPERATIONS
     }
@@ -224,19 +238,35 @@ function gaussianEliminationV3(inputMatrix, steps, fracMode) {
         let temp = matrix[row1]
         matrix[row1] = matrix[row2]
         matrix[row2] = temp
-        row1=row1+1
-        row2=row2+1
+        // row1=row1+1
+        // row2=row2+1
         
         saveSnapshot()
         
         if (steps == true) {
-            operations.push("R" + row1 + " &hArr; " + "R" + row2)
-            effectedRows.push([row1, row2])
-            let currentRowOrder = rowOrderList[rowOrderList.length-1]
+            // operations.push("R" + row1 + " &hArr; " + "R" + row2)
+            // effectedRows.push([row1, row2])
+            // let currentRowOrder = rowOrderList[rowOrderList.length-1]
 
-            let temp2 = currentRowOrder[row1-1]
-            currentRowOrder[row1-1] = currentRowOrder[row2-1]
-            currentRowOrder[row2-1] = temp2
+            // let temp2 = currentRowOrder[row1-1]
+            // currentRowOrder[row1-1] = currentRowOrder[row2-1]
+            // currentRowOrder[row2-1] = temp2
+            // rowOrderList.push(currentRowOrder)
+            operations.push({type:"swap", row1: row1, row2: row2})
+
+            let currentRowOrder
+            if (rowOrderList.length == 0) {
+                currentRowOrder = []
+                for (let i = 0; i < matrix.length; i++) {
+                    currentRowOrder.push(i)
+                }
+            } else {
+                currentRowOrder = rowOrderList[rowOrderList.length-1]
+            }
+
+            let temp = currentRowOrder[row1]
+            currentRowOrder[row1] = currentRowOrder[row2]
+            currentRowOrder[row2] = temp
             rowOrderList.push(currentRowOrder)
         }
         

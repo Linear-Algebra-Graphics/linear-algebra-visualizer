@@ -9,6 +9,7 @@ class Frac {
      * @param {Number} denominator 
      */
     constructor(numerator, denominator) {
+
         this.numerator = numerator
         this.denominator = denominator
         this.simplify()
@@ -24,6 +25,7 @@ class Frac {
             this.denominator = 1
         } else {
             let sign = Math.sign(this.numerator * this.denominator)
+            // debugger
             let gcd = this._gcd(Math.abs(this.numerator), Math.abs(this.denominator))
 
             this.numerator   = sign * Math.abs(this.numerator) / gcd
@@ -38,6 +40,7 @@ class Frac {
      * @returns {Number} greatest common factor of a and b
      */
     _gcd(a, b) {
+        
         if (a == 0) {
             return b
         } else {

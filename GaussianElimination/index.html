@@ -40,29 +40,64 @@
         
         <div class="container">
             <div class="canvas-and-settings">
-                <!-- <div class="check-boxes">
-                    <div>Plane visability: </div>
-                    <div class="plane-checkbox-container plane1">
-                        <input type="checkbox" class= "plane-checkbox" id="plane1-checkbox" checked>
-                    </div>
-                    <div class="plane-checkbox-container plane2">
-                        <input type="checkbox" class= "plane-checkbox" id="plane2-checkbox" checked>
-                    </div>
-                    <div class="plane-checkbox-container plane3">
-                        <input type="checkbox" class= "plane-checkbox" id="plane3-checkbox" checked>
-                    </div>
-                </div> -->
                 <canvas id="graph" style="border:1px solid #000000;"></canvas>
                 <div>
-                    <button type="button" id="add-augmented">Add augmented matrix</button> 
-                    <button type="button" id="remove-augmented">remove last matrix</button> 
-                    <button type="button" id="clear">clear</button> 
-                    <button type="button" id="animate">animate</button> 
-                    <button type="button" id="solve">solve</button>
+                    <button type="button" class="add-button">Add augmented matrix</button> 
+                    <button type="button" class="remove-button">remove last matrix</button> 
+                    <button type="button" class="clear-button">clear</button> 
+                    <button type="button" class="animate-button">animate</button> 
+                    <button type="button" class="solve-button">solve</button>
                 </div>
             </div>
             <div class="matrix-container">
-                
+                <div class="matrix selected" id="matrix0">
+                    <div class="name-bar">
+                        <button type="button" class="clear-button">-</button> 
+                        <div class="label"></div>
+                        <button type="button" class="select-button matrix0">select</button> 
+                        <button type="button" class="clear-button matrix0">clear</button> 
+                    </div>
+                    <div class="values">
+                    
+                        <div class="color-column">
+                            <div class="color-box row0">
+                                <input type="checkbox">
+                            </div>
+                            <div class="color-box row1">
+                                <input type="checkbox">
+                            </div>
+                            <div class="color-box row2">
+                                <input type="checkbox">
+                            </div>
+                        </div>
+                    
+                        <div class="line"></div>
+                    
+                        <div class="column">
+                            <input class="matrix-value" type="text" value="2/3">
+                            <input class="matrix-value" type="text" value="1/6">
+                            <input class="matrix-value" type="text" value="1/2">
+                        </div>
+                        <div class="column">
+                            <input class="matrix-value" type="text" value="1/3">
+                            <input class="matrix-value" type="text" value="1/2">
+                            <input class="matrix-value" type="text" value="0">
+                        </div>
+                        <div class="column">
+                            <input class="matrix-value" type="text" value="25/60">
+                            <input class="matrix-value" type="text" value="25/60">
+                            <input class="matrix-value" type="text" value="1">
+                        </div>
+                        <div class="line-gray"></div>
+                        <div class="column">
+                            <input class="matrix-value" type="text" value="15">
+                            <input class="matrix-value" type="text" value="10">
+                            <input class="matrix-value" type="text" value="11">
+                        </div>
+                    
+                        <div class="line"></div>
+                    </div>
+                </div>
             </div>
     
         </div>
