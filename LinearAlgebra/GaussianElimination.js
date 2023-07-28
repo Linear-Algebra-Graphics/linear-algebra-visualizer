@@ -18,6 +18,31 @@ function numericMatrixToFracMatrix(matrix) {
 }
 
 /**
+ * does row1 - value*row2 
+ * @param {*} fracMatrix 
+ * @param {Number} row1 
+ * @param {Number} row2 
+ * @param {Frac} value 
+ * @returns 
+ */
+function fracMatrixSubtractOperation(fracMatrix, row1, row2, value) {
+    for (let col = 0; col < fracMatrix[row1].length; col++) {
+        let subtractedFrac = multiplyFracs(fracMatrix[row2][col], value)
+        fracMatrix[row1][col] = subtractFracs(fracMatrix[row1][col], subtractedFrac)
+    }
+
+    return {steps: [fracMatrix], operations: [{type: "subtract", row1: row1, row2: row2, value: value}]}
+}
+
+function fracMatrixDivideOperation(fracMatrix, row, value) {
+    for (let col = 0; col < fracMatrix[row].length; col++) {
+        fracMatrix[row][col] = divideFracs(fracMatrix[row][col], value)
+    }
+
+}
+
+
+/**
  * Preforms Gaussian Elimination on the input matrix.
  * @param {*} inputMatrix Matix that gets reduced.
  * @requirments Must be either all Frac or all number. Must also be in columb row form.
@@ -180,7 +205,7 @@ function gaussianEliminationV3(inputMatrix, steps, fracMode) {
     }
     
     /**
-     * does row1 - scale*row2 
+     * does row1 - value*row2 
      * @param {Number} row1 a Frac
      * @param {Number} row2 a Frac
      * @param {Frac} value a Frac

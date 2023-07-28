@@ -145,27 +145,26 @@ setInterval(function() {
 
 class GaussianElimStepsHTMLModel {
 
-
-    constructor(matrixLocation) {
+    constructor() {
         this.defaultMatrix = document.createElement("div")
         this.defaultMatrix.innerHTML = `
         <div class="name-bar">
-            <button type="button" class="clear-button">-</button> 
+            <button type="button" class="">-</button> 
             <div class="label"></div>
             <button type="button" class="select-button">select</button> 
-            <button type="button" class="clear-button">clear</button> 
+            <button type="button" class="">clear</button> 
         </div>
         <div class="values">
         
             <div class="color-column">
                 <div class="color-box">
-                    <input type="checkbox">
+                    <input class="color-checkbox" type="checkbox">
                 </div>
                 <div class="color-box">
-                    <input type="checkbox">
+                    <input class="color-checkbox" type="checkbox">
                 </div>
                 <div class="color-box">
-                    <input type="checkbox">
+                    <input class="color-checkbox" type="checkbox">
                 </div>
             </div>
         
@@ -212,6 +211,13 @@ class GaussianElimStepsHTMLModel {
         this.matrixList        = []
         this.planeOrdering     = []
         this.operations        = []
+
+        // This is just for firefox basically
+        let plane1 = document.getElementsByClassName("color-box")[0].getElementsByClassName("color-checkbox")[0].checked
+        let plane2 = document.getElementsByClassName("color-box")[1].getElementsByClassName("color-checkbox")[0].checked
+        let plane3 = document.getElementsByClassName("color-box")[2].getElementsByClassName("color-checkbox")[0].checked
+
+        this.selectedPlanes    = [plane1, plane2, plane3]
         this.selected          = {type:"matrix", index:0}
     }
 
@@ -229,6 +235,8 @@ class GaussianElimStepsHTMLModel {
         if (type == "matrix") {
             document.getElementById(type+index).classList.add("selected")
             test_graph.gaussianPlanes = new GaussianPlanes(test_graph, transpose(numericMatrixFromFrac(this.matrixList[index])), ["blue", "red", "green"])
+            test_graph.gaussianPlanes.planesToDraw = this.selectedPlanes
+
         } else if (type == "operation") {
             document.getElementById(type+index).classList.add("selected")
             if(this.operations[index].type == "swap") {
@@ -357,9 +365,11 @@ class GaussianElimStepsHTMLModel {
         HTMLMatrix.id                                            = "matrix" + (index)
         
         let colorBoxes = HTMLMatrix.getElementsByClassName("color-box")
+
         // console.log(colorBoxes)
         for (let i=0; i<colorBoxes.length; i++) {
             colorBoxes[i].classList.add("row"+rowOrderList[i])
+            colorBoxes[i].getElementsByClassName("color-checkbox")[0].checked = this.selectedPlanes[rowOrderList[i]]
         }
     
         let div = document.createElement("div")
@@ -440,12 +450,46 @@ class GaussianElimStepsHTMLModel {
     }
 
     clear() {
-
+        for(let i=this.matrixList.length; i>1; i--) {
+            this.removeLast()
+        }
     }
 
     removeLast() {
+        
+        if (this.matrixList.length > 1) {
+            // debugger
+            if (this.selected.index == (this.matrixList.length-1)) {
+                this.selectStep("matrix", this.matrixList.length-2)
+            }
 
+            document.getElementById("matrix"    + (this.matrixList.length-1)).remove()
+            document.getElementById("operation" + (this.operations.length-1)).remove()
+
+            this.matrixList.pop();
+            this.planeOrdering.pop();
+            this.operations.pop();
+
+        }
     }
+
+    updatePlaneVisibility(checked, parentElement) {
+        // ^(row)(\d)$
+        for(let i=0; i<parentElement.classList.length; i++) {
+            if (parentElement.classList[i].match(/^(row)(\d)$/) != null) {
+                let rowNumber = parentElement.classList[i].match(/^(row)(\d)$/)[2]
+
+                let colorBoxesWithRow = document.getElementsByClassName("row"+rowNumber)
+
+                for (let j=0; j<colorBoxesWithRow.length; j++) {
+                    colorBoxesWithRow[j].getElementsByClassName("color-checkbox")[0].checked = checked
+                }
+                this.selectedPlanes[rowNumber] = checked
+                break;
+            }
+        }
+    }
+
 
 
 }
@@ -498,10 +542,20 @@ document.addEventListener("click", function() {
     }
 
     if (current.classList.contains("remove-button")) {
-        // Remove the last matrix
+        gaussSteps.removeLast()
     }
+
+    if (current.classList.contains("color-checkbox")) {
+        gaussSteps.updatePlaneVisibility(current.checked, current.parentElement)
+    }
+
+
 
     // ADD CHECKBOX AS WELL!!!!!!!!!
 
 
 })
+
+
+// Only for when we have default case might want to remove later
+gaussSteps.selectStep("matrix", 0)
