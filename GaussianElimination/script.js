@@ -202,7 +202,7 @@ class GaussianElimStepsHTMLModel {
         this.defaultRowOperation.innerHTML = `
         <div class="operation-text"></div>
         <div class="operation-buttons">
-            <button type="button" class="">select</button> 
+            <button type="button" class="select-button">select</button> 
             <button type="button" class="">1</button>
             <button type="button" class="">2</button> 
         </div>
@@ -216,7 +216,7 @@ class GaussianElimStepsHTMLModel {
     }
 
     selectStep(type, index) {
-        debugger
+
         if (index == 0) {
             this._updateInputMatrix();
         }
@@ -228,12 +228,31 @@ class GaussianElimStepsHTMLModel {
         this.selected = {type, index}
         if (type == "matrix") {
             document.getElementById(type+index).classList.add("selected")
+            test_graph.gaussianPlanes = new GaussianPlanes(test_graph, transpose(numericMatrixFromFrac(this.matrixList[index])), ["blue", "red", "green"])
         } else if (type == "operation") {
             document.getElementById(type+index).classList.add("selected")
+            if(this.operations[index].type == "swap") {
+
+
+            } else if(this.operations[index].type == "divide") {
+
+            } else if(this.operations[index].type == "subtract") {
+                // let transposedMatrix = transpose(numericMatrixFromFrac(this.matrixList[index]))
+                // let row1 = transposedMatrix[this.operations[index].row1]
+                // let row2 = transposedMatrix[this.operations[index].row2]
+                // let newMatrix = [row1, row2, [0,0,0,0]]
+                test_graph.gaussianPlanes = new GaussianPlanes(test_graph, transpose(numericMatrixFromFrac(this.matrixList[index])), ["blue", "red", "green"])
+                test_graph.gaussianPlanes.planesToDraw = [false, false, false]
+                test_graph.gaussianPlanes.planesToDraw[this.operations[index].row1] = true
+                test_graph.gaussianPlanes.planesToDraw[this.operations[index].row2] = true
+
+            } else {
+                throw new Error("Invalid operation.");
+            }
         } else {
             console.log("Somethin gone WRONG! ;(")
         }
-        test_graph.gaussianPlanes = new GaussianPlanes(test_graph, transpose(numericMatrixFromFrac(this.matrixList[index])), ["blue", "red", "green"])
+
     }
 
     _updateInputMatrix() {
@@ -413,7 +432,7 @@ class GaussianElimStepsHTMLModel {
 
         let HTMLOperation = this.defaultRowOperation.cloneNode(true)
         HTMLOperation.id = "operation" + (index)
-        HTMLOperation.querySelectorAll("button")[1].classList.add("operation" + (index))
+        HTMLOperation.querySelectorAll("button")[0].classList.add("operation" + (index))
 
         HTMLOperation.getElementsByClassName("operation-text")[0].innerHTML = operationStr
         
