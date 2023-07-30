@@ -63,12 +63,93 @@ class GaussianPlanes {
         this.graph = graph
         this.planesStdForm = planesStdForm
         let transposed = transpose(this.planesStdForm)
-        let reduced = gaussianEliminationV3(transposed, false, false)
-        let result = reduced[reduced.length - 1];
-        if (result.length != 3) {
-            result = [0, 0, 0]
+        let solvedMatrixInfo = gaussianEliminationV3(transposed, true, false)
+        this.planeOrderFromInput = new Array(planesStdForm.length)
+        for (let i = 0; i < planesStdForm.length; i++) {
+            this.planeOrderFromInput[i] = i
         }
-        this.intersection = result
+
+        let reduced = transpose(planesStdForm)
+        if (solvedMatrixInfo.steps.length != 0) {
+           reduced = solvedMatrixInfo.steps[solvedMatrixInfo.steps.length - 1]
+           this.planeOrderFromInput = solvedMatrixInfo.rowOrderList[solvedMatrixInfo.rowOrderList.length - 1]
+        }
+
+
+        
+
+        this.reduced = new Array(reduced.length)//for testing only
+        for (let i = 0; i < reduced.length; i++) {
+            this.reduced[i] = new Array(reduced[i].length)
+            for (let j = 0; j < reduced[i].length; j++) {
+                this.reduced[i][j] = reduced[i][j]
+            }
+        }
+        //debugger
+        //console.log(reduced)
+
+        let planeCenter = new Array(planesStdForm.length)
+        for (let i = 0; i < planeCenter.length; i++) {
+            planeCenter[i] = new Array(3);
+            for (let j = 0; j < 3; j++) {
+                planeCenter[i][j] = undefined
+            }
+        }
+
+        for (let i = 0; i < reduced[0].length; i++) {
+            let leftNotZero = leftMostNonZeroInRow(reduced, i)
+            if (leftNotZero == reduced.length - 1 && i > 0) {
+                //add previous row to this one
+                for (let col = 0; col < reduced.length; col++) {
+                    reduced[col][i] = reduced[col][i] + reduced[col][i - 1]
+                }
+            }
+        }
+        //debugger
+        //since at the end everything is in echelon form, it must be that
+        //whenever we find a left most nonzero value, it is a value that applies to all rows below it as well
+        // the goal is to find a center point per each plane, when there is a solution all planes should have the same center point
+        // all dependent variables can be set to 0 with no issues. 
+        // in dependent case, if we have 0,0,0,1, we want to take first row above with a nonzero leftmost value, add it to this row, so there can be multiple y values for example
+        // as dependent means parrallel planes can occur. 
+        for (let i = reduced[0].length - 1; i >= 0; i--) {
+            let leftNotZero = leftMostNonZeroInRow(reduced, i)
+            if (leftNotZero < reduced.length - 1) {
+                planeCenter[i][leftNotZero] = reduced[reduced.length - 1][i]
+            }
+        }
+        //debugger
+        //trickle up and down the solution values
+        
+        for (let row = planeCenter.length - 2; row >= 0; row--) {
+            for (let col = 0; col < planeCenter[row].length; col++) {
+                if (planeCenter[row][col] == undefined) {
+                    planeCenter[row][col] = planeCenter[row + 1][col]
+                }
+            }
+        }
+        //debugger
+        for (let row = 1; row < planeCenter.length; row++) {
+            for (let col = 0; col < planeCenter[row].length; col++) {
+                if (planeCenter[row][col] == undefined) {
+                    planeCenter[row][col] = planeCenter[row - 1][col]
+                }
+            }
+        }
+        //remove undefined values
+        for (let i = 0; i < planeCenter.length; i++) {
+            for (let j = 0; j < planeCenter[i].length; j++) {
+                if (planeCenter[i][j] == undefined) {
+                    planeCenter[i][j] = 0
+                }
+            }
+        }
+        //debugger
+        this.planeCenter = planeCenter
+
+
+
+        //this.intersection = result
 
         // boolean array of the size of the number of rows in the augmented matrix, indicates if row is to be drawn or not
         this.planesToDraw = [true, true, true] 
@@ -294,7 +375,7 @@ class GaussianPlanes {
 
         //get othonormal basis of two lines per plane 
         for (let i = 0; i < this.planesStdForm.length; i++) {
-            let currPlaneLines = getPlaneLines(this.graph, this.planesStdForm[i], 10, this.intersection)
+            let currPlaneLines = getPlaneLines(this.graph, this.planesStdForm[i], 10, this.planeCenter[this.planeOrderFromInput[i]])
             planeLines.push(currPlaneLines)
         }
     
@@ -314,7 +395,7 @@ class GaussianPlanes {
         }
 
         //just an example colors array
-        let colors = ["blue", "red", "green", "purple", "yellow", "orange"]
+        //let colors = ["blue", "red", "green", "purple", "yellow", "orange"]
         let polygons = []
         for (let i = 0; i < planeLines.length; i++) {
             if (planeLines[i].length != 0) {
@@ -388,7 +469,30 @@ class GaussianPlanes {
         
         if (this.showSolutionPoint) {
             //draw dot at solution
-            let inBasisSolution = this.graph.changeBasisZoomAndRotate(this.intersection)
+            // let inBasisSolution = this.graph.changeBasisZoomAndRotate(this.intersection)
+            // this.graph.ctx.fillStyle = "black"
+            // this.graph.ctx.strokeStyle = "black"
+            // this.graph.ctx.beginPath();
+            //     this.graph.ctx.arc(this.graph.centerX + this.graph.scale * inBasisSolution[0], this.graph.centerY - this.graph.scale * inBasisSolution[1], 6, 0, 2 * Math.PI);
+            //     this.graph.ctx.fill();
+            // this.graph.ctx.stroke();
+            let inBasisSolution = this.graph.changeBasisZoomAndRotate(this.planeCenter[0])
+            this.graph.ctx.fillStyle = "black"
+            this.graph.ctx.strokeStyle = "black"
+            this.graph.ctx.beginPath();
+                this.graph.ctx.arc(this.graph.centerX + this.graph.scale * inBasisSolution[0], this.graph.centerY - this.graph.scale * inBasisSolution[1], 6, 0, 2 * Math.PI);
+                this.graph.ctx.fill();
+            this.graph.ctx.stroke();
+
+            inBasisSolution = this.graph.changeBasisZoomAndRotate(this.planeCenter[1])
+            this.graph.ctx.fillStyle = "black"
+            this.graph.ctx.strokeStyle = "black"
+            this.graph.ctx.beginPath();
+                this.graph.ctx.arc(this.graph.centerX + this.graph.scale * inBasisSolution[0], this.graph.centerY - this.graph.scale * inBasisSolution[1], 6, 0, 2 * Math.PI);
+                this.graph.ctx.fill();
+            this.graph.ctx.stroke();
+
+            inBasisSolution = this.graph.changeBasisZoomAndRotate(this.planeCenter[2])
             this.graph.ctx.fillStyle = "black"
             this.graph.ctx.strokeStyle = "black"
             this.graph.ctx.beginPath();
