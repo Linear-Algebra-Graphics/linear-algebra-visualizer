@@ -58,8 +58,8 @@ class Graph {
 
         //this.basis                     = [[Math.cos(Math.PI/4),Math.sin(Math.PI/4),0],[-1*Math.sin(Math.PI/4),Math.cos(Math.PI/4),0],[0,0,1]]
         
-        this.Axis                      = new Axis(this, "blue", "red", "green", "black")
-        this.Grid                      = new Grid(this)
+        this.Axis                      = new Axis(this, "blue", "red", "green", "black", 10)
+        this.Grid                      = new Grid(this, 10)
         this.showAxis                  = true
         this.showGrid                  = true
         this.infiniteAxis              = false

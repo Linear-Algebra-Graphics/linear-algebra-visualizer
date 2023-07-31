@@ -19,7 +19,7 @@ canvas.height = displayHeight * 2
 // canvas.height = displayHeight
 
 let test_graph = new Graph(canvas);
-test_graph.Axis = new Axis(test_graph, "black", "black", "black", "black")
+test_graph.Axis = new Axis(test_graph, "black", "black", "black", "black", 10)
 test_graph.showGaussianPlanes = true
 
 test_graph.currentZoom = .7
@@ -201,9 +201,9 @@ class GaussianElimStepsHTMLModel {
         this.defaultRowOperation.innerHTML = `
         <div class="operation-text"></div>
         <div class="operation-buttons">
-            <button type="button" class="select-button">select</button> 
-            <button type="button" class="">1</button>
-            <button type="button" class="">2</button> 
+            <button type="button" class="select-button stepone">select</button> 
+            <button type="button" class="select-button steptwo">1</button>
+            <button type="button" class="select-button stepthree">2</button> 
         </div>
         `
         this.defaultRowOperation.className = "operation"
@@ -221,30 +221,40 @@ class GaussianElimStepsHTMLModel {
         this.selected          = {type:"matrix", index:0}
     }
 
-    selectStep(type, index) {
-
+    selectMatrix(index) {
         if (index == 0) {
             this._updateInputMatrix();
         }
+
         // Unselect old.
         let oldMatrix = document.getElementById(this.selected.type + this.selected.index)
         oldMatrix.classList.remove("selected");
-        
+
         // Select new.
-        this.selected = {type, index}
-        if (type == "matrix") {
-            document.getElementById(type+index).classList.add("selected")
-            test_graph.gaussianPlanes = new GaussianPlanes(test_graph, transpose(numericMatrixFromFrac(this.matrixList[index])), ["blue", "red", "green"])
-            test_graph.gaussianPlanes.planesToDraw = this.selectedPlanes
+        this.selected = {type:"matrix", index: index}
+        
+        document.getElementById("matrix"+index).classList.add("selected")
+        test_graph.gaussianPlanes = new GaussianPlanes(test_graph, transpose(numericMatrixFromFrac(this.matrixList[index])), ["blue", "red", "green"])
+        test_graph.gaussianPlanes.planesToDraw = this.selectedPlanes
+    }
 
-        } else if (type == "operation") {
-            document.getElementById(type+index).classList.add("selected")
-            if(this.operations[index].type == "swap") {
+    selectOperation(index, step) {
+        // Unselect old.
+        let oldMatrix = document.getElementById(this.selected.type + this.selected.index)
+        oldMatrix.classList.remove("selected");
+
+        // Select new.
+        document.getElementById("operation"+index).classList.add("selected")
+        this.selected = {type:"operation", index: index}
 
 
-            } else if(this.operations[index].type == "divide") {
+        if(this.operations[index].type == "swap") {
 
-            } else if(this.operations[index].type == "subtract") {
+        } else if(this.operations[index].type == "divide") {
+
+        } else if(this.operations[index].type == "subtract") {
+
+            if (step == 0) {
                 // let transposedMatrix = transpose(numericMatrixFromFrac(this.matrixList[index]))
                 // let row1 = transposedMatrix[this.operations[index].row1]
                 // let row2 = transposedMatrix[this.operations[index].row2]
@@ -253,15 +263,82 @@ class GaussianElimStepsHTMLModel {
                 test_graph.gaussianPlanes.planesToDraw = [false, false, false]
                 test_graph.gaussianPlanes.planesToDraw[this.operations[index].row1] = true
                 test_graph.gaussianPlanes.planesToDraw[this.operations[index].row2] = true
-
-            } else {
-                throw new Error("Invalid operation.");
             }
-        } else {
-            console.log("Somethin gone WRONG! ;(")
-        }
 
+            if (step == 1) {
+                let transposedMatrix = transpose(this.matrixList[index])
+                
+                let row1 = transposedMatrix[0]
+                let row2 = transposedMatrix[1]
+                let row3 = transposedMatrix[2]
+
+                let row4 = transpose(this.matrixList[index+1])[this.operations[index].row1]
+
+                let newMatrix = [row1, row2, row3, row4]
+                console.log(numericMatrixFromFrac(newMatrix))
+
+                test_graph.gaussianPlanes = new GaussianPlanes(test_graph, numericMatrixFromFrac(newMatrix), ["blue", "red", "green", "orange"])
+                test_graph.gaussianPlanes.planesToDraw = [false, false, false, true]
+                test_graph.gaussianPlanes.planesToDraw[this.operations[index].row1] = true
+                test_graph.gaussianPlanes.planesToDraw[this.operations[index].row2] = true
+            }
+
+            if (step == 2) {
+                let transposedMatrix = transpose(this.matrixList[index])
+                
+                let row1 = transposedMatrix[0]
+                let row2 = transposedMatrix[1]
+                let row3 = transposedMatrix[2]
+
+                let row4 = transpose(this.matrixList[index+1])[this.operations[index].row1]
+
+                let newMatrix = [row1, row2, row3, row4]
+                console.log(numericMatrixFromFrac(newMatrix))
+
+                test_graph.gaussianPlanes = new GaussianPlanes(test_graph, numericMatrixFromFrac(newMatrix), ["blue", "red", "green", "orange"])
+                test_graph.gaussianPlanes.planesToDraw = [false, false, false, true]
+
+            }
+
+        } else {
+            throw new Error("Invalid operation.");
+        }
     }
+
+    // selectStep(type, index) {
+
+    //     // Select new.
+    //     this.selected = {type, index}
+    //     if (type == "matrix") {
+    //         document.getElementById(type+index).classList.add("selected")
+    //         test_graph.gaussianPlanes = new GaussianPlanes(test_graph, transpose(numericMatrixFromFrac(this.matrixList[index])), ["blue", "red", "green"])
+    //         test_graph.gaussianPlanes.planesToDraw = this.selectedPlanes
+
+    //     } else if (type == "operation") {
+    //         document.getElementById(type+index).classList.add("selected")
+    //         if(this.operations[index].type == "swap") {
+
+
+    //         } else if(this.operations[index].type == "divide") {
+
+    //         } else if(this.operations[index].type == "subtract") {
+    //             // let transposedMatrix = transpose(numericMatrixFromFrac(this.matrixList[index]))
+    //             // let row1 = transposedMatrix[this.operations[index].row1]
+    //             // let row2 = transposedMatrix[this.operations[index].row2]
+    //             // let newMatrix = [row1, row2, [0,0,0,0]]
+    //             test_graph.gaussianPlanes = new GaussianPlanes(test_graph, transpose(numericMatrixFromFrac(this.matrixList[index])), ["blue", "red", "green"])
+    //             test_graph.gaussianPlanes.planesToDraw = [false, false, false]
+    //             test_graph.gaussianPlanes.planesToDraw[this.operations[index].row1] = true
+    //             test_graph.gaussianPlanes.planesToDraw[this.operations[index].row2] = true
+
+    //         } else {
+    //             throw new Error("Invalid operation.");
+    //         }
+    //     } else {
+    //         console.log("Somethin gone WRONG! ;(")
+    //     }
+
+    // }
 
     _updateInputMatrix() {
         let matrix = [[undefined,undefined,undefined],[undefined,undefined,undefined],[undefined,undefined,undefined],[undefined,undefined,undefined]]
@@ -442,10 +519,22 @@ class GaussianElimStepsHTMLModel {
 
         let HTMLOperation = this.defaultRowOperation.cloneNode(true)
         HTMLOperation.id = "operation" + (index)
-        HTMLOperation.querySelectorAll("button")[0].classList.add("operation" + (index))
+        let allbuttons = HTMLOperation.querySelectorAll("button");
+        for(let i=0; i<allbuttons.length; i++) {
+            HTMLOperation.querySelectorAll("button")[i].classList.add("operation" + (index))
+        }
 
         HTMLOperation.getElementsByClassName("operation-text")[0].innerHTML = operationStr
         
+        // Remove select buttons if not subtract.
+        // debugger
+        if (operation.type != "subtract") {
+            let buttons = HTMLOperation.getElementsByTagName("button")
+            buttons[0].remove()
+            buttons[0].remove()
+            buttons[0].remove()
+        }
+
         document.getElementsByClassName("matrix-container")[0].appendChild(HTMLOperation)
     }
 
@@ -460,7 +549,7 @@ class GaussianElimStepsHTMLModel {
         if (this.matrixList.length > 1) {
             // debugger
             if (this.selected.index == (this.matrixList.length-1)) {
-                this.selectStep("matrix", this.matrixList.length-2)
+                this.selectMatrix(this.matrixList.length-2)
             }
 
             document.getElementById("matrix"    + (this.matrixList.length-1)).remove()
@@ -506,15 +595,28 @@ let gaussSteps = new GaussianElimStepsHTMLModel()
 document.addEventListener("click", function() {
 
     const current = document.activeElement
-
+    
     if (current.classList.contains("select-button")) {
         // Figure out what is selected and update graph
         // to show correctly
         for (let i=0; i<current.classList.length; i++) {
             if (current.classList[i].match(/(\D*)(\d*)/)[2] != "") {
                 let type  = current.classList[i].match(/(\D*)(\d*)/)[1]
-                let index = current.classList[i].match(/(\D*)(\d*)/)[2]
-                gaussSteps.selectStep(type, index)
+                let index = parseInt(current.classList[i].match(/(\D*)(\d*)/)[2])
+
+                if(type == "matrix") {
+                    gaussSteps.selectMatrix(index)
+                } else if(type == "operation") {
+                    
+                    if(current.classList.contains("stepone")) {
+                        gaussSteps.selectOperation(index, 0)
+                    } else if(current.classList.contains("steptwo")) {
+                        gaussSteps.selectOperation(index, 1)
+                    } else if(current.classList.contains("stepthree")) {
+                        gaussSteps.selectOperation(index, 2)
+                    }
+                }
+
                 break
             }
         }
@@ -558,4 +660,5 @@ document.addEventListener("click", function() {
 
 
 // Only for when we have default case might want to remove later
-gaussSteps.selectStep("matrix", 0)
+
+gaussSteps.selectMatrix(0)

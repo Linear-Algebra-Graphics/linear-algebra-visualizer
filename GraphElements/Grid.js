@@ -2,8 +2,8 @@
  * returns an instance of a graph grid
  */
 class Grid {
-    constructor(graph, colorLight, lineWidthLight, colorDark, lineWidthDark){
-        
+    constructor(graph, inputGridSize, colorLight, lineWidthLight, colorDark, lineWidthDark){
+        this.gridSize = inputGridSize
         this.graph          = graph
         //lighter grid lines
         this.colorLight     = "#E6E6E3"
@@ -146,7 +146,7 @@ class Grid {
         } else {
             
             // there are gridSize lines on each half axis
-            let gridSize = 2 * 5
+            let gridSize = this.gridSize
             //this.graph.drawPointToPoint([3,3, 0], [10,3, 0], "green", 3)
 
             // let xAxisVec = this.changeBasisZoomAndRotate([gridSize,0,0])

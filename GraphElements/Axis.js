@@ -10,19 +10,19 @@ class Axis {
      * @param {*} ycolor 
      * @param {*} zcolor 
      */
-    constructor(graph, xcolor, ycolor, zcolor, zeroZeroDotColor) {
-
+    constructor(graph, xcolor, ycolor, zcolor, zeroZeroDotColor, axisLength) {
+        this.axisLength = axisLength
         this.graph = graph
         this.lineWidth = 6
         
         //for finite axis
-        this._xAxis = new Vector(this.graph, [10,0,0], xcolor, this.lineWidth, false, "x")
-        this._yAxis = new Vector(this.graph, [0,10,0], ycolor, this.lineWidth, false, "y")
-        this._zAxis = new Vector(this.graph, [0,0,10], zcolor, this.lineWidth, false, "z")
+        this._xAxis = new Vector(this.graph, [this.axisLength,0,0], xcolor, this.lineWidth, false, "x")
+        this._yAxis = new Vector(this.graph, [0,this.axisLength,0], ycolor, this.lineWidth, false, "y")
+        this._zAxis = new Vector(this.graph, [0,0,this.axisLength], zcolor, this.lineWidth, false, "z")
         
-        this._xAxisNeg = new Vector(this.graph, [-10,0,0], xcolor, this.lineWidth, false, "")
-        this._yAxisNeg = new Vector(this.graph, [0,-10,0], ycolor, this.lineWidth, false, "")
-        this._zAxisNeg = new Vector(this.graph, [0,0,-10], zcolor, this.lineWidth, false, "")
+        this._xAxisNeg = new Vector(this.graph, [-1*this.axisLength,0,0], xcolor, this.lineWidth, false, "")
+        this._yAxisNeg = new Vector(this.graph, [0,-1*this.axisLength,0], ycolor, this.lineWidth, false, "")
+        this._zAxisNeg = new Vector(this.graph, [0,0,-1*this.axisLength], zcolor, this.lineWidth, false, "")
     
         // Default
         this.fullAxis         = true //if false draws only positive axis
