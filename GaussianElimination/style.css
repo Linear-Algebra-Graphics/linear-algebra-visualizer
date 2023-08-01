@@ -125,18 +125,18 @@ body {
 }
 
 .matrix.selected .name-bar {
-    background: rgba(48,168,77,1);
-    background: linear-gradient(140deg, rgba(48,168,77,1) 0%, rgba(36,187,174,1) 100%);
+    background: rgb(164, 0, 146);
+    /* background: linear-gradient(140deg, rgba(48,168,77,1) 0%, rgba(36,187,174,1) 100%);
     background-size: 400% 400%;
-    background-position: 50% 50%;
+    background-position: 50% 50%; */
 }
 
 .operation.selected {
-    background: rgba(48,168,77,1);
-    background: linear-gradient(140deg, rgba(48,168,77,1) 0%, rgba(36,187,174,1) 100%);
+    background: rrgb(164, 0, 146);
+    /* background: linear-gradient(140deg, rgba(48,168,77,1) 0%, rgba(36,187,174,1) 100%);
     background-size: 400% 400%;
     background-position: 50% 50%;
-    border-radius: 3px 3px 3px 3px;
+    border-radius: 3px 3px 3px 3px; */
 }
 
 .column {
