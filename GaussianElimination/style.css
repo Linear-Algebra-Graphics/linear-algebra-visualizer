@@ -2,6 +2,29 @@
 
 } */
 
+body {
+    margin: 0px;
+}
+
+.solution-arrow {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 144px;
+    padding-right: 25px;
+    font-size: 2rem;
+}
+
+.solution-box {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: left;
+    align-content: flex-start;
+    gap: 10px 2px;
+    margin: 10px;
+}
 
 .operation {
     display: flex;
@@ -53,13 +76,20 @@
 }
 
 .matrix-container {
+    
+    /* For scroll bar. */
+    padding-right: 10px;
     display: flex;
     flex-direction: column;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
     justify-content: left;
     align-content: flex-start;
     gap: 10px 2px;
     margin: 10px;
+    overflow-y: auto;
+    max-height: 600px;
+
+    /* scrollbar-width: thick; */
     /* background-color: #CCDDD3; */
 }
 
@@ -72,7 +102,7 @@
 }
 
 .values {
-    position:relative;
+    position: relative;
     display: flex;
     flex-direction: row;
     gap: 3px;
