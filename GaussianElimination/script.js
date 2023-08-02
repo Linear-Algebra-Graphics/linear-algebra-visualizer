@@ -409,12 +409,18 @@ class GaussianElimStepsHTMLModel {
             colorBoxes[i].getElementsByClassName("color-checkbox")[0].checked = this.selectedPlanes[rowOrderList[steps.length-1][i]]
         }
     
-        let div = document.createElement("div")
-        div.className = "locked"
-        solutoinMatrix.getElementsByClassName("values")[0].appendChild(div)
+        // let div = document.createElement("div")
+        // div.className = "locked"
+        // solutoinMatrix.getElementsByClassName("values")[0].appendChild(div)
         
         this._writeMatrix(solutoinMatrix, this.matrixList[this.matrixList.length-1], true)
 
+        let matrixValues = solutoinMatrix.getElementsByClassName("matrix-value")
+
+        for (let i=0; i<matrixValues.length; i++) {
+            matrixValues[i].readOnly = true;
+        }
+        
         solutionLocation.appendChild(solutoinMatrix)
 
         document.getElementsByClassName("solution-arrow")[0].style = "display: flex;"
@@ -439,13 +445,19 @@ class GaussianElimStepsHTMLModel {
             colorBoxes[i].classList.add("row"+rowOrderList[i])
             colorBoxes[i].getElementsByClassName("color-checkbox")[0].checked = this.selectedPlanes[rowOrderList[i]]
         }
-    
-        let div = document.createElement("div")
-        div.className = "locked"
-        HTMLMatrix.getElementsByClassName("values")[0].appendChild(div)
+        
+        // let div = document.createElement("div")
+        // div.className = "locked"
+        // HTMLMatrix.getElementsByClassName("values")[0].appendChild(div)
         
         if (matrix != null) {
             this._writeMatrix(HTMLMatrix, matrix, true)
+        }
+
+        let matrixValues = HTMLMatrix.getElementsByClassName("matrix-value")
+
+        for (let i=0; i<matrixValues.length; i++) {
+            matrixValues[i].readOnly = true;
         }
         
         document.getElementsByClassName("matrix-container")[0].appendChild(HTMLMatrix)

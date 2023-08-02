@@ -934,6 +934,7 @@ class Polygon {
         this.graph.ctx.fillStyle = this.fillColor
         if (fill) {this.graph.ctx.fill()}
         
+        this.graph.ctx.lineWidth   = 2;
         this.graph.ctx.strokeStyle = this.outlineColor
         if (outline) {this.graph.ctx.stroke()}
         

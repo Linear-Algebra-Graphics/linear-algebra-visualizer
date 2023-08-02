@@ -861,6 +861,7 @@ function leftMostNonZeroInRow(matrix, row) {
         this.graph.ctx.fillStyle = this.color
         if (fill) {this.graph.ctx.fill()}
         
+        this.graph.ctx.lineWidth   = 2;
         this.graph.ctx.strokeStyle = "black"
         if (outline) {this.graph.ctx.stroke()}
         

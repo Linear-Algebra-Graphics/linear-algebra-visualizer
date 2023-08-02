@@ -373,6 +373,7 @@ class Graph {
 
         // Draw the dot
         this.ctx.fillStyle = fillColor
+        this.ctx.lineWidth = 4;
         this.ctx.strokeStyle = outlineColor
         this.ctx.beginPath();
             this.ctx.arc(vecX, vecY, size, 0, 2 * Math.PI);
