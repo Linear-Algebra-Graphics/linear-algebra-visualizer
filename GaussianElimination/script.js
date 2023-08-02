@@ -704,7 +704,7 @@ document.getElementById("operation-dropdown").addEventListener("change", functio
         values.innerHTML =
         `
         <select name="firstswap" id="" style="width: fit-content;">
-            <option value="" selected disabled hidden>..</option>
+            <option value="" selected disabled hidden>...</option>
             <option value="r1">R1</option>
             <option value="r2">R2</option>
             <option value="r3">R3</option>
@@ -713,7 +713,7 @@ document.getElementById("operation-dropdown").addEventListener("change", functio
         <div> &hArr; </div>
 
         <select name="secondswap" id="" style="width: fit-content;">
-            <option value="" selected disabled hidden>..</option>
+            <option value="" selected disabled hidden>...</option>
             <option value="r1">R1</option>
             <option value="r2">R2</option>
             <option value="r3">R3</option>
@@ -728,14 +728,14 @@ document.getElementById("operation-dropdown").addEventListener("change", functio
         values.innerHTML =
         `
         <select name="firstswap" id="scalethingy2" style="width: fit-content;">
-            <option value="" selected disabled hidden>..</option>
+            <option value="" selected disabled hidden>...</option>
             <option value="r1">R1</option>
             <option value="r2">R2</option>
             <option value="r3">R3</option>
         </select>
 
         <select name="minues" id="" style="width: fit-content;">
-            <option value="" selected disabled hidden>..</option>
+            <option value="" selected disabled hidden>...</option>
             <option value="r1">+</option>
             <option value="r2">-</option>
         </select>
@@ -743,14 +743,14 @@ document.getElementById("operation-dropdown").addEventListener("change", functio
         <input type="text" id="fname" name="fname" style="width: 20px;">
         <div>*</div>
         <select name="secondswap" id="" style="width: fit-content;">
-            <option value="" selected disabled hidden>..</option>
+            <option value="" selected disabled hidden>...</option>
             <option value="r1">R1</option>
             <option value="r2">R2</option>
             <option value="r3">R3</option>
         </select>
         <div>&rArr;</div>
         <select name="thirdswap" id="thuh2" style="width: fit-content;">
-        <option value="" selected disabled hidden>..</option>
+        <option value="" selected disabled hidden>...</option>
         <option value="r1">R1</option>
         <option value="r2">R2</option>
         <option value="r3">R3</option>
