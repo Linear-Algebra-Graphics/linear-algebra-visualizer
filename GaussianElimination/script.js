@@ -461,27 +461,41 @@ class GaussianElimStepsHTMLModel {
         let operationStr = ""
         
         if (operation.type == "swap") {
-            operationStr = "R" + operation.row1 + " &hArr; " + "R" + operation.row2
+            operationStr = "<p>" + "R" + "<sub>" + operation.row1 + "</sub>" + " &hArr; " + "R" + "<sub>" + operation.row2 + "</sub>"  + "<p>"
         } else if (operation.type == "divide") {
             let value = operation.value
-            let numerator   = value.getDenominator()
-            let denominator = value.getNumerator()
+            let newFrac     = new Frac(value.getDenominator(), value.getNumerator())
+            let numerator   = newFrac.getNumerator()
+            let denominator = newFrac.getDenominator()
             let row = operation.row + 1
 
-            let stepString = ""
+            let stepString = "<p>"
 
-            if (numerator == 1) {
-                stepString = "R"+(row+1)
-            } else {
-                stepString = numerator+" * R"+ row
-            }
+            // if (numerator == 1) {
+            //     stepString = "R"+(row+1)
+            // } else {
+            //     stepString = numerator+" * R"+ row
+            // }
 
-            if (denominator == 1) {
-                stepString = stepString
+            // if (denominator == 1) {
+            //     stepString = stepString
+            // } else {
+            //     stepString += "/(" + denominator + ")"
+            // }
+
+            // let additionorsubtraction = "-"
+            // if (numerator[0] == "-") {
+            //     additionorsubtraction = "+"
+            //     numerator = numerator[1]
+            // }
+
+            if (numerator == 0) {
+                stepString = stepString + "0 *"
             } else {
-                stepString += "/(" + denominator + ")"
+                stepString = stepString + " <sup>" + numerator + "</sup>/<sub>" + denominator + "</sub> * R" + "<sub>" + row + "</sub>";
             }
-            operationStr = stepString + " &rArr;" + "R" + row
+            
+            operationStr = stepString + " &rArr; " + "R" + "<sub>" + row + "</sub>" + "</p>"
         } else if (operation.type == "subtract") {
             let value = operation.value
             let numerator   = value.getNumerator()
@@ -489,20 +503,28 @@ class GaussianElimStepsHTMLModel {
             let row1 = operation.row1 + 1
             let row2 = operation.row2 + 1
 
-            let stepString = ""
-
-            if (numerator == 1) {
-                stepString = "R"+row2
-            } else {
-                stepString = numerator+" * R"+row2
+            let additionorsubtraction = "-"
+            if (String(numerator)[0] == "-") {
+                additionorsubtraction = "+"
+                numerator = -1 * numerator
             }
+            
+            let stepString = "(<sup>" + numerator + "</sup>/<sub>"  + denominator + "</sub> * R" + "<sub>" + row2 + "</sub>" + ")"
 
-            if (denominator == 1) {
-                stepString = stepString
-            } else {
-                stepString += "/" + denominator
-            }
-            operationStr = "R"+row1 + " - " + stepString + " &rArr; " + "R"+row1
+            // if (numerator == 1) {
+            //     stepString += "R"+row2
+            // } else {
+            //     stepString += numerator+" * R"+row2
+            // }
+
+            // if (denominator == 1) {
+            //     stepString = stepString
+            // } else {
+            //     stepString += "/" + denominator
+            // }
+
+
+            operationStr = "<p>" +"R"+"<sub>" + row1 + "</sub> " + additionorsubtraction + " " + stepString + " &rArr; " + "R" + "<sub>" + row1 + "</sub>" + "</p>"
         } else {
             throw new Error("Invalid row operation!!")
         }

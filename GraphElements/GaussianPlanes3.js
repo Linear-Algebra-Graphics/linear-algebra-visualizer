@@ -244,7 +244,7 @@ class GaussianPlanes {
                 i = 0
                 while (!vectorEquals(currPoint, splitPoints[1])) {
                     i++
-                    if (i > 100000000) {
+                    if (i > 10) {
                         debugger
                     }
                     rightPolygonLines.push(linesWithSplit.get(pt3DToStr(currPoint)))
@@ -278,7 +278,7 @@ class GaussianPlanes {
      * @param {Number[]} plane1 normal vector [a, b, c]
      * @param {Number[]} plane2 normal vector [a, b, c]
      * @requires : both planes are of the same dimension, R3 only rn
-     * @returns {Line} the intersection line
+     * @returns {Line | null} the intersection line
      */
     getPlanePlaneIntersectLine(plane1, plane2) {
         //debugger
@@ -341,18 +341,33 @@ class GaussianPlanes {
 
         //get othonormal basis of two lines per plane 
         for (let i = 0; i < this.planesStdForm.length; i++) {
+            //debugger
             //we are using max of width and height as the plane size rn just so they are sufficiently large to a cube around the grid
             //Math.max(this.graph.canvas.width, this.graph.canvas.height)
             let currPlaneLines = getPlaneLines(this.graph, this.planesStdForm[i], 
                                                Math.max(this.graph.canvas.width, this.graph.canvas.height) / this.graph.currentZoom, 
                                                this.planeCenter[this.planeOrderFromInput[i]])
+            //bring to basis and rotation
+            for (let j = 0; j < currPlaneLines.length; j++) {
+                currPlaneLines[j].point1 = this.graph.changeBasisAndRotate(currPlaneLines[j].point1)
+                currPlaneLines[j].point2 = this.graph.changeBasisAndRotate(currPlaneLines[j].point2)
+            }
+
             // debugger
             //console.log(currPlaneLines)
             let planeCubeIntersects = []
             
             for (let j = 0; j < cubePlanesStdForm.length; j++) {
-                planeCubeIntersects.push(this.getPlanePlaneIntersectLine(this.planesStdForm[i], cubePlanesStdForm[j]))
+                let planeCubeIntersectLine = this.getPlanePlaneIntersectLine(this.planesStdForm[i], cubePlanesStdForm[j])
+                if (planeCubeIntersectLine != null) {
+
+                    planeCubeIntersectLine.point1 = this.graph.changeBasisAndRotate(planeCubeIntersectLine.point1)
+                    planeCubeIntersectLine.point2 = this.graph.changeBasisAndRotate(planeCubeIntersectLine.point2)
+
+                    planeCubeIntersects.push(planeCubeIntersectLine)
+                }
             }
+
             let planePolygons = this.splitPlanes(currPlaneLines, planeCubeIntersects, this.planeColors[i], 0.6)
          
             let inCubePolygons = []
@@ -361,8 +376,17 @@ class GaussianPlanes {
                 let inCube = true
                 for (let k = 0; k < planePolygons[j].polygon.lines.length; k++) {
                     let currLine = planePolygons[j].polygon.lines[k].point1
+
+                    let currLineCopy = [currLine[0], currLine[1], currLine[2]]
+                    let inverseBasisRotationMatrix = matrixMultiplication(this.graph.zRotationMatrix, this.graph.basis)
+                    inverseBasisRotationMatrix = matrixMultiplication(this.graph.xRotationMatrix, inverseBasisRotationMatrix)
+                    inverseBasisRotationMatrix = matrixMultiplication(this.graph.yRotationMatrix, inverseBasisRotationMatrix)
+                    inverseBasisRotationMatrix = transpose(inverseBasisRotationMatrix)
+                    //debugger
+                    currLineCopy = matrixVectorMultiplication(inverseBasisRotationMatrix, currLineCopy)
+                    //debugger
                     let error = 0.00000001
-                    if (Math.abs(currLine[0]) > cubeSize + error || Math.abs(currLine[1]) > cubeSize + error|| Math.abs(currLine[2]) > cubeSize + error) {
+                    if (Math.abs(currLineCopy[0]) > cubeSize + error || Math.abs(currLineCopy[1]) > cubeSize + error|| Math.abs(currLineCopy[2]) > cubeSize + error) {
                         inCube = false
                         break
                     }
@@ -371,23 +395,36 @@ class GaussianPlanes {
                     inCubePolygons.push(planePolygons[j].polygon.lines)
                 }
             }
-            //console.log(inCubePolygons)
-           
-            // if (inCubePolygons.length == 0 || inCubePolygons.length > 1) {
-            //     debugger
-            // }
-            currPlaneLines = []
-            if (inCubePolygons.length != 0) {
-                for (let j = 0; j < inCubePolygons[0].length; j++) {
-                    inCubePolygons[0][j].point1 = this.graph.changeBasisAndRotate(inCubePolygons[0][j].point1)
-                    inCubePolygons[0][j].point2 = this.graph.changeBasisAndRotate(inCubePolygons[0][j].point2)
-                }
+            
+            if (inCubePolygons.length > 1) {
+                debugger
+            }
+            if (inCubePolygons.length == 0) {
+                currPlaneLines = []
+            } else {
                 currPlaneLines = inCubePolygons[0]
             }
+
+            //bring polygon to basis and rotation
+            // debugger
+            // currPlaneLines = []
+            // if (inCubePolygons.length != 0) {
+            //     for (let j = 0; j < inCubePolygons[0].length; j++) {
+            //         inCubePolygons[0][j].point1 = this.graph.changeBasisAndRotate(inCubePolygons[0][j].point1)
+            //         inCubePolygons[0][j].point2 = this.graph.changeBasisAndRotate(inCubePolygons[0][j].point2)
+
+            //         currPlaneLines = inCubePolygons[0]
+            //         //debugger
+            //         if (numEqual(inCubePolygons[0][j].point1[0], inCubePolygons[0][j].point2[0], 10) && numEqual(inCubePolygons[0][j].point1[1], inCubePolygons[0][j].point2[1], 10)) {
+            //             currPlaneLines = []
+            //             break
+            //         }
+            //     }
+            // }
             
 
             //planeLines.push(inCubePolygons[0])
-
+            //debugger
             planeLines.push(currPlaneLines)
         }
     
@@ -441,6 +478,11 @@ class GaussianPlanes {
                     planeLinesCopy[j] = new Line(planeLines[i][j].point1, planeLines[i][j].point2, false)
                 }
                 //debugger
+                for (let j = 0; j < intersectLines.length; j++) {
+                    if (intersectLines[j] == null) {
+                        debugger
+                    }
+                }
                 polygons = polygons.concat(this.splitPlanes(planeLinesCopy, intersectLines, this.planeColors[i], 0.6))
             }
         }
@@ -523,7 +565,7 @@ class GaussianPlanes {
      */
     sortPolygons(polygons) {
         let sortedPolygons = polygons.sort(function(a, b) {
-            const precision = 10
+            const precision = 7
             if (!numEqual(a.minZ, b.minZ, precision)) {
                 return a.minZ - b.minZ
             } else if (!numEqual(a.maxZ, b.maxZ, precision)) {
@@ -575,7 +617,7 @@ function planePlaneIntersectVector3D(plane1, plane2) {
     let cx = (plane1[1] * plane2[2]) - (plane1[2] * plane2[1])
     let cy = (plane1[2] * plane2[0]) - (plane1[0] * plane2[2])
     let cz = (plane1[0] * plane2[1]) - (plane1[1] * plane2[0])
-    const precision = 10
+    const precision = 7
 
     // correct fp error to 0 if needed (safer calculations)
     if (numEqual(cx, 0, precision)) {
@@ -620,7 +662,7 @@ function getPlaneLines(graph, normal, sideLength, intersection) {
      * by + d = 0
      * cz + d = 0
      */
-    const precision = 10
+    const precision = 7
     let offsetX = 0
     let offsetY = 0
     let offsetZ = 0
@@ -702,7 +744,7 @@ function getPlaneVectors2D(normal) {
     let a = normal[0]
     let b = normal[1]
     let c = normal[2]
-    const precision = 10
+    const precision = 7
 
     if(a == 0 && b == 0 && c == 0) {
         throw new Error("Normal vector is [0,0,0]")
@@ -780,7 +822,7 @@ class Line {
         const c2 = (otherLine.point1[1] * (otherLine.point2[0] - otherLine.point1[0])) - (otherLine.point1[0] * (otherLine.point2[1] - otherLine.point1[1])) //line2.abc[2]
         const det = (a1 * b2) - (a2 * b1)
 
-        const precision = 10
+        const precision = 7
 
         //check if lines are parrallel
         if (!numEqual(det, 0, precision)) {

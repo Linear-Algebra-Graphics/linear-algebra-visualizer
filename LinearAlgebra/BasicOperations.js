@@ -124,15 +124,13 @@ function vectorEquals(vector1, vector2) {
         return false;
     }
 
-    let sumError = 0
     for (let i = 0; i < vector1.length; i++) {
-        if (!numEqual(vector1[i], vector2[i], 12)) {
+        if (!numEqual(vector1[i], vector2[i], 7)) {
             return false;
         }
-        sumError += Math.abs(vector1[i] - vector2[i])
     }
     
-    return sumError < 0.00000000001
+    return true
 }
 
 /**

@@ -6,6 +6,11 @@ body {
     margin: 0px;
 }
 
+p {
+    margin: 0px;
+    padding: 0px;
+}
+
 .solution-arrow {
     display: flex;
     flex-direction: column;
