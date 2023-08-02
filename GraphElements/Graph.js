@@ -365,15 +365,15 @@ class Graph {
      * @param {*} color color of dot
      * @param {*} size radius of dot
      */
-    drawDotFromVector(vector, color, size) {
+    drawDotFromVector(vector, fillColor, outlineColor, size) {
         vector = this.changeBasisZoomAndRotate(vector)
 
         let vecX = this.centerX + this.scale * vector[0]
         let vecY = this.centerY - this.scale * vector[1]
 
         // Draw the dot
-        this.ctx.fillStyle = color
-        this.ctx.strokeStyle = color
+        this.ctx.fillStyle = fillColor
+        this.ctx.strokeStyle = outlineColor
         this.ctx.beginPath();
             this.ctx.arc(vecX, vecY, size, 0, 2 * Math.PI);
             this.ctx.fill();

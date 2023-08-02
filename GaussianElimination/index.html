@@ -4,7 +4,10 @@
     <head>
         <!-- Graph Imports -->
         <script src="../GraphElements/Axis.js"></script>
-        <script src="../GraphElements/GaussianPlanes3.js"></script>
+        <script src="../GraphElements/GaussianPlanes1.js"></script>
+        <!-- <script src="../GraphElements/GaussianPlanes2.js"></script> -->
+        <!-- <script src="../GraphElements/GaussianPlanes3.js"></script> -->
+
         <script src="../GraphElements/Graph.js"></script>
         <script src="../GraphElements/Grid.js"></script>
         <script src="../GraphElements/LinearTransformation.js"></script>
@@ -41,12 +44,16 @@
         <div class="container">
             <div class="canvas-and-settings">
                 <canvas id="graph" style="border:1px solid #000000;"></canvas>
-                <div>
+                <div class="button-container">
                     <button type="button" class="add-button">Add augmented matrix</button> 
                     <button type="button" class="remove-button">remove last matrix</button> 
                     <button type="button" class="clear-button">clear</button> 
                     <button type="button" class="animate-button">animate</button> 
                     <button type="button" class="solve-button">solve</button>
+                    <button type="button" class="row-opp">NEW ROW OPERATION</button>
+                    <button type="button" class="zoom-in-button">+</button>
+                    <button type="button" class="zoom-out-button">-</button>
+
                 </div>
             </div>
             <div class="matrix-container">
@@ -109,5 +116,28 @@
             </div>    
         
         </div>
+
+        <dialog id="row-operation-popup">
+            <!-- <p>Greetings, one and all!</p> -->
+
+            <label for="operations">Row Operation:</label>
+            <select name="operations" id="operation-dropdown">
+                <option value="" selected disabled hidden>Select operation...</option>
+                <option value="swap">Swap</option>
+                <option value="combine">Combine</option>
+                <option value="scale">Scale</option>
+            </select>
+
+            <div id="row-operation-values">
+                
+            </div>
+
+            <form method="dialog">
+              <button>Apply</button>
+              <button>Candel</button>
+
+            </form>
+          </dialog>
+        
     </body>
 </html>

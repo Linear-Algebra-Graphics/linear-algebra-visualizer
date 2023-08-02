@@ -78,7 +78,6 @@ function leftMostNonZeroInRow(matrix, row) {
         // }
  
  
-        
  
         // this.reduced = new Array(reduced.length)//for testing only
         // for (let i = 0; i < reduced.length; i++) {

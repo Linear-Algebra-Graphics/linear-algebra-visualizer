@@ -22,8 +22,8 @@ let test_graph = new Graph(canvas);
 test_graph.Axis = new Axis(test_graph, "black", "black", "black", "black", 10)
 test_graph.showGaussianPlanes = true
 
-test_graph.currentZoom = .7
-test_graph.defaultZoom = .7
+test_graph.currentZoom = 6/10
+test_graph.defaultZoom = 6/10
 
 //add mouse support
 let x = 387//95//41;
@@ -492,7 +492,7 @@ class GaussianElimStepsHTMLModel {
             if (numerator == 0) {
                 stepString = stepString + "0 *"
             } else {
-                stepString = stepString + " <sup>" + numerator + "</sup>/<sub>" + denominator + "</sub> * R" + "<sub>" + row + "</sub>";
+                stepString = stepString + " <sup>" + numerator + "</sup>/<sub>" + denominator + "</sub> R" + "<sub>" + row + "</sub>";
             }
             
             operationStr = stepString + " &rArr; " + "R" + "<sub>" + row + "</sub>" + "</p>"
@@ -509,7 +509,7 @@ class GaussianElimStepsHTMLModel {
                 numerator = -1 * numerator
             }
             
-            let stepString = "(<sup>" + numerator + "</sup>/<sub>"  + denominator + "</sub> * R" + "<sub>" + row2 + "</sub>" + ")"
+            let stepString = "(<sup>" + numerator + "</sup>/<sub>"  + denominator + "</sub> R" + "<sub>" + row2 + "</sub>" + ")"
 
             // if (numerator == 1) {
             //     stepString += "R"+row2
@@ -667,6 +667,18 @@ document.addEventListener("click", function() {
         gaussSteps.updatePlaneVisibility(current.checked, current.parentElement)
     }
 
+    if (current.classList.contains("row-opp")) {
+        document.getElementsByTagName("dialog")[0].showModal();
+    }
+
+    if (current.classList.contains("zoom-in-button")) {
+        test_graph.zoomIn()
+    }
+
+    if (current.classList.contains("zoom-out-button")) {
+        test_graph.zoomOut()
+    }
+
 
 
     // ADD CHECKBOX AS WELL!!!!!!!!!
@@ -678,3 +690,129 @@ document.addEventListener("click", function() {
 // Only for when we have default case might want to remove later
 
 gaussSteps.selectMatrix(0)
+
+// document.getElementsByTagName("dialog")[0].showModal();
+
+document.getElementById("operation-dropdown").addEventListener("change", function() {
+    let selection = document.getElementById("operation-dropdown").value;
+    let popup     = document.getElementById("row-operation-popup")
+    
+    if (selection == "swap") {
+        let values = document.getElementById("row-operation-values")
+
+        values.style = "display: flex; flex-direction: row; gap: 5px; border-top: 1px solid black; border-bottom: 1px solid black; margin-top: 10px; margin-bottom: 10px; padding-top: 4px; padding-bottom: 4px;"
+        values.innerHTML =
+        `
+        <select name="firstswap" id="" style="width: fit-content;">
+            <option value="" selected disabled hidden>..</option>
+            <option value="r1">R1</option>
+            <option value="r2">R2</option>
+            <option value="r3">R3</option>
+        </select>
+
+        <div> &hArr; </div>
+
+        <select name="secondswap" id="" style="width: fit-content;">
+            <option value="" selected disabled hidden>..</option>
+            <option value="r1">R1</option>
+            <option value="r2">R2</option>
+            <option value="r3">R3</option>
+        </select>
+
+        `
+
+    } else if (selection == "combine") {
+        let values = document.getElementById("row-operation-values")
+
+        values.style = "display: flex; flex-direction: row; gap: 5px; border-top: 1px solid black; border-bottom: 1px solid black; margin-top: 10px; margin-bottom: 10px; padding-top: 4px; padding-bottom: 4px;"
+        values.innerHTML =
+        `
+        <select name="firstswap" id="scalethingy2" style="width: fit-content;">
+            <option value="" selected disabled hidden>..</option>
+            <option value="r1">R1</option>
+            <option value="r2">R2</option>
+            <option value="r3">R3</option>
+        </select>
+
+        <select name="minues" id="" style="width: fit-content;">
+            <option value="" selected disabled hidden>..</option>
+            <option value="r1">+</option>
+            <option value="r2">-</option>
+        </select>
+
+        <input type="text" id="fname" name="fname" style="width: 20px;">
+        <div>*</div>
+        <select name="secondswap" id="" style="width: fit-content;">
+            <option value="" selected disabled hidden>..</option>
+            <option value="r1">R1</option>
+            <option value="r2">R2</option>
+            <option value="r3">R3</option>
+        </select>
+        <div>&rArr;</div>
+        <select name="thirdswap" id="thuh2" style="width: fit-content;">
+        <option value="" selected disabled hidden>..</option>
+        <option value="r1">R1</option>
+        <option value="r2">R2</option>
+        <option value="r3">R3</option>
+        </select>
+        `
+        
+        document.getElementById("scalethingy2").addEventListener("change", function() {
+            
+            let value = document.getElementById("scalethingy2").value
+            if (value == "r1") {
+                document.getElementById("thuh2").selectedIndex = 1;
+            }
+            if (value == "r2") {
+                document.getElementById("thuh2").selectedIndex = 2;
+            }
+            if (value == "r3") {
+                document.getElementById("thuh2").selectedIndex = 3;
+            }
+        })
+
+    } else if (selection == "scale") {
+        let values = document.getElementById("row-operation-values")
+
+        values.style = "display: flex; flex-direction: row; gap: 5px; border-top: 1px solid black; border-bottom: 1px solid black; margin-top: 10px; margin-bottom: 10px; padding-top: 4px; padding-bottom: 4px;"
+        values.innerHTML =
+        `
+
+        <input type="text" id="fname" name="fname" style="width: 20px;">
+        <div>*</div>
+        <select name="secondswap" id="scalethingy" style="width: fit-content;">
+            <option value="" selected disabled hidden>..</option>
+            <option value="r1">R1</option>
+            <option value="r2">R2</option>
+            <option value="r3">R3</option>
+        </select>
+        <div>&rArr;</div>
+        <select name="thirdswap" id="thuh" style="width: fit-content;">
+        <option value="" selected disabled hidden>..</option>
+        <option value="r1">R1</option>
+        <option value="r2">R2</option>
+        <option value="r3">R3</option>
+        </select>
+        `
+
+        document.getElementById("scalethingy").addEventListener("change", function() {
+            
+            let value = document.getElementById("scalethingy").value
+            if (value == "r1") {
+                document.getElementById("thuh").selectedIndex = 1;
+            }
+            if (value == "r2") {
+                document.getElementById("thuh").selectedIndex = 2;
+            }
+            if (value == "r3") {
+                document.getElementById("thuh").selectedIndex = 3;
+            }
+        })
+
+    }
+
+
+    
+
+});
+
