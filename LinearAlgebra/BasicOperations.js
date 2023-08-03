@@ -254,11 +254,11 @@ function vectorSubtract(v1, v2) {
  */
 function vectorAdd(v1, v2) {
     if (v1.length != v2.length) {
-        throw new Error("v1 length != v2 length!!")
+        throw new Error("v1 length " + v1.length + " != v2 length " + v2.length + "!!")
     }
     let result = Array(v1.length)
     
-    for (let i=0; i<v1.length; i++) {
+    for (let i = 0; i < v1.length; i++) {
         result[i] = v1[i] + v2[i]
     }
     
