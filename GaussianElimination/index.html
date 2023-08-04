@@ -43,7 +43,22 @@
         
         <div class="container">
             <div class="canvas-and-settings">
-                <canvas id="graph" style="border:1px solid #000000;"></canvas>
+                <div>       
+                    <div class="view-bar">
+                        <div class="view-button-container">
+                            <button class="view-button view-1" style="background: lightgray;">View 1</button>
+                            <button class="view-button view-2">View 2</button>
+                        </div>
+                        <div class="settings-button-container">
+                            <button class="view-button">Color Settings</button>
+                        </div>
+                    </div>
+                    <canvas id="graph" style="border:1px solid #000000;"></canvas>
+                    <!-- <details style="position: absolute; top:10px; left: 10px;">
+                        <summary>Settings</summary>
+                        Something small enough to escape casual notice.
+                    </details>                       -->
+                </div>
                 <div class="button-container">
                     <button type="button" class="add-button">Add augmented matrix</button> 
                     <button type="button" class="remove-button">remove last matrix</button> 
@@ -103,6 +118,9 @@
                     
                         <div class="line"></div>
                     </div>
+                </div>
+                <div class="new-operation">
+                    
                 </div>
             </div>
             <div class="solution-box">

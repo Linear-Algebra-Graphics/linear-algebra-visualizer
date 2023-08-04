@@ -471,7 +471,7 @@ class Graph {
         // if (y <= upperBound && y >=lowerBound) {
         //     y = 0
         // }
-        return !vectorEquals([x, y, 1], [0, 0, 1])
+        return !vectorEquals([x, y, 1], [0, 0, 1], 10)
     }
 
     yAxisVisible() {
@@ -486,7 +486,7 @@ class Graph {
         // if (y <= upperBound && y >=lowerBound) {
         //     y = 0
         // }
-        return !vectorEquals([x, y, 1], [0, 0, 1])
+        return !vectorEquals([x, y, 1], [0, 0, 1], 10)
     }
 
     zAxisVisible() {
@@ -501,7 +501,7 @@ class Graph {
         // if (y <= upperBound && y >=lowerBound) {
         //     y = 0
         // }
-        return !vectorEquals([x, y, 1], [0, 0, 1])
+        return !vectorEquals([x, y, 1], [0, 0, 1], 10)
     }
 
     /**

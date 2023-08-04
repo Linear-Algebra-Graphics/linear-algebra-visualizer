@@ -219,6 +219,7 @@ class GaussianElimStepsHTMLModel {
 
         this.selectedPlanes    = [plane1, plane2, plane3]
         this.selected          = {type:"matrix", index:0}
+        this.view              = 1
     }
 
     selectMatrix(index) {
@@ -590,6 +591,19 @@ class GaussianElimStepsHTMLModel {
         }
     }
 
+    changeView(view) {
+        // Remove old color
+        debugger
+        document.querySelectorAll(".view-button.view-" + this.view)[0].style="background: white;"
+        this.view = view
+        document.querySelectorAll(".view-button.view-" + this.view)[0].style="background: lightgray;"
+        if(view == 1) {
+            test_graph.gaussianPlanes.cubeBoundPlanes = false
+        } else if (view == 2) {
+            test_graph.gaussianPlanes.cubeBoundPlanes = true
+        }
+    }
+
     updatePlaneVisibility(checked, parentElement) {
         // ^(row)(\d)$
         for(let i=0; i<parentElement.classList.length; i++) {
@@ -681,6 +695,17 @@ document.addEventListener("click", function() {
 
     if (current.classList.contains("row-opp")) {
         document.getElementsByTagName("dialog")[0].showModal();
+    }
+
+    if (current.classList.contains("view-button")) {
+        if (current.classList.contains("view-1")) {
+            gaussSteps.changeView(1)
+            console.log("test")
+
+        }
+        if (current.classList.contains("view-2")) {
+            gaussSteps.changeView(2)
+        }
     }
 
     if (current.classList.contains("zoom-in-button")) {

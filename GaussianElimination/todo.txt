@@ -15,3 +15,10 @@ can't add anything else?
 Also change the last name to finished or something?
 
 make unselected darker? make everything in matrix steps editable?
+
+When editing orginal matrix give visual idication it is edited but NOT updated
+When updated clear all steps and change solution
+
+When no solution add red bar below tabs saying no solution. Change solution dot expliation to saying there is no solution
+
+BE ABLE TO SAVE SOLUTOIN AS LATEX / SAVE AS IMAGE

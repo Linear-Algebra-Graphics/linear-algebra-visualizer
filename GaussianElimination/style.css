@@ -11,6 +11,14 @@ p {
     padding: 0px;
 }
 
+button:hover {
+    cursor: pointer;
+}
+
+canvas:hover {
+    cursor: move;
+}
+
 .solution-arrow {
     display: flex;
     flex-direction: column;
@@ -229,5 +237,49 @@ table {
 
 .row2 {
     background-color: rgb(56, 189, 56);
+}
+
+.view-bar {
+    /* background: rgb(37, 178, 233); */
+    /* height: 20px; */
+    border-radius: 3px 3px 0px 0px;
+    border-style: solid;
+    border-width: 1px 1px 0px 1px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 26px;
+}
+
+.view-button-container {
+    height: inherit;
+    display: flex;
+    padding-left: 3px;
+    align-items: flex-end;
+}
+
+.view-button {
+    font-size: .85rem;
+    background: white;
+    margin: 3px 3px 0px 3px;
+    border-color: black;
+    border-radius: 3px 3px 0px 0px;
+    border-style: solid;
+    border-width: 1px 1px 0px 1px;
+    padding-right: 4px;
+    padding-left: 4px;
+    height: 20px;
+    transition: height .4s ease, border-top-left-radius .4s ease, border-top-right-radius .4s ease /* Add CSS transitions for height, background-color, and border */
+}
+
+.view-button:hover {
+    height: 27px; border-top-left-radius: 0px; border-top-right-radius: 0px;
+}
+
+.settings-button-container {
+    height: inherit;
+    display: flex;
+    padding-right: 3px;
+    align-items: flex-end;
 }
 
