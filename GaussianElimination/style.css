@@ -16,6 +16,10 @@ button:hover {
 }
 
 canvas:hover {
+    cursor: grab;
+}
+
+canvas:active {
     cursor: move;
 }
 
@@ -295,13 +299,14 @@ div.bar button:hover {
 .new-operation .new-operation-button {
     text-align: center;
     font-size: .9rem;
-    background: white;
+    background-color: white;
     border-color: black;
     border-radius: 3px 3px 3px 3px;
     border-style: solid;
     border-width: 1px 1px 1px 1px;
     width: 220px;
     background: white;
+    padding: 3px;
     transition: width .5s ease, background-color .5s ease;
 }
 
@@ -309,4 +314,25 @@ div.bar button:hover {
     /* font-size: 1.1rem; */
     width: 250px;
     background-color: lightgray;
+}
+
+.operation-settings-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.operation-settings-container select {
+    border-color: black;
+    border-radius: 3px 3px 3px 3px;
+    border-style: solid;
+    border-width: 1px 1px 1px 1px;
+    background-color: white;
+}
+
+.operation-settings-container .settings {
+    margin-top:    10px;
+    margin-bottom: 10px;
+
 }

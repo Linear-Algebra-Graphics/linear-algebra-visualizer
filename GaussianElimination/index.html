@@ -76,7 +76,7 @@
                 <div class="matrix selected" id="matrix0">
                     <div class="name-bar">
                         <button type="button" class="">-</button> 
-                        <div class="label">Matrix</div>
+                        <div class="label">🔢 Matrix</div>
                         <button type="button" class="select-button matrix0">select</button> 
                         <button type="button" class="matrix0">clear</button> 
                     </div>
@@ -122,24 +122,23 @@
                 </div>
                 <div class="new-operation">
                     <button class="new-operation-button">➕ Apply new row operation</button>
-                    <div class="coolstuff" style="display: none;">
-                        <label for="operations">Row Operation:</label>
-                        <select name="operations" id="operation-dropdown">
-                            <option value="" selected disabled hidden>Select operation...</option>
-                            <option value="swap">🔄 Swap</option>
-                            <option value="combine">🧬 Combine</option>
-                            <option value="scale">⚖️ Scale</option>
-                        </select>
+                    <div class="operation-settings-container" style="display: none;">
+                        <div class="settings">
+                            <label for="operations">Row Operation:</label>
+                            <select name="operations" id="operation-dropdown">
+                                <option value="" selected disabled hidden>Select operation..</option>
+                                <option value="swap">🔄 Swap</option>
+                                <option value="combine">🧬 Combine</option>
+                                <option value="scale">⚖️ Scale</option>
+                            </select>
 
-                        <div id="row-operation-values">
-                            
+                            <div id="row-operation-values">
+                                
+                            </div>
                         </div>
 
-                        <form method="dialog">
-                        <button>Apply</button>
-                        <button>Cancel</button>
+                        <button class="new-operation-button">✅ Apply</button>
 
-                        </form>
                     </div>
                 </div>
 

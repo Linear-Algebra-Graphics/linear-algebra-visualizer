@@ -718,7 +718,7 @@ document.addEventListener("click", function() {
     }
 
     if (current.classList.contains("new-operation-button")) {
-        document.getElementsByClassName("new-operation-button")[0].style="display: none;"
+        document.getElementsByClassName("new-operation-button")[0].innerHTML = "➖ Close"
 
         // @keyframes fadein {
         //     0%   {opacity: 0.0;}
@@ -736,7 +736,7 @@ document.addEventListener("click", function() {
         // };
 
         // document.getElementsByClassName("coolstuff")[0].animate(newspaperSpinning, newspaperTiming)
-        document.getElementsByClassName("coolstuff")[0].style="display: static;"
+        document.getElementsByClassName("operation-settings-container")[0].style="display: static;"
 
     }
 
@@ -761,7 +761,7 @@ document.getElementById("operation-dropdown").addEventListener("change", functio
     if (selection == "swap") {
         let values = document.getElementById("row-operation-values")
 
-        values.style = "display: flex; flex-direction: row; gap: 5px; border-top: 1px solid black; border-bottom: 1px solid black; margin-top: 10px; margin-bottom: 10px; padding-top: 4px; padding-bottom: 4px;"
+        values.style = "display: flex; flex-direction: row; gap: 5px; border-top: 1px solid black; border-bottom: 1px solid black; margin-top: 10px; padding-top: 4px; padding-bottom: 4px;"
         values.innerHTML =
         `
         <select name="firstswap" id="" style="width: fit-content;">
@@ -785,7 +785,7 @@ document.getElementById("operation-dropdown").addEventListener("change", functio
     } else if (selection == "combine") {
         let values = document.getElementById("row-operation-values")
 
-        values.style = "display: flex; flex-direction: row; gap: 5px; border-top: 1px solid black; border-bottom: 1px solid black; margin-top: 10px; margin-bottom: 10px; padding-top: 4px; padding-bottom: 4px;"
+        values.style = "display: flex; flex-direction: row; gap: 5px; border-top: 1px solid black; border-bottom: 1px solid black; margin-top: 10px; padding-top: 4px; padding-bottom: 4px;"
         values.innerHTML =
         `
         <select name="firstswap" id="scalethingy2" style="width: fit-content;">
@@ -835,7 +835,7 @@ document.getElementById("operation-dropdown").addEventListener("change", functio
     } else if (selection == "scale") {
         let values = document.getElementById("row-operation-values")
 
-        values.style = "display: flex; flex-direction: row; gap: 5px; border-top: 1px solid black; border-bottom: 1px solid black; margin-top: 10px; margin-bottom: 10px; padding-top: 4px; padding-bottom: 4px;"
+        values.style = "display: flex; flex-direction: row; gap: 5px; border-top: 1px solid black; border-bottom: 1px solid black; margin-top: 10px; padding-top: 4px; padding-bottom: 4px;"
         values.innerHTML =
         `
 
