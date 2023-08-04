@@ -7,6 +7,9 @@ Add grid numbers
 
 Long term:
 
+idea: is calculating plane polygons once and then changing basis on those polygons to draw everytime possible? 
+      would it be more optimal compared to finding polygons every time? would floating point errors be an issue for this?
+
 Add a hard limit to all while loops so it doesn't crash browswer
 
 Change rotation:

@@ -56,24 +56,28 @@ class GaussianPlanes {
     constructor(graph, planesStdForm, planeColors, cubeBoundPlanes) {
         this.graph = graph
         this.planesStdForm = planesStdForm
-        let transposed = transpose(this.planesStdForm)
-        this.planeOrderFromInput = Array.from(Array(planesStdForm.length).keys());
-        let reduced = gaussianEliminationV3(transposed, false, false)
-        this.solution = [reduced[reduced.length - 1][0], reduced[reduced.length - 1][1], reduced[reduced.length - 1][2]]
-        let matrix = transpose(planesStdForm)
-        this.hasSolution = true
+        this.planeColors = planeColors
         this.cubeBoundPlanes = cubeBoundPlanes
 
-        //see if a solution exists
-        for (let i = 0; i < reduced[0].length; i++) {
-            let col = this.leftMostNonZeroInRow(reduced, i)
-            if (col == reduced.length - 1) {
-                this.hasSolution = false
-                break
-            }
-        }
+        this.planeOrderFromInput = Array.from(Array(planesStdForm.length).keys());
 
-        let planeCenter = new Array(planesStdForm.length)//.fill(new Array(3).fill(0)) //why does this not work??!!!!
+        let reduced = gaussianEliminationV3(transpose(this.planesStdForm), false, false)
+        this.solution = [reduced[reduced.length - 1][0], reduced[reduced.length - 1][1], reduced[reduced.length - 1][2]]
+        let matrix = transpose(planesStdForm)
+
+        this.hasSolution = this._hasSolution(reduced)
+        this.planeCenter = this._findPlaneCenters(matrix)
+
+        // boolean array of the size of the number of rows in the augmented matrix, indicates if row is to be drawn or not
+        this.planesToDraw = new Array(this.planesStdForm.length).fill(true)
+
+        //floating point this.precision => 1e-this.precision
+        this.precision = 7
+        this.cubeHalfSideLength = 6
+    }
+
+    _findPlaneCenters(matrix) {
+        let planeCenter = new Array(this.planesStdForm.length)//.fill(new Array(3).fill(0)) //why does this not work??!!!!
         for (let i = 0; i < planeCenter.length; i++) {
             planeCenter[i] = new Array(3);
             for (let j = 0; j < 3; j++) {
@@ -93,16 +97,20 @@ class GaussianPlanes {
                 }
             }
         }
+        return planeCenter
+    }
 
-        this.planeCenter = planeCenter
-
-        // boolean array of the size of the number of rows in the augmented matrix, indicates if row is to be drawn or not
-        this.planesToDraw = new Array(this.planesStdForm.length).fill(true)
-        this.planeColors = planeColors
-
-        //floating point this.precision => 1e-this.precision
-        this.precision = 7
-        this.cubeHalfSideLength = 6
+    _hasSolution(reduced) {
+        let hasSolution = true
+        //see if a solution 
+        for (let i = 0; i < reduced[0].length; i++) {
+            let col = this.leftMostNonZeroInRow(reduced, i)
+            if (col == reduced.length - 1) {
+                hasSolution = false
+                break
+            }
+        }
+        return hasSolution
     }
 
     /**
@@ -162,13 +170,14 @@ class GaussianPlanes {
                     let splitPt1 = splitLines[0].point1
                     let splitPt2 = splitLines[1].point1
                     
-                    if (vectorEquals(splitLines[0].point1, splitLines[0].point2) || vectorEquals(splitLines[1].point1, splitLines[1].point2)) {
-                        //case where intersect point is the exact endpoint of a line
-                        if (vectorEquals(splitLines[0].point1, splitLines[0].point2)) {
-                            linesWithSplit.set(pt3DToStr(splitLines[0].point1), splitLines[1])
-                        } else {
-                            linesWithSplit.set(pt3DToStr(splitPt1), new Line(this.graph, splitPt1, splitLines[1].point2, splitLines[0].inf))
-                        }
+                    if (vectorEquals(splitLines[0].point1, splitLines[0].point2, this.precision) || 
+                        vectorEquals(splitLines[1].point1, splitLines[1].point2, this.precision)) {
+                            //case where intersect point is the exact endpoint of a line
+                            if (vectorEquals(splitLines[0].point1, splitLines[0].point2, this.precision)) {
+                                linesWithSplit.set(pt3DToStr(splitLines[0].point1), splitLines[1])
+                            } else {
+                                linesWithSplit.set(pt3DToStr(splitPt1), new Line(this.graph, splitPt1, splitLines[1].point2, splitLines[0].inf))
+                            }
                     } else {
                         linesWithSplit.set(pt3DToStr(splitPt1), splitLines[0])
                         linesWithSplit.set(pt3DToStr(splitPt2), splitLines[1])
@@ -191,10 +200,10 @@ class GaussianPlanes {
                 // lines in a polygon
 
                 // aabb, abb, aab, abba, aba
-                if (vectorEquals(foundSplitPoints[0], foundSplitPoints[1])) {  
+                if (vectorEquals(foundSplitPoints[0], foundSplitPoints[1], this.precision)) {  
                     splitPoints = [foundSplitPoints[0], foundSplitPoints[foundSplitPoints.length - 1]]
                 } else {
-                    if (vectorEquals(foundSplitPoints[0], foundSplitPoints[foundSplitPoints.length - 1])) {
+                    if (vectorEquals(foundSplitPoints[0], foundSplitPoints[foundSplitPoints.length - 1], this.precision)) {
                         splitPoints = [foundSplitPoints[1], foundSplitPoints[foundSplitPoints.length - 1]]
                     } else {
                         splitPoints = [foundSplitPoints[0], foundSplitPoints[foundSplitPoints.length - 1]]
@@ -203,7 +212,7 @@ class GaussianPlanes {
             }
 
             //if there are two distinct split points we know it is a valid split
-            if (splitPoints.length == 2 && !vectorEquals([splitPoints[0][0], splitPoints[0][1]], [splitPoints[1][0],splitPoints[1][1]])) {
+            if (splitPoints.length == 2 && !vectorEquals([splitPoints[0][0], splitPoints[0][1]], [splitPoints[1][0],splitPoints[1][1]], this.precision)) {
                 //case where line does not split plane, ie standard view for example
                 //create two new shapes defined by lines.
                 let leftPolygonLines = new Array()
@@ -212,18 +221,19 @@ class GaussianPlanes {
                 let currPoint = splitLinesRef[0].point2
 
                 //check if one of lines is length 0, ie start end are the same point
-                if (vectorEquals(splitLinesRef[0].point1, splitLinesRef[0].point2) || vectorEquals(splitLinesRef[1].point1, splitLinesRef[1].point2)) {
-                    //case where intersect point is the exact endpoint of a line
-                    if (vectorEquals(splitLinesRef[0].point1, splitLinesRef[0].point2)) {
-                        currPoint = splitLinesRef[0].point1
-                    } else {
-                        currPoint = splitLinesRef[1].point2
-                    }
+                if (vectorEquals(splitLinesRef[0].point1, splitLinesRef[0].point2, this.precision) || 
+                    vectorEquals(splitLinesRef[1].point1, splitLinesRef[1].point2, this.precision)) {
+                        //case where intersect point is the exact endpoint of a line
+                        if (vectorEquals(splitLinesRef[0].point1, splitLinesRef[0].point2, this.precision)) {
+                            currPoint = splitLinesRef[0].point1
+                        } else {
+                            currPoint = splitLinesRef[1].point2
+                        }
                 }
 
                 // populate lefPolygonLines
                 let i = 0
-                while (!vectorEquals(currPoint, splitPoints[0])) {
+                while (!vectorEquals(currPoint, splitPoints[0], this.precision)) {
                     i++
                     leftPolygonLines.push(linesWithSplit.get(pt3DToStr(currPoint)))
                     currPoint = linesWithSplit.get(pt3DToStr(currPoint)).point2
@@ -232,7 +242,7 @@ class GaussianPlanes {
 
                 // populate rightPolygonLines
                 i = 0
-                while (!vectorEquals(currPoint, splitPoints[1])) {
+                while (!vectorEquals(currPoint, splitPoints[1], this.precision)) {
                     i++
                     rightPolygonLines.push(linesWithSplit.get(pt3DToStr(currPoint)))
                     currPoint = linesWithSplit.get(pt3DToStr(currPoint)).point2
@@ -597,13 +607,14 @@ class GaussianPlanes {
                                  [0,1,0,-cubeSize],
                                  [0,0,1,cubeSize],
                                  [0,0,1,-cubeSize]]
+        
         let planeLines
-
         if (this.cubeBoundPlanes) {
             planeLines = this.getCubeBoundedPlaneLines(cubeSize, cubePlanesStdForm)
         } else {
             planeLines = this.getFixedSizePlaneLines(6)
         }
+        planeLines.push([new Line(this.graph, [0,0,10],[0,10,0],false)])
 
         let polygons = this._getPlanePolygons(planeLines)
         let sortedPolygons = this.sortPolygons(polygons)
@@ -645,8 +656,9 @@ class GaussianPlanes {
                     let pointA = a.polygon.lines[i].point1
                     for (let j = 0; j < b.polygon.lines.length; j++) {
                         let pointB = b.polygon.lines[j].point1
-                        if (vectorEquals([pointA[0], pointA[1]], [pointB[0], pointB[1]]) && !numEqual(pointA[2], pointB[2], numericPrecision)) {
-                            return pointA[2] - pointB[2]
+                        if (vectorEquals([pointA[0], pointA[1]], [pointB[0], pointB[1]], numericPrecision) && 
+                            !numEqual(pointA[2], pointB[2], numericPrecision)) {
+                                return pointA[2] - pointB[2]
                         }
                     }
                 }
@@ -684,8 +696,9 @@ class GaussianPlanes {
                 let pointA = a.polygon.lines[i].point1
                 for (let j = 0; j < b.polygon.lines.length; j++) {
                     let pointB = b.polygon.lines[j].point1
-                    if (vectorEquals([pointA[0], pointA[1]], [pointB[0], pointB[1]]) && !numEqual(pointA[2], pointB[2], numericPrecision)) {
-                        return pointA[2] - pointB[2]
+                    if (vectorEquals([pointA[0], pointA[1]], [pointB[0], pointB[1]], numericPrecision) && 
+                        !numEqual(pointA[2], pointB[2], numericPrecision)) {
+                            return pointA[2] - pointB[2]
                     }
                 }
             }
@@ -850,6 +863,7 @@ function pt3DToStr(point) {
 class Line {
     /**
      * creates a new instance of a Line
+     * @param {*} graph
      * @param {Number[]} point1 a point in Rn where n >= 2
      * @param {Number[]} point2 a point in Rn where n >= 2
      * @param {Boolean} inf indicates if line extends infinitely
@@ -912,9 +926,9 @@ class Line {
                     let z = this.point1[2] + dz * t
                     let midPoint = [x, y, z]
 
-                    if (vectorEquals(this.point1, midPoint)) {
+                    if (vectorEquals(this.point1, midPoint, this.precision)) {
                         return [new Line(this.graph, this.point1, this.point1, false), new Line(this.graph, this.point1, this.point2, false)]
-                    } else if (vectorEquals(this.point2, midPoint)) {
+                    } else if (vectorEquals(this.point2, midPoint, this.precision)) {
                         return [new Line(this.graph, this.point1, this.point2, false), new Line(this.graph, this.point2, this.point2, false)]
                     } else {
                         return [new Line(this.graph, this.point1, midPoint, false), new Line(this.graph, midPoint, this.point2, false)]

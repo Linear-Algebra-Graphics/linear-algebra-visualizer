@@ -116,7 +116,7 @@ function matrixEquals(matrix1, matrix2) {
  * @param {Number[]} vector2 
  * @returns {boolean} true if equal false otherwise
  */
-function vectorEquals(vector1, vector2) {
+function vectorEquals(vector1, vector2, precision) {
     if (vector1 == undefined || vector2 == undefined) {
         throw new Error("a vector is undefined")
     }
@@ -125,7 +125,7 @@ function vectorEquals(vector1, vector2) {
     }
 
     for (let i = 0; i < vector1.length; i++) {
-        if (!numEqual(vector1[i], vector2[i], 7)) {
+        if (!numEqual(vector1[i], vector2[i], precision)) {
             return false;
         }
     }
