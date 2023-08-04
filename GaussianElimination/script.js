@@ -203,7 +203,7 @@ class GaussianElimStepsHTMLModel {
         <div class="operation-buttons">
             <button type="button" class="select-button stepone">Select Planes</button> 
             <button type="button" class="select-button steptwo">Combine Planes</button>
-            <button type="button" class="select-button stepthree">Result</button> 
+            <button type="button" class="select-button stepthree">Result</button>
         </div>
         `
         this.defaultRowOperation.className = "operation"
@@ -715,6 +715,29 @@ document.addEventListener("click", function() {
 
     if (current.classList.contains("zoom-out-button")) {
         test_graph.zoomOut()
+    }
+
+    if (current.classList.contains("new-operation-button")) {
+        document.getElementsByClassName("new-operation-button")[0].style="display: none;"
+
+        // @keyframes fadein {
+        //     0%   {opacity: 0.0;}
+        //     100% {opacity: 100.0;}
+        // }
+
+        // const newspaperSpinning = [
+        //     { opacity: 0.25  },
+        //     { opacity: 1.0 },
+        //   ];
+          
+        // const newspaperTiming = {
+        //     duration: 1000,
+        //     iterations: 1,
+        // };
+
+        // document.getElementsByClassName("coolstuff")[0].animate(newspaperSpinning, newspaperTiming)
+        document.getElementsByClassName("coolstuff")[0].style="display: static;"
+
     }
 
 

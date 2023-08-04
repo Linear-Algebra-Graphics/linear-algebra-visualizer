@@ -42,6 +42,8 @@ canvas:hover {
 .operation {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .operation-buttons {
@@ -95,7 +97,7 @@ canvas:hover {
 }
 
 .matrix-container {
-    
+    width: 300px;
     /* For scroll bar. */
     padding-right: 10px;
     display: flex;
@@ -269,7 +271,7 @@ div.bar button {
     padding-right: 4px;
     padding-left: 4px;
     height: 20px;
-    transition: height .4s ease, border-top-left-radius .4s ease, border-top-right-radius .4s ease /* Add CSS transitions for height, background-color, and border */
+    transition: height .4s ease, border-top-left-radius .4s ease, border-top-right-radius .4s ease; /* Add CSS transitions for height, background-color, and border */
 }
 
 div.bar button:hover {
@@ -283,3 +285,28 @@ div.bar button:hover {
     align-items: flex-end;
 }
 
+.new-operation {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.new-operation .new-operation-button {
+    text-align: center;
+    font-size: .9rem;
+    background: white;
+    border-color: black;
+    border-radius: 3px 3px 3px 3px;
+    border-style: solid;
+    border-width: 1px 1px 1px 1px;
+    width: 220px;
+    background: white;
+    transition: width .5s ease, background-color .5s ease;
+}
+
+.new-operation .new-operation-button:hover {
+    /* font-size: 1.1rem; */
+    width: 250px;
+    background-color: lightgray;
+}

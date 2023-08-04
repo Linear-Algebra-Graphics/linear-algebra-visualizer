@@ -121,8 +121,28 @@
                     </div>
                 </div>
                 <div class="new-operation">
-                    
+                    <button class="new-operation-button">➕ Apply new row operation</button>
+                    <div class="coolstuff" style="display: none;">
+                        <label for="operations">Row Operation:</label>
+                        <select name="operations" id="operation-dropdown">
+                            <option value="" selected disabled hidden>Select operation...</option>
+                            <option value="swap">🔄 Swap</option>
+                            <option value="combine">🧬 Combine</option>
+                            <option value="scale">⚖️ Scale</option>
+                        </select>
+
+                        <div id="row-operation-values">
+                            
+                        </div>
+
+                        <form method="dialog">
+                        <button>Apply</button>
+                        <button>Cancel</button>
+
+                        </form>
+                    </div>
                 </div>
+
             </div>
             <div class="solution-box">
                 <div class="solution-arrow" style="display: none;">
@@ -136,27 +156,9 @@
         
         </div>
 
-        <dialog id="row-operation-popup">
-            <!-- <p>Greetings, one and all!</p> -->
+        <!-- <dialog id="row-operation-popup">
 
-            <label for="operations">Row Operation:</label>
-            <select name="operations" id="operation-dropdown">
-                <option value="" selected disabled hidden>Select operation...</option>
-                <option value="swap">Swap</option>
-                <option value="combine">Combine</option>
-                <option value="scale">Scale</option>
-            </select>
-
-            <div id="row-operation-values">
-                
-            </div>
-
-            <form method="dialog">
-              <button>Apply</button>
-              <button>Cancel</button>
-
-            </form>
           </dialog>
-        
+         -->
     </body>
 </html>
