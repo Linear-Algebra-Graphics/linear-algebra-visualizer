@@ -239,7 +239,7 @@ table {
     background-color: rgb(56, 189, 56);
 }
 
-.view-bar {
+.bar {
     /* background: rgb(37, 178, 233); */
     /* height: 20px; */
     border-radius: 3px 3px 0px 0px;
@@ -258,7 +258,7 @@ table {
     align-items: flex-end;
 }
 
-.view-button {
+div.bar button {
     font-size: .85rem;
     background: white;
     margin: 3px 3px 0px 3px;
@@ -272,11 +272,11 @@ table {
     transition: height .4s ease, border-top-left-radius .4s ease, border-top-right-radius .4s ease /* Add CSS transitions for height, background-color, and border */
 }
 
-.view-button:hover {
+div.bar button:hover {
     height: 27px; border-top-left-radius: 0px; border-top-right-radius: 0px;
 }
 
-.settings-button-container {
+.settings-and-help-button-container {
     height: inherit;
     display: flex;
     padding-right: 3px;

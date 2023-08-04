@@ -201,9 +201,9 @@ class GaussianElimStepsHTMLModel {
         this.defaultRowOperation.innerHTML = `
         <div class="operation-text"></div>
         <div class="operation-buttons">
-            <button type="button" class="select-button stepone">select</button> 
-            <button type="button" class="select-button steptwo">1</button>
-            <button type="button" class="select-button stepthree">2</button> 
+            <button type="button" class="select-button stepone">Select Planes</button> 
+            <button type="button" class="select-button steptwo">Combine Planes</button>
+            <button type="button" class="select-button stepthree">Result</button> 
         </div>
         `
         this.defaultRowOperation.className = "operation"
@@ -428,7 +428,8 @@ class GaussianElimStepsHTMLModel {
     }
 
     addMatrix(matrix, rowOrderList) {
-        // debugger
+        // SO MATRIX COLORS DO NOT CHANGE! 
+        rowOrderList = [0,1,2]
         this.matrixList.push(matrix)
         this.planeOrdering.push(rowOrderList)
 
@@ -593,7 +594,7 @@ class GaussianElimStepsHTMLModel {
 
     changeView(view) {
         // Remove old color
-        debugger
+        
         document.querySelectorAll(".view-button.view-" + this.view)[0].style="background: white;"
         this.view = view
         document.querySelectorAll(".view-button.view-" + this.view)[0].style="background: lightgray;"
