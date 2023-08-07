@@ -65,6 +65,7 @@ canvas:active {
 }
 
 .button-container {
+    margin-top: 10px;
     display: flex;
     width: 600px;
     gap: 5px;
@@ -98,10 +99,12 @@ canvas:active {
 
 .canvas-and-settings {
     margin: 10px;
+    display: flex;
+    flex-direction: column;
 }
 
 .matrix-container {
-    width: 300px;
+    /* width: 300px; */
     /* For scroll bar. */
     padding-right: 10px;
     display: flex;
@@ -119,6 +122,7 @@ canvas:active {
 }
 
 .matrix {
+    width: 310px;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -254,7 +258,7 @@ table {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    height: 26px;
+    height: 36px;
 }
 
 .view-button-container {
@@ -265,7 +269,7 @@ table {
 }
 
 div.bar button {
-    font-size: .85rem;
+    font-size: 1rem;
     background: white;
     margin: 3px 3px 0px 3px;
     border-color: black;
@@ -274,13 +278,37 @@ div.bar button {
     border-width: 1px 1px 0px 1px;
     padding-right: 4px;
     padding-left: 4px;
-    height: 20px;
+    height: 30px;
     transition: height .4s ease, border-top-left-radius .4s ease, border-top-right-radius .4s ease; /* Add CSS transitions for height, background-color, and border */
 }
 
 div.bar button:hover {
-    height: 27px; border-top-left-radius: 0px; border-top-right-radius: 0px;
+    height: 37px; border-top-left-radius: 0px; border-top-right-radius: 0px;
 }
+
+.emoji {
+    display: inline-block;
+    /* background-color: white; */
+    transition: transform 1s ease;
+}
+
+.help-button:hover .emoji {
+    transform: rotate(360deg);
+}
+
+.view-button:hover .emoji {
+    transform: rotate(30deg);
+}
+
+
+.color-settings-button:hover .emoji.paintbrush {
+    transform: rotate(90deg);
+} 
+
+.color-settings-button:hover .emoji.palette {
+    transform: rotate(-15deg);
+}
+
 
 .settings-and-help-button-container {
     height: inherit;
@@ -289,14 +317,106 @@ div.bar button:hover {
     align-items: flex-end;
 }
 
+.warning-banner {
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 5px;
+    font-size: 1.1rem;
+    
+    padding-bottom: 5px;
+    background-color: lightcoral;
+    width: 602px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.warning-banner .emoji {
+    text-shadow:
+    -1px -1px 0 #000,  
+     1px -1px 0 #000,
+     -1px 1px 0 #000,
+      1px 1px 0 #000;
+}
+
+.warning-words {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width:100%;
+    /* transform: translateX(100%); */
+    /* transform: translateX(50%) */
+
+}
+
+.warning-banner.top {
+    border-top: 1px solid black;
+}
+/* .warning-banner.bottom {
+} */
+
+.warning-banner.top .warning-words {
+    animation: marquee-right 2.5s linear 1;
+}
+
+.warning-banner.bottom .warning-words {
+    animation: marquee-left 2.5s linear 1;
+}
+
+@keyframes marquee-right {
+    0%   {transform: translateX(100%)}
+
+    100%   {transform: translateX(0%)}
+}
+
+@keyframes marquee-left {
+    0%   {transform: translateX(-100%)}
+
+    100%   {transform: translateX(0%)}
+}
+
+
+.warning-banner .emoji {
+    font-style: normal;
+    font-weight: normal;
+
+    animation: fullrotation 1s linear infinite;
+}
+
+@keyframes fullrotation {
+    0%   {transform: rotate(-15deg)}
+    50%   {transform: rotate(15deg)}
+    100%   {transform: rotate(-15deg)}
+}
+
+
+
+
+
+
+
+
+
+
+
+
 .new-operation {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    /* font-size: 1.2rem; */
 }
 
-.new-operation .new-operation-button {
+.new-operation .arrow-text {
+    font-size: 1.5rem;
+}
+
+.new-operation button {
     text-align: center;
     font-size: .9rem;
     background-color: white;
@@ -310,20 +430,21 @@ div.bar button:hover {
     transition: width .5s ease, background-color .5s ease;
 }
 
-.new-operation .new-operation-button:hover {
+.new-operation button:hover {
     /* font-size: 1.1rem; */
     width: 250px;
     background-color: lightgray;
 }
 
-.operation-settings-container {
+.new-operation .settings-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-.operation-settings-container select {
+.new-operation .settings-container select {
+    font-size: .9rem;
     border-color: black;
     border-radius: 3px 3px 3px 3px;
     border-style: solid;
@@ -331,8 +452,19 @@ div.bar button:hover {
     background-color: white;
 }
 
-.operation-settings-container .settings {
+.new-operation .settings {
     margin-top:    10px;
     margin-bottom: 10px;
+}
 
+.new-operation .specific-settings {
+    display: none;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    margin-top: 10px;
+    padding-top: 4px; 
+    padding-bottom: 4px;
 }

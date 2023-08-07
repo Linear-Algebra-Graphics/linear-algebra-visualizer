@@ -43,22 +43,45 @@
         
         <div class="container">
             <div class="canvas-and-settings">
-                <div>       
-                    <div class="bar">
-                        <div class="view-button-container">
-                            <button class="view-button view-1" style="background: lightgray;">🔍 View 1</button>
-                            <button class="view-button view-2">🔍 View 2</button>
-                        </div>
-                        <div class="settings-and-help-button-container">
-                            <button class="help-button">🛟 Help</button>
-                            <button class="color-settings-button">🎨 Color Settings</button>
-                        </div>
+                <div class="bar">
+                    <div class="view-button-container">
+                        <button class="view-button view-1" style="background: lightgray;"><div class="emoji">🔍</div> View 1</button>
+                        <button class="view-button view-2"><div class="emoji">🔍</div> View 2</button>
                     </div>
-                    <canvas id="graph" style="border:1px solid #000000;"></canvas>
-                    <!-- <details style="position: absolute; top:10px; left: 10px;">
-                        <summary>Settings</summary>
-                        Something small enough to escape casual notice.
-                    </details>                       -->
+                    <div class="settings-and-help-button-container">
+                        <button class="about-button"><div class="emoji">📖</div> About</button>
+
+                        <button class="help-button"><div class="emoji">🛟</div> Help</button>
+                        <button class="color-settings-button"><div class="emoji palette">🎨</div><div class="emoji paintbrush">🖌️</div> Color Settings</button>
+                    </div>
+                    
+                </div>
+                <!-- <div class="warning-banner top">
+                    <div class="warning-words">
+                        <div class="emoji">🚫</div>
+                        &nbsp;No solution!&nbsp;
+                        <div class="emoji">🚫</div>
+                        &nbsp;No solution!&nbsp;
+                        <div class="emoji">🚫</div>
+                        &nbsp;No solution!&nbsp;
+                        <div class="emoji">🚫</div>
+                    </div>
+                </div> -->
+                    
+                    
+                <canvas id="graph" style="border:1px solid #000000;"></canvas>
+
+                
+                <div class="warning-banner bottom">
+                    <div class="warning-words">
+                        <div class="emoji">🚫</div>
+                        &nbsp;No solution!&nbsp;
+                        <div class="emoji">🚫</div>
+                        &nbsp;No solution!&nbsp;
+                        <div class="emoji">🚫</div>
+                        &nbsp;No solution!&nbsp;
+                        <div class="emoji">🚫</div>
+                    </div>
                 </div>
                 <div class="button-container">
                     <button type="button" class="add-button">Add augmented matrix</button> 
@@ -121,23 +144,96 @@
                     </div>
                 </div>
                 <div class="new-operation">
-                    <button class="new-operation-button">➕ Apply new row operation</button>
-                    <div class="operation-settings-container" style="display: none;">
+                    <button class="new-operation-button closed">➕ Apply new row operation</button>
+                    <div class="settings-container" style="display: none;">
                         <div class="settings">
                             <label for="operations">Row Operation:</label>
-                            <select name="operations" id="operation-dropdown">
-                                <option value="" selected disabled hidden>Select operation..</option>
+                            <select name="operations" class="operation-dropdown">
+                                <option value="" selected hidden>Select operation..</option>
                                 <option value="swap">🔄 Swap</option>
                                 <option value="combine">🧬 Combine</option>
-                                <option value="scale">⚖️ Scale</option>
+                                <option value="scale">📏 Scale</option>
                             </select>
 
-                            <div id="row-operation-values">
-                                
+                            <div class="swap specific-settings">
+                                <select class="row swap-1" style="width: fit-content;">
+                                    <option value="" selected disabled hidden>...</option>
+                                    <option value="r1">R1</option>
+                                    <option value="r2">R2</option>
+                                    <option value="r3">R3</option>
+                                </select>
+                        
+                                <div class="arrow-text"> &hArr; </div>
+                        
+                                <select class="row swap-2" style="width: fit-content;">
+                                    <option value="" selected disabled hidden>...</option>
+                                    <option value="r1">R1</option>
+                                    <option value="r2">R2</option>
+                                    <option value="r3">R3</option>
+                                </select>
                             </div>
+                            <div class="combine specific-settings">
+                                <select class="row combine-1" style="width: fit-content;">
+                                    <option value="" selected disabled hidden>...</option>
+                                    <option value="r1">R1</option>
+                                    <option value="r2">R2</option>
+                                    <option value="r3">R3</option>
+                                </select>
+                        
+                                <select class="combine-2" style="width: fit-content;">
+                                    <option value="" selected disabled hidden>...</option>
+                                    <option value="+">+</option>
+                                    <option value="-">-</option>
+                                </select>
+                        
+                                <input class="combine-3" type="text" id="fname" name="fname" style="width: 20px;">
+
+                                <div class="arrow-text">*</div>
+
+                                <select class="row combine-4" style="width: fit-content;">
+                                    <option value="" selected disabled hidden>...</option>
+                                    <option value="r1">R1</option>
+                                    <option value="r2">R2</option>
+                                    <option value="r3">R3</option>
+                                </select>
+
+                                <div class="arrow-text">&rArr;</div>
+
+                                <select class="row combine-5" class="" style="width: fit-content;">
+                                    <option value="" selected disabled hidden>...</option>
+                                    <option value="r1">R1</option>
+                                    <option value="r2">R2</option>
+                                    <option value="r3">R3</option>
+                                </select>
+                            </div>
+                            <div class="scale specific-settings">
+
+                                <input class="row scale-1" type="text" id="fname" name="fname" style="width: 20px;">
+
+                                <div class="arrow-text">*</div>
+
+                                <select class="row scale-2" style="width: fit-content;">
+                                    <option value="" selected disabled hidden>..</option>
+                                    <option value="r1">R1</option>
+                                    <option value="r2">R2</option>
+                                    <option value="r3">R3</option>
+                                </select>
+
+                                <div class="arrow-text">&rArr;</div>
+
+                                <select class="row scale-3" style="width: fit-content;">
+                                    <option value="" selected disabled hidden>..</option>
+                                    <option value="r1">R1</option>
+                                    <option value="r2">R2</option>
+                                    <option value="r3">R3</option>
+                                </select>
+
+                            </div>
+
                         </div>
 
-                        <button class="new-operation-button">✅ Apply</button>
+                        <button class="apply-new-operation-button" style="display: none;">✅ Apply</button>
+                        <!-- <button class="invalid-operation">❌ Invalid operation</button> -->
 
                     </div>
                 </div>

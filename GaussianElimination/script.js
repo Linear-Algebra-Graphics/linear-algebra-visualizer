@@ -622,8 +622,6 @@ class GaussianElimStepsHTMLModel {
         }
     }
 
-
-
 }
 
 let gaussSteps = new GaussianElimStepsHTMLModel()
@@ -701,8 +699,6 @@ document.addEventListener("click", function() {
     if (current.classList.contains("view-button")) {
         if (current.classList.contains("view-1")) {
             gaussSteps.changeView(1)
-            console.log("test")
-
         }
         if (current.classList.contains("view-2")) {
             gaussSteps.changeView(2)
@@ -717,163 +713,191 @@ document.addEventListener("click", function() {
         test_graph.zoomOut()
     }
 
-    if (current.classList.contains("new-operation-button")) {
-        document.getElementsByClassName("new-operation-button")[0].innerHTML = "➖ Close"
+    if (current.classList.contains("new-operation-button") ) {
+        if (current.classList.contains("closed")) {
+            document.querySelectorAll(".new-operation .new-operation-button")[0].innerHTML = "➖ Close"
+            current.classList.remove("closed")
+            current.classList.add("open")
 
-        // @keyframes fadein {
-        //     0%   {opacity: 0.0;}
-        //     100% {opacity: 100.0;}
-        // }
+            document.querySelectorAll(".new-operation .settings-container select")[0].value=""
+            document.querySelectorAll(".new-operation .settings-container")[0].style="display: static;"
+            
+            document.querySelectorAll(".swap.specific-settings")[0].style = "display: none;";
+            document.querySelectorAll(".combine.specific-settings")[0].style = "display: none;";
+            document.querySelectorAll(".scale.specific-settings")[0].style = "display: none;";
 
-        // const newspaperSpinning = [
-        //     { opacity: 0.25  },
-        //     { opacity: 1.0 },
-        //   ];
-          
-        // const newspaperTiming = {
-        //     duration: 1000,
-        //     iterations: 1,
-        // };
+            document.querySelectorAll(".new-operation button.apply-new-operation-button")[0].style="display: none;"
 
-        // document.getElementsByClassName("coolstuff")[0].animate(newspaperSpinning, newspaperTiming)
-        document.getElementsByClassName("operation-settings-container")[0].style="display: static;"
+        } else if (current.classList.contains("open")) {
+            document.querySelectorAll(".new-operation .new-operation-button")[0].innerHTML = "➕ Apply new row operation"
+            current.classList.remove("open")
+            current.classList.add("closed")
 
+            document.querySelectorAll(".new-operation .settings-container")[0].style="display: none;"
+        }
     }
 
+    if (current.classList.contains("apply-new-operation-button")) {
+        if(checkValidOperations() == true) {
 
+        } else {
+            setTimeout(function() {
+                current.innerHTML = "✅ Apply"
+                current.class = "apply-new-operation-button"
+            }, 1000);
+
+            current.innerHTML = "❌ Invalid operation"
+            current.class     = "invalid-operation"
+        }
+    }
 
     // ADD CHECKBOX AS WELL!!!!!!!!!
+
+})
+
+document.addEventListener("change", function() {
+    const current = document.activeElement
+    // console.log(current.value);
+    if (current.classList.contains("operation-dropdown")) {
+        let selection = current.value;
+        if (selection == "swap") {
+            document.querySelectorAll(".swap.specific-settings")[0].style = "display: flex;";
+            document.querySelectorAll(".combine.specific-settings")[0].style = "display: none;";
+            document.querySelectorAll(".scale.specific-settings")[0].style = "display: none;";
+        } else if (selection == "combine") {
+            document.querySelectorAll(".swap.specific-settings")[0].style = "display: none;";
+            document.querySelectorAll(".combine.specific-settings")[0].style = "display: flex;";
+            document.querySelectorAll(".scale.specific-settings")[0].style = "display: none;";
+        } else if (selection == "scale") {
+            document.querySelectorAll(".swap.specific-settings")[0].style = "display: none;";
+            document.querySelectorAll(".combine.specific-settings")[0].style = "display: none;";
+            document.querySelectorAll(".scale.specific-settings")[0].style = "display: flex;";
+        }
+
+        // For firefox. Make sure all are unselected
+        let select = document.querySelectorAll(".new-operation .specific-settings select")
+        for (let i=0; i<select.length; i++) {
+            select[i].value="";
+        }
+
+        document.querySelectorAll(".new-operation button.apply-new-operation-button")[0].style="display: block;"
+    }
+
+    if (current.classList.contains("row")) {
+        
+        // Swap option
+        if(current.classList.contains("swap-1")) {
+            let selection = document.querySelectorAll(".new-operation .swap-1")[0].value
+            let row2Options = document.querySelectorAll(".new-operation .swap-2 option")
+            for (let i=0; i<row2Options.length; i++) {
+                if (row2Options[i].value == selection) {
+                    row2Options[i].disabled = true;
+                } else {
+                    row2Options[i].disabled = false;
+                }
+            }
+        }
+
+        if(current.classList.contains("swap-2")) {
+            let selection = document.querySelectorAll(".new-operation .swap-2")[0].value
+            let row1Options = document.querySelectorAll(".new-operation .swap-1 option")
+            for (let i=0; i<row1Options.length; i++) {
+                if (row1Options[i].value == selection) {
+                    row1Options[i].disabled = true;
+                } else {
+                    row1Options[i].disabled = false;
+                }
+            }
+        }
+
+        // Combine option
+        if(current.classList.contains("combine-1")) {
+            let selection = document.querySelectorAll(".new-operation .combine-1")[0].value
+            let combine5Select = document.querySelectorAll(".new-operation select.combine-5")[0]
+            combine5Select.value = selection
+
+        }
+
+        if(current.classList.contains("combine-5")) {
+            let selection = document.querySelectorAll(".new-operation .combine-5")[0].value
+            let combine1OSelect = document.querySelectorAll(".new-operation select.combine-1")[0]
+            combine1OSelect.value = selection
+        }
+
+
+    }
 
 
 })
 
 
+function checkValidOperations() {
+    
+    let selection = document.querySelectorAll(".new-operation .operation-dropdown")[0].value
+    debugger
+    if (selection == "swap") {
+        let swap = document.querySelectorAll(".new-operation .swap.specific-settings")[0]
+        let swap1 = swap.querySelectorAll(".row.swap-1")[0].value
+        let swap2 = swap.querySelectorAll(".row.swap-2")[0].value 
+
+        if (swap1 != "r1" && swap1 != "r2" && swap1 != "r3") {
+            return false
+        }
+        
+        if (swap2 != "r1" && swap2 != "r2" && swap2 != "r3") {
+            return false
+        }
+
+        return true
+    } else if (selection == "combine") {
+        let swap = document.querySelectorAll(".new-operation .combine.specific-settings")[0]
+        let combine1 = swap.querySelectorAll(".row.combine-1")[0].value
+        let combine2 = swap.querySelectorAll(".combine-2")[0].value
+        let combine3 = swap.querySelectorAll(".row.combine-3") // DO NOT USE RIGHT NOW
+        let combine4 = swap.querySelectorAll(".row.combine-4")[0].value 
+        let combine5 = swap.querySelectorAll(".row.combine-5")[0].value
+
+        
+
+        if (combine1 != "r1" && combine1 != "r2" && combine1 != "r3") {
+            return false
+        }
+        
+        if (combine2 != "+" && combine2 != "-") {
+            return false
+        }
+
+        if (combine4 != "r1" && combine4 != "r2" && combine4 != "r3") {
+            return false
+        }
+
+        if (combine5 != "r1" && combine5 != "r2" && combine5 != "r3") {
+            return false
+        }
+
+
+        return true
+    } else if (selection == "scale") {
+        let scale = document.querySelectorAll(".new-operation .scale.specific-settings")[0]
+        let scale1 = swap.querySelectorAll(".row.scale-1")[0].value
+        let scale2 = swap.querySelectorAll(".row.scale-2")[0].value
+        let scale3 = swap.querySelectorAll(".row.scale-3")[0].value
+
+        if (scale2 != "r1" && scale2 != "r2" && scale2 != "r3") {
+            return false
+        }
+
+        if (scale3 != "r1" && scale3 != "r2" && scale3 != "r3") {
+            return false
+        }
+        
+    } else {
+        return false;
+    }
+
+}
+
+
 // Only for when we have default case might want to remove later
 
 gaussSteps.selectMatrix(0)
-
-// document.getElementsByTagName("dialog")[0].showModal();
-
-document.getElementById("operation-dropdown").addEventListener("change", function() {
-    let selection = document.getElementById("operation-dropdown").value;
-    let popup     = document.getElementById("row-operation-popup")
-    
-    if (selection == "swap") {
-        let values = document.getElementById("row-operation-values")
-
-        values.style = "display: flex; flex-direction: row; gap: 5px; border-top: 1px solid black; border-bottom: 1px solid black; margin-top: 10px; padding-top: 4px; padding-bottom: 4px;"
-        values.innerHTML =
-        `
-        <select name="firstswap" id="" style="width: fit-content;">
-            <option value="" selected disabled hidden>...</option>
-            <option value="r1">R1</option>
-            <option value="r2">R2</option>
-            <option value="r3">R3</option>
-        </select>
-
-        <div> &hArr; </div>
-
-        <select name="secondswap" id="" style="width: fit-content;">
-            <option value="" selected disabled hidden>...</option>
-            <option value="r1">R1</option>
-            <option value="r2">R2</option>
-            <option value="r3">R3</option>
-        </select>
-
-        `
-
-    } else if (selection == "combine") {
-        let values = document.getElementById("row-operation-values")
-
-        values.style = "display: flex; flex-direction: row; gap: 5px; border-top: 1px solid black; border-bottom: 1px solid black; margin-top: 10px; padding-top: 4px; padding-bottom: 4px;"
-        values.innerHTML =
-        `
-        <select name="firstswap" id="scalethingy2" style="width: fit-content;">
-            <option value="" selected disabled hidden>...</option>
-            <option value="r1">R1</option>
-            <option value="r2">R2</option>
-            <option value="r3">R3</option>
-        </select>
-
-        <select name="minues" id="" style="width: fit-content;">
-            <option value="" selected disabled hidden>...</option>
-            <option value="r1">+</option>
-            <option value="r2">-</option>
-        </select>
-
-        <input type="text" id="fname" name="fname" style="width: 20px;">
-        <div>*</div>
-        <select name="secondswap" id="" style="width: fit-content;">
-            <option value="" selected disabled hidden>...</option>
-            <option value="r1">R1</option>
-            <option value="r2">R2</option>
-            <option value="r3">R3</option>
-        </select>
-        <div>&rArr;</div>
-        <select name="thirdswap" id="thuh2" style="width: fit-content;">
-        <option value="" selected disabled hidden>...</option>
-        <option value="r1">R1</option>
-        <option value="r2">R2</option>
-        <option value="r3">R3</option>
-        </select>
-        `
-        
-        document.getElementById("scalethingy2").addEventListener("change", function() {
-            
-            let value = document.getElementById("scalethingy2").value
-            if (value == "r1") {
-                document.getElementById("thuh2").selectedIndex = 1;
-            }
-            if (value == "r2") {
-                document.getElementById("thuh2").selectedIndex = 2;
-            }
-            if (value == "r3") {
-                document.getElementById("thuh2").selectedIndex = 3;
-            }
-        })
-
-    } else if (selection == "scale") {
-        let values = document.getElementById("row-operation-values")
-
-        values.style = "display: flex; flex-direction: row; gap: 5px; border-top: 1px solid black; border-bottom: 1px solid black; margin-top: 10px; padding-top: 4px; padding-bottom: 4px;"
-        values.innerHTML =
-        `
-
-        <input type="text" id="fname" name="fname" style="width: 20px;">
-        <div>*</div>
-        <select name="secondswap" id="scalethingy" style="width: fit-content;">
-            <option value="" selected disabled hidden>..</option>
-            <option value="r1">R1</option>
-            <option value="r2">R2</option>
-            <option value="r3">R3</option>
-        </select>
-        <div>&rArr;</div>
-        <select name="thirdswap" id="thuh" style="width: fit-content;">
-        <option value="" selected disabled hidden>..</option>
-        <option value="r1">R1</option>
-        <option value="r2">R2</option>
-        <option value="r3">R3</option>
-        </select>
-        `
-
-        document.getElementById("scalethingy").addEventListener("change", function() {
-            
-            let value = document.getElementById("scalethingy").value
-            if (value == "r1") {
-                document.getElementById("thuh").selectedIndex = 1;
-            }
-            if (value == "r2") {
-                document.getElementById("thuh").selectedIndex = 2;
-            }
-            if (value == "r3") {
-                document.getElementById("thuh").selectedIndex = 3;
-            }
-        })
-
-    }
-
-
-    
-
-});
-
