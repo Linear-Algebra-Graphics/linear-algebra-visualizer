@@ -19,8 +19,11 @@ canvas.height = displayHeight * 2
 // canvas.height = displayHeight
 
 let test_graph = new Graph(canvas);
-test_graph.Axis = new Axis(test_graph, "black", "black", "black", "black", 10)
+test_graph.Axis = new Axis(test_graph, [255,255,255,.4], "black", "black", "black", 10)
 test_graph.showGaussianPlanes = true
+
+// test_graph.showAxis = false;
+test_graph.showGrid = false;
 
 test_graph.currentZoom = 6/10
 test_graph.defaultZoom = 6/10
@@ -90,39 +93,16 @@ function readMatrix(matrixNumber, fractionFormat) {
         let values = columbs[c].getElementsByTagName("input")
         for(let v = 0; v < values.length; v++) {
             
-            let fracAnswer
+            let userInput = this.parseInputFrac(values[v].value)
 
-            const regex = /^(-*)(((\d*\.*\d*)\/(\d*\.*\d*))|\d*\.*\d*)$/;
-            let regexGroups = (values[v].value).match(regex)
-            
-            let minusSigns  = regexGroups[1]
-
-            let neg = 1
-
-            if (minusSigns % 2 != 0) {
-                neg = -1
-            }
-
-            let number      = regexGroups[2]
-            
-            let split = number.split("/")
-            
-            if(split.length == 2) {
-                if (parseFloat(split[1]) != 0) {
-                    fracAnswer = new Frac(parseFloat(neg*split[0]), parseFloat(split[1]))
+            if (userInput.valid == false) {
+                alert("Invalid Input!")
+            } else {
+                if (fractionFormat == true) {
+                    matrix[c][v] = userInput.value
                 } else {
-                    return null;
+                    matrix[c][v] = userInput.value.getNumericalValue()
                 }
-            } else if(split.length == 1) {
-                fracAnswer = new Frac(parseFloat(neg*split[0]), 1)
-            } else {
-                return null
-            }
-
-            if (fractionFormat == true) {
-                matrix[c][v] = fracAnswer
-            } else {
-                matrix[c][v] = fracAnswer.getNumericalValue()
             }
                         
         }
@@ -136,7 +116,6 @@ setInterval(function() {
     test_graph.rotateAboutZ(2 * Math.PI * (x) / displayWidth)
 
     test_graph.rotateAboutX(2 * Math.PI * (y) / displayHeight)
-
 
     test_graph.draw()
 }, 1000/60)
@@ -220,6 +199,7 @@ class GaussianElimStepsHTMLModel {
         this.selectedPlanes    = [plane1, plane2, plane3]
         this.selected          = {type:"matrix", index:0}
         this.view              = 1
+        this.newOperationOpen  = false;
     }
 
     selectMatrix(index) {
@@ -251,9 +231,9 @@ class GaussianElimStepsHTMLModel {
 
         if(this.operations[index].type == "swap") {
 
-        } else if(this.operations[index].type == "divide") {
+        } else if(this.operations[index].type == "scale") {
 
-        } else if(this.operations[index].type == "subtract") {
+        } else if(this.operations[index].type == "combine") {
 
             if (step == 0) {
                 // let transposedMatrix = transpose(numericMatrixFromFrac(this.matrixList[index]))
@@ -461,81 +441,59 @@ class GaussianElimStepsHTMLModel {
         for (let i=0; i<matrixValues.length; i++) {
             matrixValues[i].readOnly = true;
         }
-        
-        document.getElementsByClassName("matrix-container")[0].appendChild(HTMLMatrix)
+
+        let container = document.getElementsByClassName("matrix-container")[0]
+        container.insertBefore(HTMLMatrix, container.getElementsByClassName("new-operation")[0])
         
     }
 
-
-    // CHANGE DIRECTION OF ARROW (R1 <- 3*R)
-    // ADD <sub>subscript</sub> TAGS FOR R TO MAKE CLEAR
     addRowOperation(operation) {
         this.operations.push(operation)
         let index = this.operations.length - 1
         let operationStr = ""
         
         if (operation.type == "swap") {
-            operationStr = "<p>" + "R" + "<sub>" + operation.row1 + "</sub>" + " &hArr; " + "R" + "<sub>" + operation.row2 + "</sub>"  + "<p>"
-        } else if (operation.type == "divide") {
-            let value = operation.value
-            let newFrac     = new Frac(value.getDenominator(), value.getNumerator())
-            let numerator   = newFrac.getNumerator()
-            let denominator = newFrac.getDenominator()
-            let row = operation.row + 1
+            operationStr = "<p>" + "R" + "<sub>" + (operation.row1+1) + "</sub>" + " &hArr; " + "R" + "<sub>" + (operation.row2+1) + "</sub>"  + "<p>"
+        } else if (operation.type == "scale") {
+            let value       = operation.value
+            let numerator   = value.getNumerator()
+            let denominator = value.getDenominator()
+            let row         = operation.row + 1
 
             let stepString = "<p>"
 
-            // if (numerator == 1) {
-            //     stepString = "R"+(row+1)
-            // } else {
-            //     stepString = numerator+" * R"+ row
-            // }
-
-            // if (denominator == 1) {
-            //     stepString = stepString
-            // } else {
-            //     stepString += "/(" + denominator + ")"
-            // }
-
-            // let additionorsubtraction = "-"
-            // if (numerator[0] == "-") {
-            //     additionorsubtraction = "+"
-            //     numerator = numerator[1]
-            // }
-
-            if (numerator == 0) {
-                stepString = stepString + "0 *"
+            if ((numerator == 0 || denominator == 1) && numerator != 1) {
+                stepString = stepString + "(" + numerator + ") R" + "<sub>" + row + "</sub>";
+            } else if (numerator == 1 && denominator == 1) {
+                stepString = stepString + "R" + "<sub>" + row + "</sub>";
             } else {
-                stepString = stepString + " <sup>" + numerator + "</sup>/<sub>" + denominator + "</sub> R" + "<sub>" + row + "</sub>";
+                stepString = stepString + "(<sup>" + numerator + "</sup>/<sub>" + denominator + "</sub>) R" + "<sub>" + row + "</sub>";
             }
             
             operationStr = stepString + " &rArr; " + "R" + "<sub>" + row + "</sub>" + "</p>"
-        } else if (operation.type == "subtract") {
+        } else if (operation.type == "combine") {
             let value = operation.value
             let numerator   = value.getNumerator()
             let denominator = value.getDenominator()
             let row1 = operation.row1 + 1
             let row2 = operation.row2 + 1
 
-            let additionorsubtraction = "-"
-            if (String(numerator)[0] == "-") {
+            let additionorsubtraction = operation.sign;
+            if (String(numerator)[0] == "-" && additionorsubtraction == "-") {
                 additionorsubtraction = "+"
                 numerator = -1 * numerator
             }
             
-            let stepString = "(<sup>" + numerator + "</sup>/<sub>"  + denominator + "</sub> R" + "<sub>" + row2 + "</sub>" + ")"
+            // Check edge cases
+            let stepString
+            if ((numerator == 0 || denominator == 1) && numerator != 1) {
+                stepString = "((" + numerator + ") R" + "<sub>" + row2 + "</sub>" + ")"
+            } else if(numerator == 1 && denominator == 1) {
+                stepString = "R" + "<sub>" + row2 + "</sub>"
+            } else {
+                stepString = "((<sup>" + numerator + "</sup>/<sub>"  + denominator + "</sub>) R" + "<sub>" + row2 + "</sub>" + ")"
+            }
 
-            // if (numerator == 1) {
-            //     stepString += "R"+row2
-            // } else {
-            //     stepString += numerator+" * R"+row2
-            // }
-
-            // if (denominator == 1) {
-            //     stepString = stepString
-            // } else {
-            //     stepString += "/" + denominator
-            // }
 
 
             operationStr = "<p>" +"R"+"<sub>" + row1 + "</sub> " + additionorsubtraction + " " + stepString + " &rArr; " + "R" + "<sub>" + row1 + "</sub>" + "</p>"
@@ -555,14 +513,16 @@ class GaussianElimStepsHTMLModel {
         
         // Remove select buttons if not subtract.
         // debugger
-        if (operation.type != "subtract") {
+        if (operation.type != "combine") {
             let buttons = HTMLOperation.getElementsByTagName("button")
             buttons[0].remove()
             buttons[0].remove()
             buttons[0].remove()
         }
 
-        document.getElementsByClassName("matrix-container")[0].appendChild(HTMLOperation)
+
+        let container = document.getElementsByClassName("matrix-container")[0]
+        container.insertBefore(HTMLOperation, container.getElementsByClassName("new-operation")[0])
     }
 
     clear() {
@@ -619,6 +579,228 @@ class GaussianElimStepsHTMLModel {
                 this.selectedPlanes[rowNumber] = checked
                 break;
             }
+        }
+    }
+    
+    toggleNewOperation() {
+        
+        if (this.newOperationOpen == false) {
+            let button = document.querySelectorAll(".new-operation .new-operation-button")[0]
+            button.innerHTML = "➖ Close"
+            button.classList.remove("closed")
+            button.classList.add("open")
+
+            document.querySelectorAll(".new-operation .settings-container select")[0].value=""
+            document.querySelectorAll(".new-operation .settings-container")[0].style="display: static;"
+            
+            document.querySelectorAll(".swap.specific-settings")[0].style = "display: none;";
+            document.querySelectorAll(".combine.specific-settings")[0].style = "display: none;";
+            document.querySelectorAll(".scale.specific-settings")[0].style = "display: none;";
+
+            let swaps   = document.querySelectorAll(".new-operation .swap-1 option, .new-operation .swap-2 option")
+            for (let i=0; i<swaps.length; i++) {
+                swaps[i].disabled = false;
+            }
+
+            document.querySelectorAll(".new-operation button.apply-new-operation-button")[0].style="display: none;"
+            this.newOperationOpen = true
+
+        } else if (this.newOperationOpen == true) {
+            let button = document.querySelectorAll(".new-operation .new-operation-button")[0]
+
+            button.innerHTML = "➕ Apply new row operation"
+            button.classList.remove("open")
+            button.classList.add("closed")
+
+            document.querySelectorAll(".new-operation .settings-container")[0].style="display: none;"
+            this.newOperationOpen = false
+        }
+    }
+
+    applyNewOperation() {
+        
+        let button = document.querySelectorAll(".apply-new-operation-button")[0]
+        let checkResult = this.checkAndReturnOperationAndMatrix()
+
+        if (checkResult.passed == true) {
+            // debugger
+            let matrix       = checkResult.data.matrix
+            let rowOperation = checkResult.data.operation
+
+            this.addRowOperation(rowOperation)
+            this.addMatrix(matrix)
+            this.toggleNewOperation()
+            
+        } else {
+            setTimeout(function() {
+                button.innerHTML = "✅ Apply"
+                button.class = "apply-new-operation-button"
+            }, 1000);
+
+            button.innerHTML = "❌ Invalid operation"
+            button.class     = "invalid-operation"
+        }
+
+    }
+
+    // Uses the latest matrix
+    checkAndReturnOperationAndMatrix() {
+    
+        let selection = document.querySelectorAll(".new-operation .operation-dropdown")[0].value
+        
+        if (selection == "swap") {
+            let swap = document.querySelectorAll(".new-operation .swap.specific-settings")[0]
+            let swap1 = swap.querySelectorAll(".row.swap-1")[0].value
+            let swap2 = swap.querySelectorAll(".row.swap-2")[0].value 
+    
+            if (swap1 != "R0" && swap1 != "R1" && swap1 != "R2") {
+                return {passed: false, data: null}
+            }
+            
+            if (swap2 != "R0" && swap2 != "R1" && swap2 != "R2") {
+                return {passed: false, data: null}
+            }
+
+            let fracMatrix = this.matrixList[this.matrixList.length-1]
+            let row1       = parseInt(swap1[1])
+            let row2       = parseInt(swap2[1])
+            // debugger
+            return {passed: true, data: {
+                matrix: swapMatrixRows(fracMatrix, row1, row2),
+                operation: {type:"swap", row1: row1, row2: row2}
+            }}
+        } else if (selection == "combine") {
+            let combine = document.querySelectorAll(".new-operation .combine.specific-settings")[0]
+            let combine1 = combine.querySelectorAll(".row.combine-1")[0].value
+            let combine2 = combine.querySelectorAll(".combine-2")[0].value
+            let combine3 = this.parseInputFrac(combine.querySelectorAll(".combine-3")[0].value)
+            let combine4 = combine.querySelectorAll(".row.combine-4")[0].value 
+            let combine5 = combine.querySelectorAll(".row.combine-5")[0].value
+    
+            if (combine1 != "R0" && combine1 != "R1" && combine1 != "R2") {
+                return {passed: false, data: null}
+            }
+            
+            if (combine2 != "+" && combine2 != "-") {
+                return {passed: false, data: null}
+            }
+
+            if (combine3.valid == false) {
+                return {passed: false, data: null}
+            }
+    
+            if (combine4 != "R0" && combine4 != "R1" && combine4 != "R2") {
+                return {passed: false, data: null}
+            }
+    
+            if (combine5 != "R0" && combine5 != "R1" && combine5 != "R2") {
+                return {passed: false, data: null}
+            }
+            
+            let fracMatrix = this.matrixList[this.matrixList.length-1]
+            let row1       = parseInt(combine1[1])
+            let row2       = parseInt(combine4[1])
+            let sign       = combine2
+            let value      = combine3.value
+
+            return {passed: true, data: {
+                // fracMatrix, row1, row2, sign, value
+                matrix: combineMatrixRows(fracMatrix, row1, row2, sign, value),
+                operation: {type:"combine", row1: row1, row2: row2, sign: sign, value: value}
+            }}
+
+        } else if (selection == "scale") {
+            let scale = document.querySelectorAll(".new-operation .scale.specific-settings")[0]
+            // debugger
+            let scale1 = this.parseInputFrac(scale.querySelectorAll(".scale-1")[0].value)
+            let scale2 = scale.querySelectorAll(".row.scale-2")[0].value
+            let scale3 = scale.querySelectorAll(".row.scale-3")[0].value
+            
+            if (scale1.valid == false) {
+                return {passed: false, data: null}
+            }
+
+            if (scale2 != "R0" && scale2 != "R1" && scale2 != "R2") {
+                return {passed: false, data: null}
+            }
+    
+            if (scale3 != "R0" && scale3 != "R1" && scale3 != "R2") {
+                return {passed: false, data: null}
+            }
+
+            let fracMatrix = this.matrixList[this.matrixList.length-1]
+            let row        = parseInt(scale2[1])
+            let value      = scale1.value
+            
+            return {passed: true, data: {
+                // fracMatrix, row, value
+                matrix: scaleMatrixRow(fracMatrix, row, value),
+                operation: {type:"scale", row: row, value: value}
+            }}
+            
+        } else {
+            return {passed: false, data: null};
+        }
+    
+    }
+
+    changeOperationType(operation) {
+        if (operation == "swap") {
+            document.querySelectorAll(".swap.specific-settings")[0].style = "display: flex;";
+            document.querySelectorAll(".combine.specific-settings")[0].style = "display: none;";
+            document.querySelectorAll(".scale.specific-settings")[0].style = "display: none;";
+        } else if (operation == "combine") {
+            document.querySelectorAll(".swap.specific-settings")[0].style = "display: none;";
+            document.querySelectorAll(".combine.specific-settings")[0].style = "display: flex;";
+            document.querySelectorAll(".scale.specific-settings")[0].style = "display: none;";
+        } else if (operation == "scale") {
+            document.querySelectorAll(".swap.specific-settings")[0].style = "display: none;";
+            document.querySelectorAll(".combine.specific-settings")[0].style = "display: none;";
+            document.querySelectorAll(".scale.specific-settings")[0].style = "display: flex;";
+        }
+
+        // For firefox. Make sure all are unselected
+        let select = document.querySelectorAll(".new-operation .specific-settings select")
+        for (let i=0; i<select.length; i++) {
+            select[i].value="";
+        }
+
+        document.querySelectorAll(".new-operation button.apply-new-operation-button")[0].style="display: block;"
+    }
+
+    parseInputFrac(input) {
+        let fracAnswer
+        
+        const regex = /^(-*)(((\d*\.*\d*)\/(\d*\.*\d*))|\d*\.*\d*)$/;
+        let regexGroups = (input).match(regex)
+
+        if (regexGroups != null) {
+            let minusSigns  = regexGroups[1]
+
+            let neg = 1
+
+            if (minusSigns.length % 2 != 0) {
+                neg = -1
+            }
+
+            let number = regexGroups[2]
+            let split  = number.split("/")
+            
+            if(split.length == 2) {
+                if (parseFloat(split[1]) != 0) {
+                    fracAnswer = new Frac(parseFloat(neg*split[0]), parseFloat(split[1]))
+                    return {valid: true, value: fracAnswer}
+                } else {
+                    return {valid: false, value: null};
+                }
+            } else if(split.length == 1) {
+                fracAnswer = new Frac(parseFloat(neg*split[0]), 1)
+                return {valid: true, value: fracAnswer}
+            } else {
+                return {valid: false, value: null}
+            }
+        } else {
+            return {valid: false, value: null}
         }
     }
 
@@ -714,44 +896,12 @@ document.addEventListener("click", function() {
     }
 
     if (current.classList.contains("new-operation-button") ) {
-        if (current.classList.contains("closed")) {
-            document.querySelectorAll(".new-operation .new-operation-button")[0].innerHTML = "➖ Close"
-            current.classList.remove("closed")
-            current.classList.add("open")
-
-            document.querySelectorAll(".new-operation .settings-container select")[0].value=""
-            document.querySelectorAll(".new-operation .settings-container")[0].style="display: static;"
-            
-            document.querySelectorAll(".swap.specific-settings")[0].style = "display: none;";
-            document.querySelectorAll(".combine.specific-settings")[0].style = "display: none;";
-            document.querySelectorAll(".scale.specific-settings")[0].style = "display: none;";
-
-            document.querySelectorAll(".new-operation button.apply-new-operation-button")[0].style="display: none;"
-
-        } else if (current.classList.contains("open")) {
-            document.querySelectorAll(".new-operation .new-operation-button")[0].innerHTML = "➕ Apply new row operation"
-            current.classList.remove("open")
-            current.classList.add("closed")
-
-            document.querySelectorAll(".new-operation .settings-container")[0].style="display: none;"
-        }
+        gaussSteps.toggleNewOperation();
     }
 
     if (current.classList.contains("apply-new-operation-button")) {
-        if(checkValidOperations() == true) {
-
-        } else {
-            setTimeout(function() {
-                current.innerHTML = "✅ Apply"
-                current.class = "apply-new-operation-button"
-            }, 1000);
-
-            current.innerHTML = "❌ Invalid operation"
-            current.class     = "invalid-operation"
-        }
+        gaussSteps.applyNewOperation();
     }
-
-    // ADD CHECKBOX AS WELL!!!!!!!!!
 
 })
 
@@ -760,27 +910,7 @@ document.addEventListener("change", function() {
     // console.log(current.value);
     if (current.classList.contains("operation-dropdown")) {
         let selection = current.value;
-        if (selection == "swap") {
-            document.querySelectorAll(".swap.specific-settings")[0].style = "display: flex;";
-            document.querySelectorAll(".combine.specific-settings")[0].style = "display: none;";
-            document.querySelectorAll(".scale.specific-settings")[0].style = "display: none;";
-        } else if (selection == "combine") {
-            document.querySelectorAll(".swap.specific-settings")[0].style = "display: none;";
-            document.querySelectorAll(".combine.specific-settings")[0].style = "display: flex;";
-            document.querySelectorAll(".scale.specific-settings")[0].style = "display: none;";
-        } else if (selection == "scale") {
-            document.querySelectorAll(".swap.specific-settings")[0].style = "display: none;";
-            document.querySelectorAll(".combine.specific-settings")[0].style = "display: none;";
-            document.querySelectorAll(".scale.specific-settings")[0].style = "display: flex;";
-        }
-
-        // For firefox. Make sure all are unselected
-        let select = document.querySelectorAll(".new-operation .specific-settings select")
-        for (let i=0; i<select.length; i++) {
-            select[i].value="";
-        }
-
-        document.querySelectorAll(".new-operation button.apply-new-operation-button")[0].style="display: block;"
+        gaussSteps.changeOperationType(selection)
     }
 
     if (current.classList.contains("row")) {
@@ -816,12 +946,46 @@ document.addEventListener("change", function() {
             let combine5Select = document.querySelectorAll(".new-operation select.combine-5")[0]
             combine5Select.value = selection
 
+            let combine4Select = document.querySelectorAll(".new-operation select.combine-4")[0]
+            for (let i=0; i<combine4Select.length; i++) {
+                if (combine4Select[i].value == selection) {
+                    combine4Select[i].disabled = true;
+                } else {
+                    combine4Select[i].disabled = false;
+                }
+            }
+
         }
 
         if(current.classList.contains("combine-5")) {
             let selection = document.querySelectorAll(".new-operation .combine-5")[0].value
-            let combine1OSelect = document.querySelectorAll(".new-operation select.combine-1")[0]
-            combine1OSelect.value = selection
+            let combine1Select = document.querySelectorAll(".new-operation select.combine-1")[0]
+            combine1Select.value = selection
+
+            let combine4Select = document.querySelectorAll(".new-operation select.combine-4")[0]
+            for (let i=0; i<combine4Select.length; i++) {
+                if (combine4Select[i].value == selection) {
+                    combine4Select[i].disabled = true;
+                } else {
+                    combine4Select[i].disabled = false;
+                }
+            }
+
+        }
+
+        // Scale option
+        // debugger
+        if(current.classList.contains("scale-2")) {
+            let selection = document.querySelectorAll(".new-operation .scale-2")[0].value
+            let scale3Select = document.querySelectorAll(".new-operation select.scale-3")[0]
+            scale3Select.value = selection
+
+        }
+
+        if(current.classList.contains("scale-3")) {
+            let selection = document.querySelectorAll(".new-operation .scale-3")[0].value
+            let scale2Select = document.querySelectorAll(".new-operation select.scale-2")[0]
+            scale2Select.value = selection
         }
 
 
@@ -830,74 +994,7 @@ document.addEventListener("change", function() {
 
 })
 
-
-function checkValidOperations() {
-    
-    let selection = document.querySelectorAll(".new-operation .operation-dropdown")[0].value
-    debugger
-    if (selection == "swap") {
-        let swap = document.querySelectorAll(".new-operation .swap.specific-settings")[0]
-        let swap1 = swap.querySelectorAll(".row.swap-1")[0].value
-        let swap2 = swap.querySelectorAll(".row.swap-2")[0].value 
-
-        if (swap1 != "r1" && swap1 != "r2" && swap1 != "r3") {
-            return false
-        }
-        
-        if (swap2 != "r1" && swap2 != "r2" && swap2 != "r3") {
-            return false
-        }
-
-        return true
-    } else if (selection == "combine") {
-        let swap = document.querySelectorAll(".new-operation .combine.specific-settings")[0]
-        let combine1 = swap.querySelectorAll(".row.combine-1")[0].value
-        let combine2 = swap.querySelectorAll(".combine-2")[0].value
-        let combine3 = swap.querySelectorAll(".row.combine-3") // DO NOT USE RIGHT NOW
-        let combine4 = swap.querySelectorAll(".row.combine-4")[0].value 
-        let combine5 = swap.querySelectorAll(".row.combine-5")[0].value
-
-        
-
-        if (combine1 != "r1" && combine1 != "r2" && combine1 != "r3") {
-            return false
-        }
-        
-        if (combine2 != "+" && combine2 != "-") {
-            return false
-        }
-
-        if (combine4 != "r1" && combine4 != "r2" && combine4 != "r3") {
-            return false
-        }
-
-        if (combine5 != "r1" && combine5 != "r2" && combine5 != "r3") {
-            return false
-        }
-
-
-        return true
-    } else if (selection == "scale") {
-        let scale = document.querySelectorAll(".new-operation .scale.specific-settings")[0]
-        let scale1 = swap.querySelectorAll(".row.scale-1")[0].value
-        let scale2 = swap.querySelectorAll(".row.scale-2")[0].value
-        let scale3 = swap.querySelectorAll(".row.scale-3")[0].value
-
-        if (scale2 != "r1" && scale2 != "r2" && scale2 != "r3") {
-            return false
-        }
-
-        if (scale3 != "r1" && scale3 != "r2" && scale3 != "r3") {
-            return false
-        }
-        
-    } else {
-        return false;
-    }
-
-}
-
-
 // Only for when we have default case might want to remove later
+
 
 gaussSteps.selectMatrix(0)

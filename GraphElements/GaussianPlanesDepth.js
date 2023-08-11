@@ -91,7 +91,7 @@ class GaussianPlanes {
             }
         } else {
             for (let i = 0; i < matrix[0].length; i++) {
-                let col = this.leftMostNonZeroInRow(matrix, i)
+                let col = leftMostNonZeroInRow(matrix, i)
                 if (col < matrix.length - 1) {
                     planeCenter[i][col] = matrix[matrix.length - 1][i] / matrix[col][i]
                 }
@@ -104,7 +104,7 @@ class GaussianPlanes {
         let hasSolution = true
         //see if a solution 
         for (let i = 0; i < reduced[0].length; i++) {
-            let col = this.leftMostNonZeroInRow(reduced, i)
+            let col = leftMostNonZeroInRow(reduced, i)
             if (col == reduced.length - 1) {
                 hasSolution = false
                 break
@@ -132,20 +132,10 @@ class GaussianPlanes {
         if (intersectLines.length == 0 || intersectLinesIndex == intersectLines.length ) {
             //base case, there are no intersection lines, so no more splits can be found
             //now return the current polygonLines as a polygon in output
-
-            //find minZ and maxZ so output is sortable
-            let minZ = Number.MAX_VALUE
-            let maxZ = -1*Number.MAX_VALUE
-            for (let i = 0; i < polygonLines.length; i++) {
-                let currZ = polygonLines[i].point1[2]
-                if (currZ == -0) {
-                    currZ = 0
-                }
-
-                minZ = Math.min(currZ, minZ)
-                maxZ = Math.max(currZ, maxZ)
-            }
-            output.push({polygon: new Polygon(this.graph, polygonLines, fillColor, outlineColor, alpha), minZ: minZ, maxZ: maxZ})
+            let polygon = new Polygon(this.graph, polygonLines, fillColor, outlineColor, alpha)
+            polygon.fill = true
+            polygon.outline = false
+            output.push(polygon)
 
         } else {
             //recursive case
@@ -236,6 +226,9 @@ class GaussianPlanes {
                 while (!vectorEquals(currPoint, splitPoints[0], this.precision)) {
                     i++
                     leftPolygonLines.push(linesWithSplit.get(pt3DToStr(currPoint)))
+                    if (linesWithSplit.get(pt3DToStr(currPoint)) == undefined) {
+                        debugger
+                    }
                     currPoint = linesWithSplit.get(pt3DToStr(currPoint)).point2
                 }
                 leftPolygonLines.push(new Line(this.graph, currPoint, splitPoints[1], false))
@@ -375,57 +368,60 @@ class GaussianPlanes {
             let currPlaneLines = this.getPlaneLines(this.planesStdForm[i], 
                                                Math.max(this.graph.canvas.width, this.graph.canvas.height) / this.graph.currentZoom, 
                                                this.planeCenter[this.planeOrderFromInput[i]])
-            //bring to basis and rotation
-            for (let j = 0; j < currPlaneLines.length; j++) {
-                this._changeBasisAndRotate3DLine(currPlaneLines[j])
-            }
-
-            let planeCubeIntersects = []
-            
-            for (let j = 0; j < cubePlanesStdForm.length; j++) {
-                let planeCubeIntersectLine = this.getPlanePlaneIntersectLine(this.planesStdForm[i], cubePlanesStdForm[j])
-                if (planeCubeIntersectLine != null) {
-                    this._changeBasisAndRotate3DLine(planeCubeIntersectLine)
-
-                    planeCubeIntersects.push(planeCubeIntersectLine)
+            if (currPlaneLines.length != 0) {
+                //bring to basis and rotation
+                for (let j = 0; j < currPlaneLines.length; j++) {
+                    this._changeBasisAndRotate3DLine(currPlaneLines[j])
                 }
-            }
 
-            let planePolygons = this.splitPlanes(currPlaneLines, planeCubeIntersects, this.planeColors[i], "black", 0.6)
-         
-            let inCubePolygons = []
-            let inverseRotationMatrix = this._inverseRotate()
+                let planeCubeIntersects = []
+                
+                for (let j = 0; j < cubePlanesStdForm.length; j++) {
+                    let planeCubeIntersectLine = this.getPlanePlaneIntersectLine(this.planesStdForm[i], cubePlanesStdForm[j])
+                    if (planeCubeIntersectLine != null) {
+                        this._changeBasisAndRotate3DLine(planeCubeIntersectLine)
 
-            //write a specialized splitplanes function later to optimize? not needed?
-            for (let j = 0; j < planePolygons.length; j++) {
-                let inCube = true
-                for (let k = 0; k < planePolygons[j].polygon.lines.length; k++) {
-                    let currLine = planePolygons[j].polygon.lines[k].point1
-                    let currLineCopy = [currLine[0], currLine[1], currLine[2]]
-              
-                    currLineCopy = matrixVectorMultiplication(inverseRotationMatrix, currLineCopy)
-
-                    let error = 0.00000001
-                    let cubeSizeAndError = cubeSize + error
-                    if (Math.abs(currLineCopy[0]) > cubeSizeAndError ||
-                        Math.abs(currLineCopy[1]) > cubeSizeAndError ||
-                        Math.abs(currLineCopy[2]) > cubeSizeAndError) {
-                            inCube = false
-                            break
+                        planeCubeIntersects.push(planeCubeIntersectLine)
                     }
                 }
-                if (inCube) {
-                    inCubePolygons.push(planePolygons[j].polygon.lines)
-                }
-            }
+
+                let planePolygons = this.splitPlanes(currPlaneLines, planeCubeIntersects, this.planeColors[i], "black", 0.6)
             
-            if (inCubePolygons.length > 1) {
-                debugger
-            }
-            if (inCubePolygons.length == 0) {
-                currPlaneLines = []
-            } else {
-                currPlaneLines = inCubePolygons[0]
+                let inCubePolygons = []
+                let inverseRotationMatrix = this._inverseRotate()
+
+                //write a specialized splitplanes function later to optimize? not needed?
+                for (let j = 0; j < planePolygons.length; j++) {
+                    let inCube = true
+                    for (let k = 0; k < planePolygons[j].lines.length; k++) {
+                        let currLine = planePolygons[j].lines[k].point1
+                        let currLineCopy = [currLine[0], currLine[1], currLine[2]]
+                
+                        currLineCopy = matrixVectorMultiplication(inverseRotationMatrix, currLineCopy)
+
+                        let error = 0.00000001
+                        let cubeSizeAndError = cubeSize + error
+                        if (Math.abs(currLineCopy[0]) > cubeSizeAndError ||
+                            Math.abs(currLineCopy[1]) > cubeSizeAndError ||
+                            Math.abs(currLineCopy[2]) > cubeSizeAndError) {
+                                inCube = false
+                                break
+                        }
+                    }
+                    if (inCube) {
+                        inCubePolygons.push(planePolygons[j].lines)
+                    }
+                }
+                
+                if (inCubePolygons.length > 1) {
+                    debugger
+                }
+                if (inCubePolygons.length == 0) {
+                    currPlaneLines = []
+                } else {
+                    currPlaneLines = inCubePolygons[0]
+                }
+
             }
 
             planeLines.push(currPlaneLines)
@@ -465,26 +461,63 @@ class GaussianPlanes {
     /**
      * returns all polygons with their minZ and maxZ values from the gaussian planes
      * @param {Line[][]} planeLines 
-     * @returns {{polygon: Polygon, minZ: Number, maxZ: Number}[]}
+     * @returns {Polygon[]}
      */
     _getPlanePolygons(planeLines) {
         //intersect_ij[i][j] is the intersectio line between plane i and plane j, is null if no intersectino
         let intersect_ij = this._getAllPlaneIntersections()
 
+        let axisPlanes = [[1,0,0,0],[0,1,0,0],[0,0,1,0]]
+
+        let axisIntersections = []
+        for (let i = 0; i < this.planesStdForm.length; i++) {
+            if (this.planesToDraw[i]) {
+                for (let j = 0; j < axisPlanes.length; j++) {
+                    let currIntersect = this.getPlanePlaneIntersectLine(this.planesStdForm[i], axisPlanes[j])
+                    if (currIntersect != null) {
+                        this._changeBasisAndRotate3DLine(currIntersect)
+                        axisIntersections.push(currIntersect)
+                    }
+                }
+            }
+        }
+
         let polygons = []
         //iterate over each plane
         for (let i = 0; i < planeLines.length; i++) {
-            if (planeLines[i].length != 0 && this.planesToDraw[i]) {
+            if (planeLines[i].length != 0 /**&& this.planesToDraw[i]**/) {
                 //build up the lines that could intersect with the ith plane
+                // let xp = new Line(this.graph, [0,0,0], [10,0,0], false)
+                // let xn = new Line(this.graph, [0,0,0], [-10,0,0], false)
+
+                // let yp = new Line(this.graph, [0,0,0], [0,10,0], false)
+                // let yn = new Line(this.graph, [0,0,0], [0,-10,0], false)
+
+                // let zp = new Line(this.graph, [0,0,0], [0,0,10], false)
+                // let zn = new Line(this.graph, [0,0,0], [0,0,-10], false)
+
+                // let intersectLines = [xp, xn, yp, yn, zp, zn]
+
+                // for (let i = 0; i < intersectLines.length; i++) {
+                //     this._changeBasisAndRotate3DLine(intersectLines[i]) 
+                // }
                 let intersectLines = []
+
+                //add axis planes as well?
+                // for (let j = 0; j < axisIntersections.length; j++) {
+                //     intersectLines.push(axisIntersections[j])
+                // }
 
                 //all lines from intersections between ith plane and some jth plane
                 for (let j = 0; j < intersect_ij.length; j++) {
                     for (let k = 0; k < intersect_ij.length; k++) {
-                        if (intersect_ij[j][k] != null) {
+                        if (intersect_ij[j][k] != null && this.planesToDraw[j] && this.planesToDraw[k]) {
                             intersectLines.push(intersect_ij[j][k])
                         }
                     }
+                    // if (intersect_ij[i][j] != null) {
+                    //     intersectLines.push(intersect_ij[i][j])
+                    // }
                 }
 
                 //all lines from the outlines of the other visible planes
@@ -508,7 +541,7 @@ class GaussianPlanes {
 
     /**
      * draws all the planes with correct depth perception
-     * @param {{polygon: Polygon, minZ: Number, maxZ: Number}[]} sortedPolygons 
+     * @param {Polygon[]} sortedPolygons 
      */
     _drawPlanes(sortedPolygons) {
         let planesToDrawColors = new Set()
@@ -519,19 +552,17 @@ class GaussianPlanes {
             }
         }
 
-        for (let i = 0; i < sortedPolygons.length; i++) {
-            if (planesToDrawColors.has(sortedPolygons[i].polygon.fillColor)){
-                for (let j = 0; j < sortedPolygons[i].polygon.lines.length; j++) {
+        let returnPolygons = []
 
-                    let point1 = sortedPolygons[i].polygon.lines[j].point1
-                    let point2 = sortedPolygons[i].polygon.lines[j].point2
-    
-                    sortedPolygons[i].polygon.lines[j].point1 = this.graph.applyZoom(point1)
-                    sortedPolygons[i].polygon.lines[j].point2 = this.graph.applyZoom(point2)
-                }
-                sortedPolygons[i].polygon.draw(true, false)
-            }
+        for (let i = 0; i < sortedPolygons.length; i++) {
+            if (planesToDrawColors.has(sortedPolygons[i].fillColor)){
+
+                returnPolygons.push(sortedPolygons[i])
+
+             }
         }
+
+        return returnPolygons;
     }
 
     /**
@@ -541,17 +572,23 @@ class GaussianPlanes {
      */
     _drawPlaneOutlines(planeLines, outlineColor) {
         //draw outlines
+        
+        let returnPolygons = []
+
         for (let i = 0; i < planeLines.length; i++) {
             if (planeLines[i].length != 0 && this.planesToDraw[i]) {
-                for (let j = 0; j < planeLines[i].length; j++) {
-                    planeLines[i][j].point1 = this.graph.applyZoom(planeLines[i][j].point1)
-                    planeLines[i][j].point2 = this.graph.applyZoom(planeLines[i][j].point2)
-                }
+
+                
                 // console.log(planeLines)
                 let planePolygon = new Polygon(this.graph, planeLines[i], "black", outlineColor, 1)
-                planePolygon.draw(false, true)
+                planePolygon.fill = false
+                planePolygon.outline = true
+                returnPolygons.push(planePolygon)
+
             }
         }
+
+        return returnPolygons
     }
 
     /**
@@ -561,44 +598,32 @@ class GaussianPlanes {
      * @param {String} outlineColor 
      */
     _drawPlaneBoundingCubeOutlines(cubePlanesStdForm, cubeSize, outlineColor) {
+        let returnPolygons = []
         for (let i = 0; i < cubePlanesStdForm.length; i++) {
             let point = [0,0,0]
-            let nonzero = this.leftMostNonZeroInRow(transpose(cubePlanesStdForm), i)
+            let nonzero = leftMostNonZeroInRow(transpose(cubePlanesStdForm), i)
             point[nonzero] = cubePlanesStdForm[i][cubePlanesStdForm[i].length - 1]
             let cubePlaneLines = this.getPlaneLines(cubePlanesStdForm[i], cubeSize, point)
             if (cubePlaneLines.length != 0) {
                 for (let j = 0; j < cubePlaneLines.length; j++) {
-                    cubePlaneLines[j].point1 = this.graph.changeBasisZoomAndRotate(cubePlaneLines[j].point1)
-                    cubePlaneLines[j].point2 = this.graph.changeBasisZoomAndRotate(cubePlaneLines[j].point2)
+                    cubePlaneLines[j].point1 = this.graph.changeBasisAndRotate(cubePlaneLines[j].point1)
+                    cubePlaneLines[j].point2 = this.graph.changeBasisAndRotate(cubePlaneLines[j].point2)
                 }
                 let cubePolygon = new Polygon(this.graph, cubePlaneLines, "gray", outlineColor, 1)
-                cubePolygon.draw(false, true)
+                cubePolygon.fill = false
+                cubePolygon.outline = true
+                returnPolygons.push(cubePolygon)
             }
         }
+        return returnPolygons;
     }
-
-    /**
-     * 
-     * @param {Number[][]} matrix col row format matrix
-     * @param {Number} row 
-     * @returns {Number} index of the leftmost nonzero element in row of matrix
-     */
-    leftMostNonZeroInRow(matrix, row) {
-        let col = 0
-        while (col < matrix.length) {
-            if (matrix[col][row] != 0) {
-                return col;
-            }
-            col++
-        }
-        return col
-    }
+    
 
     /** 
      * draws the planes from the augmented matrix defined by this.planesStdForm
      * trying to add a larger constant sized cube in which the planes will be constrained, within the cube the planes should fill to max
      */
-    draw() {
+    returnPlanePolygons() {
         //dividing so that regardless of zoom cube remains same size
         let cubeSize = this.cubeHalfSideLength / this.graph.currentZoom
         let cubePlanesStdForm = [[1,0,0,cubeSize],
@@ -607,42 +632,60 @@ class GaussianPlanes {
                                  [0,1,0,-cubeSize],
                                  [0,0,1,cubeSize],
                                  [0,0,1,-cubeSize]]
-        
+        //debugger
         let planeLines
         if (this.cubeBoundPlanes) {
             planeLines = this.getCubeBoundedPlaneLines(cubeSize, cubePlanesStdForm)
         } else {
             planeLines = this.getFixedSizePlaneLines(6)
         }
-        //planeLines.push([new Line(this.graph, [0,0,10],[0,10,0],false)])
+        let polygonlist = []
 
         let polygons = this._getPlanePolygons(planeLines)
-        let sortedPolygons = this.sortPolygons(polygons)
 
+        //debugger
+        // --- --- --- --- ---
+        //let sortedPolygons = this.sortPolygons(polygons)
+        // for (let i=0; i< polygons.length; i++) {
+        //     polygonlist.push(polygons[i])
+        // }
+        //debugger
         //draw planes   
-        this._drawPlanes(sortedPolygons)
-
+        let planePolygons = this._drawPlanes(polygons)
+        for (let i=0; i< planePolygons.length; i++) {
+            polygonlist.push(planePolygons[i])
+        }
+        //debugger
         //draw outlines
-        this._drawPlaneOutlines(planeLines, "black")
-
+        let planeOutlines = this._drawPlaneOutlines(planeLines, "black")
+        for (let i=0; i< planeOutlines.length; i++) {
+            polygonlist.push(planeOutlines[i])
+        }
+  
         //draw plane bounding cube
         if (this.cubeBoundPlanes) {
-            this._drawPlaneBoundingCubeOutlines(cubePlanesStdForm, cubeSize, "#333333")
+            let boxpolygons = this._drawPlaneBoundingCubeOutlines(cubePlanesStdForm, cubeSize, "#333333")
+            for (let i=0; i< boxpolygons.length; i++) {
+                polygonlist.push(boxpolygons[i])
+            }
+            
         }
 
-        
-        if (this.hasSolution) {
-            //draw dot at solution
-            this.graph.drawDotFromVector(this.solution, "pink", "black", 6)
-        }   
+   
+        // if (this.hasSolution) {
+        //     //draw dot at solution
+        //     this.graph.drawDotFromVector(this.solution, "pink", "black", 6)
+        // }
+
+        return polygonlist
     }
 
     /**
      * sorts record of polygons by smallest to largest minimum Z value
      * then for all polygons with same minimum Z, sorts by smallest to largest maximum Z value
-     * @param {{polygon: Polygon, minZ: Number, maxZ: Number}} polygons a list of {polygon: Polygon, minZ: minZ: maxZ: maxZ}
+     * @param {Polygon[]} polygons a list of polygons
      *                    wherre Polygon is a Polygon Object, and minZ, maxZ are numerical values
-     * @returns {{polygon: Polygon, minZ: Number, maxZ: Number}} a sorted array of the input records, first by minZ then by maxZ
+     * @returns {Polygon[]} a sorted array of the input records, first by minZ then by maxZ
      */
     sortPolygons(polygons) {
         const numericPrecision = this.precision
@@ -652,10 +695,10 @@ class GaussianPlanes {
             } else if (!numEqual(a.maxZ, b.maxZ, numericPrecision)) {
                 return a.maxZ - b.maxZ
             } else { 
-                for (let i = 0; i < a.polygon.lines.length; i++) {
-                    let pointA = a.polygon.lines[i].point1
-                    for (let j = 0; j < b.polygon.lines.length; j++) {
-                        let pointB = b.polygon.lines[j].point1
+                for (let i = 0; i < a.lines.length; i++) {
+                    let pointA = a.lines[i].point1
+                    for (let j = 0; j < b.lines.length; j++) {
+                        let pointB = b.lines[j].point1
                         if (vectorEquals([pointA[0], pointA[1]], [pointB[0], pointB[1]], numericPrecision) && 
                             !numEqual(pointA[2], pointB[2], numericPrecision)) {
                                 return pointA[2] - pointB[2]
@@ -692,10 +735,10 @@ class GaussianPlanes {
         let preSorted = arr.slice(0, start)
         let postSorted = arr.slice(end);
         let sorted = arr.slice(start, end).sort(function(a, b) {
-            for (let i = 0; i < a.polygon.lines.length; i++) {
-                let pointA = a.polygon.lines[i].point1
-                for (let j = 0; j < b.polygon.lines.length; j++) {
-                    let pointB = b.polygon.lines[j].point1
+            for (let i = 0; i < a.lines.length; i++) {
+                let pointA = a.lines[i].point1
+                for (let j = 0; j < b.lines.length; j++) {
+                    let pointB = b.lines[j].point1
                     if (vectorEquals([pointA[0], pointA[1]], [pointB[0], pointB[1]], numericPrecision) && 
                         !numEqual(pointA[2], pointB[2], numericPrecision)) {
                             return pointA[2] - pointB[2]
@@ -854,6 +897,26 @@ function pt3DToStr(point) {
     return "" + point[0] + "," + point[1] + "," + point[2]
 }
 
+/**
+ * 
+ * @param {Number[][]} matrix col row format matrix
+ * @param {Number} row 
+ * @returns {Number} index of the leftmost nonzero element in row of matrix
+ */
+function leftMostNonZeroInRow(matrix, row) {
+    let col = 0
+    while (col < matrix.length) {
+        if (matrix[col] == null) {
+            debugger
+        }
+        if (matrix[col][row] != 0) {
+            return col;
+        }
+        col++
+    }
+    return col
+}
+
 
 
 
@@ -876,6 +939,100 @@ class Line {
         this.point2 = point2
         this.inf = inf
         this.precision = 7
+        this.color = "#E6E6E3"
+        this.lineWidth = 4
+        this.behindPlanes = new Set()
+        this.beforePlanes = new Set()
+        this.minZ = Math.min(this.point1[2], this.point2[2])
+        this.maxZ = Math.max(this.point1[2], this.point2[2])
+
+        let sumX = this.point1[0] + this.point2[0]
+        let sumY = this.point1[1] + this.point2[1]
+        let sumZ = this.point1[2] + this.point2[2]
+        this.midPoint = [sumX / 2, sumY / 2, sumZ / 2]
+
+        this.planesBefore = []
+    }
+
+    splitWithPlane(plane, color) {
+        // Return array of lines.
+        // ax+by+cz = d [a, b, c, d]
+        let a = this.point2[0] - this.point1[0]
+        let b = this.point2[1] - this.point1[1]
+        let c = this.point2[2] - this.point1[2]
+        //debugger
+
+        if (numEqual(dotProduct([plane[0], plane[1], plane[2]], [a, b, c]), 0, this.precision)) {
+            return [this]
+        } else {
+            let a1 = plane[0]
+            let b1 = plane[1]
+            let c1 = plane[2]
+            let d1 = plane[3]
+
+            let x0 = this.point1[0]
+            let y0 = this.point1[1]
+            let z0 = this.point1[2]
+
+            let numerator = d1 - ((a1*x0) + (b1*y0) + (c1*z0))
+            let denominator = (a1*a) + (b1*b) + (c1*c)
+
+            if (numEqual(denominator, 0, this.precision)) {
+                return [this]
+            } else {
+                let t = numerator / denominator
+                let x = x0 + (a * t)
+                let y = y0 + (b * t)
+                let z = z0 + (c * t)
+
+                //check if within bounds 
+                if (!this.inf) {
+                    let xMax = Math.max(this.point1[0], this.point2[0])
+                    let yMax = Math.max(this.point1[1], this.point2[1])
+                    let zMax = Math.max(this.point1[2], this.point2[2])
+                    let xMin = Math.min(this.point1[0], this.point2[0])
+                    let yMin = Math.min(this.point1[1], this.point2[1])
+                    let zMin = Math.min(this.point1[2], this.point2[2])
+
+                    if ((!(x > xMax || x < xMin) || numEqual(x, xMax, this.precision) || numEqual(x, xMin, this.precision)) &&
+                        (!(y > yMax || y < yMin) || numEqual(y, yMax, this.precision) || numEqual(y, yMin, this.precision)) &&
+                        (!(z > zMax || z < zMin) || numEqual(z, zMax, this.precision) || numEqual(z, zMin, this.precision))) {
+                            let intersectPoint = [x, y, z]
+                            //check if intersects at endpoints
+                            if (!vectorEquals(intersectPoint, this.point1, this.precision) && 
+                                !vectorEquals(intersectPoint, this.point2, this.precision)) {
+                                    let line1 = new Line(this.graph, this.point1, intersectPoint, false) 
+                                    let line2 = new Line(this.graph, intersectPoint, this.point2, false)
+                                    line1.color = this.color
+                                    line2.color = this.color
+                                    line1.lineWidth = this.lineWidth
+                                    line2.lineWidth = this.lineWidth
+
+                                    line1.behindPlanes = new Set(this.behindPlanes)
+                                    line1.beforePlanes = new Set(this.beforePlanes)
+                                    line2.behindPlanes = new Set(this.behindPlanes)
+                                    line2.beforePlanes = new Set(this.beforePlanes)
+                                    
+                                    //debugger
+                                    if (!numEqual(this.point1[2], this.point2[2], this.precision)) {
+                                        if (this.point1[2] > this.point2[2]) {
+                                            line1.behindPlanes.add(color)
+                                            line2.beforePlanes.add(color)
+                                        } else {
+                                            line2.behindPlanes.add(color)
+                                            line1.beforePlanes.add(color)
+                                        }
+                                    }
+                                    
+                                    return [line1, line2]
+                            }
+                    }
+                }
+            }
+            return [this]
+            // y = mx + b
+        }
+
     }
 
 
@@ -886,9 +1043,6 @@ class Line {
      *                   [line(this.point1, splitPoint), line(splitPoint, this.point2)] if a splitPoint exists
      */
     splitWithLine2D(otherLine) {
-        // if (otherLine == null) {
-        //     debugger
-        // }
         const a1 = this.point2[1] - this.point1[1]
         const b1 = this.point1[0] - this.point2[0] 
         const c1 = (this.point1[1] * (this.point2[0] - this.point1[0])) - (this.point1[0] * (this.point2[1] - this.point1[1]))
@@ -910,6 +1064,7 @@ class Line {
 
             //dont care if the other line is inf or finite for this algorithm, treating it as finite has issues
             //so always treat otherLine as inf
+            //this checks for if the point is within bound of the line
             if ((!(x > xMax || x < xMin) || numEqual(x, xMax, this.precision) || numEqual(x, xMin, this.precision)) &&
                 (!(y > yMax || y < yMin) || numEqual(y, yMax, this.precision) || numEqual(y, yMin, this.precision))) {
 
@@ -942,6 +1097,8 @@ class Line {
     draw() {
         let scaledPoint1 = scaleVector(this.point1, this.graph.scale)
         let scaledPoint2 = scaleVector(this.point2, this.graph.scale)
+        // scaledPoint1 = this.point1
+        // scaledPoint2 = this.point2
         let point1GraphCoord = [this.graph.centerX + scaledPoint1[0], this.graph.centerY - scaledPoint1[1]]
         let point2GraphCoord = [this.graph.centerX + scaledPoint2[0], this.graph.centerY - scaledPoint2[1]]
         //just finite line case for now
@@ -949,8 +1106,8 @@ class Line {
         this.graph.ctx.moveTo(point1GraphCoord[0], point1GraphCoord[1])
         this.graph.ctx.lineTo(point2GraphCoord[0], point2GraphCoord[1])
         this.graph.ctx.closePath()
-        this.graph.ctx.strokeStyle = "black"
-        this.graph.ctx.lineWidth = 5
+        this.graph.ctx.strokeStyle = this.color
+        this.graph.ctx.lineWidth = this.lineWdith
         this.graph.ctx.stroke()
 
     }
@@ -977,6 +1134,39 @@ class Polygon {
         this.fillColor = fillColor
         this.outlineColor = outlineColor
         this.alpha = alpha
+
+        this.fill    = true
+        this.outline = true
+        //find minZ and maxZ so polygon is sortable
+        let minZ = this.lines[0].point1[2]
+        let maxZ = this.lines[0].point1[2]
+
+        let sumX = this.lines[0].point1[0]
+        let sumY = this.lines[0].point1[1]
+        let sumZ = this.lines[0].point1[2]
+        //debugger
+        for (let i = 0; i < this.lines.length; i++) {
+            let currZ = this.lines[i].point2[2]
+            if (currZ == -0) {
+                currZ = 0
+            }
+
+            minZ = Math.min(currZ, minZ)
+            maxZ = Math.max(currZ, maxZ)
+
+            if (i < this.lines.length - 1 || this.lines.length == 1) {
+                sumX += this.lines[i].point2[0]
+                sumY += this.lines[i].point2[1]
+                sumZ += this.lines[i].point2[2]
+            }
+        }
+        //debugger
+        this.minZ = minZ
+        this.maxZ = maxZ
+
+        this.numPoints = this.lines.length + 1
+
+        this.centroid = [sumX / this.numPoints, sumY / this.numPoints, sumZ / this.numPoints]
     }
 
     /**
@@ -984,25 +1174,56 @@ class Polygon {
      * @param {Boolean} fill if true, polygon is filled with this.color, else no fill
      * @param {Boolean} outline if true, polygon is outlined with black
      */
-    draw(fill, outline) {
+    draw() {
+        // let vector = this.centroid
+
+        // let vecX = this.graph.centerX + (this.graph.scale * vector[0])
+        // let vecY = this.graph.centerY - (this.graph.scale * vector[1])
+
+        // // Draw the center dot
+        // let size = 10
+        // this.graph.ctx.fillStyle = this.fillColor
+        // this.graph.ctx.lineWidth = 4;
+        // this.graph.ctx.strokeStyle = this.outlineColor
+        // this.graph.ctx.beginPath();
+        //     this.graph.ctx.arc(vecX, vecY, size, 0, 2 * Math.PI);
+        //     this.graph.ctx.fill();
+        // this.graph.ctx.stroke();
+
+        //draw polygon
         let line = this.lines[0]
 
         this.graph.ctx.globalAlpha = this.alpha;
+        //debugger
+        let point = [(this.graph.scale * line.point1[0]), (this.graph.scale * line.point1[1])]
+        point = this.vectorToFixed(point, 0)
+
+
         this.graph.ctx.beginPath()
-        this.graph.ctx.moveTo(this.graph.centerX + (this.graph.scale * line.point1[0]), this.graph.centerY - (this.graph.scale * line.point1[1]))
+        this.graph.ctx.moveTo(this.graph.centerX + point[0], this.graph.centerY - point[1])
         for (let i = 0; i < this.lines.length; i++) {
             line = this.lines[i]
-            this.graph.ctx.lineTo(this.graph.centerX + (this.graph.scale * line.point2[0]), this.graph.centerY - (this.graph.scale * line.point2[1]))
+            point = [(this.graph.scale * line.point2[0]), (this.graph.scale * line.point2[1])]
+            point = this.vectorToFixed(point, 0)
+            this.graph.ctx.lineTo(this.graph.centerX + point[0], this.graph.centerY - point[1])
         }
         this.graph.ctx.closePath()
         this.graph.ctx.fillStyle = this.fillColor
-        if (fill) {this.graph.ctx.fill()}
+        if (this.fill) {this.graph.ctx.fill()}
         
-        this.graph.ctx.lineWidth   = 2;
+        this.graph.ctx.lineWidth = this.lines[0].lineWidth;
         this.graph.ctx.strokeStyle = this.outlineColor
-        if (outline) {this.graph.ctx.stroke()}
+        if (this.outline) {this.graph.ctx.stroke()}
         
         this.graph.ctx.globalAlpha = 1;
+
+    }
+
+    vectorToFixed(vector, val) {
+        for (let i = 0; i < vector.length; i++) {
+            vector[i] = parseFloat((Math.round(vector[i] * 100) / 100).toFixed(val));
+        }
+        return vector
     }
 }
 

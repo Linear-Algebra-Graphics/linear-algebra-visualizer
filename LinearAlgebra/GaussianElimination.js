@@ -17,30 +17,77 @@ function numericMatrixToFracMatrix(matrix) {
     return fracMatrix
 }
 
-/**
- * does row1 - value*row2 
- * @param {*} fracMatrix 
- * @param {Number} row1 
- * @param {Number} row2 
- * @param {Frac} value 
- * @returns 
- */
-function fracMatrixSubtractOperation(fracMatrix, row1, row2, value) {
+// /**
+//  * does row1 - value*row2 
+//  * @param {*} fracMatrix 
+//  * @param {Number} row1 
+//  * @param {Number} row2 
+//  * @param {Frac} value 
+//  * @returns 
+//  */
+// function fracMatrixSubtractOperation(fracMatrix, row1, row2, value) {
+//     for (let col = 0; col < fracMatrix[row1].length; col++) {
+//         let subtractedFrac = multiplyFracs(fracMatrix[row2][col], value)
+//         fracMatrix[row1][col] = subtractFracs(fracMatrix[row1][col], subtractedFrac)
+//     }
+
+//     return {steps: [fracMatrix], operations: [{type: "subtract", row1: row1, row2: row2, value: value}]}
+// }
+
+// function fracMatrixDivideOperation(fracMatrix, row, value) {
+//     for (let col = 0; col < fracMatrix[row].length; col++) {
+//         fracMatrix[row][col] = divideFracs(fracMatrix[row][col], value)
+//     }
+
+// }
+
+
+
+
+
+
+// THESE ARE FOR USER INPUT ONLY!!! DO NOT USE IN GAUSSIAN ELIM NORMALLY...
+// WORKS WITH COLUMN MATRICIES ONLY!!!
+
+function swapMatrixRows(fracMatrix, row1, row2) {
+
+    fracMatrix = deepCopy(transpose(fracMatrix))
+
+    let temp = fracMatrix[row1]
+    fracMatrix[row1] = fracMatrix[row2]
+    fracMatrix[row2] = temp
+
+    return transpose(fracMatrix)
+    
+}
+
+// Value scaled row2.
+function combineMatrixRows(fracMatrix, row1, row2, sign, value) {
+    fracMatrix = deepCopy(transpose(fracMatrix))
+
     for (let col = 0; col < fracMatrix[row1].length; col++) {
-        let subtractedFrac = multiplyFracs(fracMatrix[row2][col], value)
-        fracMatrix[row1][col] = subtractFracs(fracMatrix[row1][col], subtractedFrac)
+        let fracResult = multiplyFracs(fracMatrix[row2][col], value)
+
+        if(sign=="+"){
+            fracMatrix[row1][col] = addFracs(fracMatrix[row1][col], fracResult)
+        }else if(sign=="-"){
+            fracMatrix[row1][col] = subtractFracs(fracMatrix[row1][col], fracResult)
+        }
+
     }
 
-    return {steps: [fracMatrix], operations: [{type: "subtract", row1: row1, row2: row2, value: value}]}
+    return transpose(fracMatrix)
 }
 
-function fracMatrixDivideOperation(fracMatrix, row, value) {
+function scaleMatrixRow(fracMatrix, row, value) {
+    fracMatrix = deepCopy(transpose(fracMatrix))
+
     for (let col = 0; col < fracMatrix[row].length; col++) {
-        fracMatrix[row][col] = divideFracs(fracMatrix[row][col], value)
+        fracMatrix[row][col] = multiplyFracs(fracMatrix[row][col], value)
     }
 
+    return transpose(fracMatrix)
 }
-
 
 /**
  * Preforms Gaussian Elimination on the input matrix.
@@ -187,7 +234,7 @@ function gaussianEliminationV3(inputMatrix, steps, fracMode) {
             // }
 
             // R1/3   -> R1
-            operations.push({type:"divide", row: row, value: value})
+            operations.push({type:"scale", row: row, value: new Frac(value.getDenominator(), value.getNumerator())})
 
             let currentRowOrder
             if (rowOrderList.length == 0) {
@@ -201,7 +248,6 @@ function gaussianEliminationV3(inputMatrix, steps, fracMode) {
 
             rowOrderList.push(currentRowOrder)
         }
-        // ADD ONE TO OPPERATIONS
     }
     
     /**
@@ -239,7 +285,7 @@ function gaussianEliminationV3(inputMatrix, steps, fracMode) {
 
             // R1 - R2 -> R1
             //operations.push("R"+row1 + " - " + stepString + " &rArr; " + "R"+row1)
-            operations.push({type: "subtract", row1: row1, row2: row2, value: value})
+            operations.push({type: "combine", row1: row1, row2: row2, sign: "-", value: value})
             //effectedRows.push([row1, row2])
 
             let currentRowOrder

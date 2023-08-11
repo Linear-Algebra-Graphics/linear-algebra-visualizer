@@ -1,11 +1,15 @@
-Add control pannel
-
 Add minimzation
 
 When editing orginal matrix give visual idication it is edited but NOT updated
 When updated clear all steps and change solution
 
-When no solution add red bar below tabs saying no solution. Change solution dot expliation to saying there is no solution
+Add checker for all inputs so only valid inputs allowed.
+
+Add popup top left always open saying if solution, infinte solution, no solution.
 
 BE ABLE TO SAVE SOLUTOIN AS LATEX / SAVE AS IMAGE
 
+CHANGE SELECT TO GRAPH
+
+
+CHANGE VIEW FORGETS SETTINGS
