@@ -35,6 +35,8 @@ let y = -114//-213;
 let delta_x = 0
 let delta_y = 0
 
+let drawGraph = false;
+
 canvas.addEventListener('mousemove', function(e) {    // return null
 
     // console.log("mouse on canvas!")
@@ -42,9 +44,13 @@ canvas.addEventListener('mousemove', function(e) {    // return null
         // this 20 is the offset of canvas
         x = - delta_x + (e.clientX -20);
         y = - delta_y + (e.clientY -20);
+        drawGraph = true;
     } else {
         delta_x = (e.clientX -20) - x
         delta_y = (e.clientY -20) - y
+        // Tell the graph not to draw because it isn't needed.
+        drawGraph = false;
+
     }
 
 });
@@ -80,9 +86,6 @@ canvas.addEventListener("wheel", event => {
     }
 });
 
-
-test_graph.draw()
-
 function readMatrix(matrixNumber, fractionFormat) {
     //debugger
     matrix = [[undefined,undefined,undefined],[undefined,undefined,undefined],[undefined,undefined,undefined],[undefined,undefined,undefined]]
@@ -111,14 +114,36 @@ function readMatrix(matrixNumber, fractionFormat) {
     return matrix
 }
 
-setInterval(function() {
+let fps    = 60
+let oldFps = 60
 
-    test_graph.rotateAboutZ(2 * Math.PI * (x) / displayWidth)
+var myFunction = function(){
+    if (mouseIsDown == true && drawGraph == true) {
+        test_graph.rotateAboutZ(2 * Math.PI * (x) / displayWidth)
 
-    test_graph.rotateAboutX(2 * Math.PI * (y) / displayHeight)
+        test_graph.rotateAboutX(2 * Math.PI * (y) / displayHeight)
 
-    test_graph.draw()
-}, 1000/60)
+        test_graph.draw()
+    }
+    if (fps != oldFps) {
+        clearInterval(bigLoop);
+        bigLoop = setInterval(myFunction, 1000/fps);
+        oldFps = fps;
+    }
+}
+
+var bigLoop = setInterval(myFunction, 1000/fps);
+
+
+// setInterval(function() {
+
+//     test_graph.rotateAboutZ(2 * Math.PI * (x) / displayWidth)
+
+//     test_graph.rotateAboutX(2 * Math.PI * (y) / displayHeight)
+
+//     test_graph.draw()
+
+// }, 1000/fps)
 
 
 
@@ -130,8 +155,7 @@ class GaussianElimStepsHTMLModel {
         <div class="name-bar">
             <button type="button" class="">-</button> 
             <div class="label"></div>
-            <button type="button" class="select-button">select</button> 
-            <button type="button" class="">clear</button> 
+            <button type="button" class="select-button">graph</button> 
         </div>
         <div class="values">
         
@@ -214,6 +238,14 @@ class GaussianElimStepsHTMLModel {
         // Select new.
         this.selected = {type:"matrix", index: index}
         
+        let matrix = gaussianEliminationV3(this.matrixList[this.selected.index], false, true);
+
+        if (matrix[0][0].getNumericalValue() == 1 && matrix[1][1].getNumericalValue() == 1 && matrix[2][2].getNumericalValue() == 1) {
+            document.getElementsByClassName("solution-overlay")[0].innerHTML = "One Solution ✅"
+        } else {
+            document.getElementsByClassName("solution-overlay")[0].innerHTML = "No Solution ❌"
+        }
+
         document.getElementById("matrix"+index).classList.add("selected")
         test_graph.gaussianPlanes = new GaussianPlanes(test_graph, transpose(numericMatrixFromFrac(this.matrixList[index])), ["blue", "red", "green"])
         test_graph.gaussianPlanes.planesToDraw = this.selectedPlanes
@@ -994,7 +1026,12 @@ document.addEventListener("change", function() {
 
 })
 
-// Only for when we have default case might want to remove later
+test_graph.rotateAboutZ(2 * Math.PI * (x) / displayWidth)
 
+test_graph.rotateAboutX(2 * Math.PI * (y) / displayHeight)
+
+test_graph.draw()
+
+// Only for when we have default case might want to remove later
 
 gaussSteps.selectMatrix(0)

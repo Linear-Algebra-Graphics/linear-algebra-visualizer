@@ -1,15 +1,37 @@
-Add minimzation
+Features 🎬:
+    Add minimzation of matricies (Make button work)
 
-When editing orginal matrix give visual idication it is edited but NOT updated
-When updated clear all steps and change solution
+    When editing orginal matrix give visual idication it is edited but NOT updated
+    When updated clear all steps and change solution
 
-Add checker for all inputs so only valid inputs allowed.
+    Add checker for all inputs so only valid inputs allowed.
 
-Add popup top left always open saying if solution, infinte solution, no solution.
+    Add popup top left always open saying if solution, infinte solution, no solution.
 
-BE ABLE TO SAVE SOLUTOIN AS LATEX / SAVE AS IMAGE
+    BE ABLE TO SAVE SOLUTOIN AS LATEX / SAVE AS IMAGE / SAVE AS TEXT
 
-CHANGE SELECT TO GRAPH
+    MAKE LAST MATRIX HAVE REMOVE BUTTON OR HAVE REMOVE LAST OPERATION BUTTON OR SOMETHING
+    Remove all as well (Maybe)
 
+    ADD FPS CHANGE SETTINGS
+    When someone goes to page do one draw operation and time it and give reccomended fps.
 
-CHANGE VIEW FORGETS SETTINGS
+    Add color picking page
+    
+    Add help page
+
+    Finish up sovling so it works.
+        E.g when matrix is typed in show the solution.
+    
+    Add animate / animate button
+
+    Animate between planes
+
+    Make the matrix look a little better
+
+Glitches 🐛:
+
+    CHANGE VIEW FORGETS SETTINGS
+
+    Zooming with scroll wheel is messed up. Zooming canvas should *only* zoom canvas.
+        Track pad AND scroll wheel need help with this.

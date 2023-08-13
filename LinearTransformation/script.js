@@ -63,18 +63,36 @@ document.addEventListener('mouseup', function(event) {
 
 
 canvas.addEventListener("wheel", event => {
+    //disableScroll()
+    debugger
     const delta = Math.sign(event.deltaY);
+    if (event.target.id == "graph") {
+        
+        let rect = event.target.getBoundingClientRect()
+        let x = event.clientX - rect.left; //x position within the element.
+        let y = event.clientY - rect.top;  //y position within the element.
 
-    if (delta==-1) {
-      test_graph.zoomIn()
-      // console.log("Increasing scale by 10%")
-    }
+        if (delta==-1) {
+        test_graph.zoomIn()
+        // console.log("Increasing scale by 10%")
+        }
 
-    if (delta==1) {
-      test_graph.zoomOut()
-      // console.log("Decreasing scale by 10%")
+        if (delta==1) {
+        test_graph.zoomOut()
+        // console.log("Decreasing scale by 10%")
+        }
+        
     }
+    //enableScroll()
 });
+
+function disableScroll() {
+    document.body.classList.add("stop-scrolling");
+}
+
+function enableScroll() {
+    document.body.classList.remove("stop-scrolling");
+}
 
 
 

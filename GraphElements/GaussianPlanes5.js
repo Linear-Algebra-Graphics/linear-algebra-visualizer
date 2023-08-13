@@ -72,7 +72,7 @@ class GaussianPlanes {
         this.planesToDraw = new Array(this.planesStdForm.length).fill(true)
 
         //floating point this.precision => 1e-this.precision
-        this.precision = 7
+        this.precision = 12
         this.cubeHalfSideLength = 6
     }
 
