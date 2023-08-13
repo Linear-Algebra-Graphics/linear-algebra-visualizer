@@ -17,6 +17,39 @@ function numericMatrixToFracMatrix(matrix) {
     return fracMatrix
 }
 
+// Only works for frac matrix
+function numberOfSolutionsMatrix(matrix) {
+    if(matrix[0][0].getNumericalValue() == 1 && matrix[1][1].getNumericalValue() == 1 && matrix[2][2].getNumericalValue() == 1) {
+        return "one"
+    }
+
+    let newMatrix = transpose(deepCopy(matrix))
+    
+    for(let i=0; i<newMatrix.length; i++) {
+        let allZeros = true
+        for(let j=0; j<newMatrix[i].length-1; j++) {
+            if(newMatrix[i][j].getNumerator() != 0) {
+                allZeros = false;
+            }
+        }
+
+        /*
+        If matrix looks like this then there is no solution
+        [1 0 0 1]
+        [0 1 0 0]
+        [0 0 0 1]
+        */
+
+        if (allZeros == true && newMatrix[i][3] != 0) {
+            return "none"
+        }
+    }
+
+    return "infinte"
+    
+}
+
+
 // /**
 //  * does row1 - value*row2 
 //  * @param {*} fracMatrix 

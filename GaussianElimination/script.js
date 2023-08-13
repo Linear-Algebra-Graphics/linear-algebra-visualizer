@@ -237,14 +237,25 @@ class GaussianElimStepsHTMLModel {
 
         // Select new.
         this.selected = {type:"matrix", index: index}
-        
-        let matrix = gaussianEliminationV3(this.matrixList[this.selected.index], false, true);
 
-        if (matrix[0][0].getNumericalValue() == 1 && matrix[1][1].getNumericalValue() == 1 && matrix[2][2].getNumericalValue() == 1) {
-            document.getElementsByClassName("solution-overlay")[0].innerHTML = "One Solution ✅"
-        } else {
-            document.getElementsByClassName("solution-overlay")[0].innerHTML = "No Solution ❌"
+        let matrix = gaussianEliminationV3(this.matrixList[this.selected.index], false, true);
+        let solutions = numberOfSolutionsMatrix(matrix);
+
+        if (solutions == "one") {
+            document.getElementsByClassName("solution-overlay")[0].innerHTML = "One solution"
+            document.getElementsByClassName("solution-overlay")[0].style = "background: lightgreen;"
+
+        } else if (solutions == "infinte") {
+            document.getElementsByClassName("solution-overlay")[0].innerHTML = "Infinte solutions"
+            document.getElementsByClassName("solution-overlay")[0].style = "background: lightblue;"
+
+
+        } else if(solutions == "none") {
+            document.getElementsByClassName("solution-overlay")[0].innerHTML = "No Solution"
+            document.getElementsByClassName("solution-overlay")[0].style = "background: #f7697e;"
+
         }
+
 
         document.getElementById("matrix"+index).classList.add("selected")
         test_graph.gaussianPlanes = new GaussianPlanes(test_graph, transpose(numericMatrixFromFrac(this.matrixList[index])), ["blue", "red", "green"])

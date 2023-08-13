@@ -1,6 +1,12 @@
 Features 🎬:
-    Add minimzation of matricies (Make button work)
 
+    High priorty:
+
+    Medium priority:
+
+    Low priority:
+        Animate between planes
+        
     When editing orginal matrix give visual idication it is edited but NOT updated
     When updated clear all steps and change solution
 
@@ -20,14 +26,19 @@ Features 🎬:
     
     Add help page
 
-    Finish up sovling so it works.
+    Finish up matrix stuff so it works.
         E.g when matrix is typed in show the solution.
     
     Add animate / animate button
 
-    Animate between planes
 
     Make the matrix look a little better
+
+    Add minimzation of matricies (Make button work)
+
+    Animate between planes
+
+    Choose better font
 
 Glitches 🐛:
 
