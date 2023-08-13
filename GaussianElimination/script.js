@@ -37,6 +37,72 @@ let delta_y = 0
 
 let drawGraph = false;
 
+document.addEventListener("keydown", (event) => {
+    const inputField = document.activeElement
+    if (inputField.className == "matrix-value") {
+        //in future add a check to make sure this is a input field in a matrix and not for a vector
+        //debugger 
+        const columnId = inputField.parentNode
+        const valuesId = columnId.parentNode
+        const matrixId = valuesId.parentNode
+        const matrixContainer = matrixId.parentNode
+
+        const column = Array.from(columnId.getElementsByTagName("input"))
+        const columns = Array.from(valuesId.getElementsByClassName("column"))
+        const matrixArray = Array.from(matrixContainer.getElementsByClassName("matrix"))
+        
+        const l = column.indexOf(inputField) // inputIndex
+        const k = columns.indexOf(columnId) // columnIndex
+        //keep this to poentially move between matrices using arrows?
+        const i = matrixArray.indexOf(matrixId) // matrixIndex
+        
+        let inputTextLength = inputField.value.length
+    
+        if (isNaN(inputTextLength)) {
+            inputTextLength = 0
+        }
+        let indexInText = event.target.selectionStart
+        
+        // console.log("W")
+        // console.log(inputTextLength)
+        // console.log(indexInText)
+    
+        // console.log("textLength " + (inputTextLength))
+        // console.log("index "  + indexInText)
+        switch (event.key) {
+            case "ArrowLeft":
+                let rowLeft = k - 1
+                if (rowLeft >= 0 && indexInText == 0) {
+                    // console.log(columns[rowLeft].getElementsByTagName("input"))
+                    columns[rowLeft].getElementsByTagName("input")[l].focus()
+                }
+                
+                break
+            case "ArrowRight":
+                let rowRight = k + 1
+                // console.log(indexInText + ", " + inputTextLength)
+                if (rowRight < columns.length && indexInText == inputTextLength) {
+                    columns[rowRight].getElementsByTagName("input")[l].focus()
+                }
+                break
+            case "ArrowUp":
+                let rowUp = l - 1
+                if (rowUp >= 0) {
+                    column[rowUp].focus()
+                }
+                break
+            case "ArrowDown":
+                let rowDown = l + 1 
+                if (rowDown < column.length) {
+                    column[rowDown].focus()
+                }
+                break
+            default:
+                break
+        }
+    }
+})
+
 canvas.addEventListener('mousemove', function(e) {    // return null
 
     // console.log("mouse on canvas!")

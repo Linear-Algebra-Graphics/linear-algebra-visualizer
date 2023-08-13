@@ -10,19 +10,34 @@ Features 🎬:
     When editing orginal matrix give visual idication it is edited but NOT updated
     When updated clear all steps and change solution
 
-    Add checker for all inputs so only valid inputs allowed.
+    High priorty:
+        (Medium) Add checker for all inputs so only valid inputs allowed.
 
-    Add popup top left always open saying if solution, infinte solution, no solution.
+        (Easy) Add popup top left always open saying if solution, infinte solution, no solution.
 
-    BE ABLE TO SAVE SOLUTOIN AS LATEX / SAVE AS IMAGE / SAVE AS TEXT
+        (Medium) Finish up matrix stuff so it works.
+                    E.g when matrix is typed in show the solution.
 
-    MAKE LAST MATRIX HAVE REMOVE BUTTON OR HAVE REMOVE LAST OPERATION BUTTON OR SOMETHING
-    Remove all as well (Maybe)
+        (Medium) Move between input cells with arrow keys 
 
-    ADD FPS CHANGE SETTINGS
-    When someone goes to page do one draw operation and time it and give reccomended fps.
+    Medium priority:
+        (Medium) When editing orginal matrix give visual idication it is edited but NOT updated
+        (Medium) When updated clear all steps and change solution
 
-    Add color picking page
+        (Medium) MAKE LAST MATRIX HAVE REMOVE BUTTON OR HAVE REMOVE LAST OPERATION BUTTON OR SOMETHING
+                Remove all as well (Maybe)
+
+        (Medium) Add settings page
+            (Medium) Add settings like: Axis on and off, grid on and off, etc...
+            (Medium) ADD FPS CHANGE SETTINGS
+                (Medium) When someone goes to page do one draw operation and time it and give reccomended fps.
+
+        (Hard) Add color picking page
+
+        (Medium) Add minimzation of matricies (Make button work)
+
+    Low priority:
+        (Hard) Animate between planes
     
     Add help page
 
@@ -31,8 +46,38 @@ Features 🎬:
     
     Add animate / animate button
 
+        (Medium) Add animate / animate button
 
-    Make the matrix look a little better
+        (Easy) Choose better font
+        
+        (Hard) BE ABLE TO SAVE SOLUTOIN AS LATEX / SAVE AS IMAGE / SAVE AS TEXT
+
+        (Medium) Make the matrix look a little better
+        
+        (Easy) Have base colors be color blind compatible
+
+Linear Transformations page brainstorm 🧠:
+    Three different sections:
+        left: equations
+        mid: graph
+        right: question problems directory
+
+    Question directory:
+        All on same page, questions go down out like directory,
+        when click on question hide directory and show questio info and stuff and have back arrow to go back to directory
+
+    Equations:
+        Coppy desmos ideas
+        Both "direct" and or "formated" matrix input
+
+        Demo:
+            A = [[],[],[]] (Not graphed)
+            v = [1,2,3]    (Graphed)
+            Av             (Graphed)
+            m = Av         (Graphed)
+
+        If output is a vector or pedefined shape it gets graphed. Otherwise it doesn't.
+        There is option not to graph
 
     Add minimzation of matricies (Make button work)
 
@@ -41,7 +86,6 @@ Features 🎬:
     Choose better font
 
 Glitches 🐛:
-
     CHANGE VIEW FORGETS SETTINGS
 
     Zooming with scroll wheel is messed up. Zooming canvas should *only* zoom canvas.
