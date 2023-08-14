@@ -485,6 +485,8 @@ class GaussianElimStepsHTMLModel {
             this.matrixList[0] = matrix
             test_graph.gaussianPlanes = new GaussianPlanes(test_graph, transpose(numericMatrixFromFrac(matrix)), ["blue", "red", "green", "orange"], (this.view == 2))
         }
+        // make clear work later!!
+        // this.clear()
         test_graph.draw()
 
     }
