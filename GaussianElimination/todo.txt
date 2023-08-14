@@ -1,15 +1,4 @@
 Features 🎬:
-
-    High priorty:
-
-    Medium priority:
-
-    Low priority:
-        Animate between planes
-        
-    When editing orginal matrix give visual idication it is edited but NOT updated
-    When updated clear all steps and change solution
-
     High priorty:
         (Medium) Add checker for all inputs so only valid inputs allowed.
 
