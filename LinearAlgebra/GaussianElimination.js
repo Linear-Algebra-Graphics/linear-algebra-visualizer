@@ -18,6 +18,12 @@ function numericMatrixToFracMatrix(matrix) {
 }
 
 // Only works for frac matrix
+/**
+ * finds how many solutions a system of equations has
+ * @param {Frac[][]} matrix 
+ * @requires: input matrix is of the reduced echelon form
+ * @returns {"one" | "none" | "infinite"}
+ */
 function numberOfSolutionsMatrix(matrix) {
     if(matrix[0][0].getNumericalValue() == 1 && matrix[1][1].getNumericalValue() == 1 && matrix[2][2].getNumericalValue() == 1) {
         return "one"
@@ -45,7 +51,7 @@ function numberOfSolutionsMatrix(matrix) {
         }
     }
 
-    return "infinte"
+    return "infinite"
     
 }
 

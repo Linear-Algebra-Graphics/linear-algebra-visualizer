@@ -7,8 +7,6 @@ Features 🎬:
         (Medium) Finish up matrix stuff so it works.
                     E.g when matrix is typed in show the solution.
 
-        (Medium) Move between input cells with arrow keys 
-
     Medium priority:
         (Medium) When editing orginal matrix give visual idication it is edited but NOT updated
         (Medium) When updated clear all steps and change solution
@@ -79,3 +77,7 @@ Glitches 🐛:
 
     Zooming with scroll wheel is messed up. Zooming canvas should *only* zoom canvas.
         Track pad AND scroll wheel need help with this.
+
+    Input like: 2/-3 is invalid. Change regex / neg statmemnts to make valid
+
+    Clear matrix doesn't work. If step is selected then it breaks.

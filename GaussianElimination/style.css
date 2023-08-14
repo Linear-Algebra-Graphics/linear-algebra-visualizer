@@ -12,7 +12,7 @@ p {
 }
 
 button:hover {
-    cursor: pointer;
+    cursor: pointer !important;
 }
 
 canvas:hover {
@@ -161,7 +161,7 @@ canvas:active {
 }
 
 .operation.selected {
-    background: rgb(61, 175, 67);
+    background: lightseagreen; /*rgb(61, 175, 67);*/
     /* background: linear-gradient(140deg, rgba(48,168,77,1) 0%, rgba(36,187,174,1) 100%);
     background-size: 400% 400%;
     background-position: 50% 50%; */
