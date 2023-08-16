@@ -72,6 +72,7 @@ class Graph {
         this.gaussAnimationTick        = 1/150
         this.SUV                       = undefined
         this.augmented2                = undefined
+        this.animatedRowsQueue         = []
     }
 
      /**
@@ -133,6 +134,8 @@ class Graph {
         this.SUV = SUV
     }
 
+    
+    
     animateGaussianPlanes(augmented1, augmented2, index, center) {
         //debugger
         //should only work for systems that have a solution.
@@ -670,7 +673,33 @@ class Graph {
 
 }
 
+/**
+ * why is this green?
+ * @param {*} a
+ * @param {*} b 
+ */
+function getTransformationMatrix(a, b) {
+    //ref: https://math.stackexchange.com/questions/180418/calculate-rotation-matrix-to-align-vector-a-to-vector-b-in-3d/
+    let v = crossProductR3(a, b);
+    let s = vectorNormL2(v);
+    let c = dotProduct(a, b);
 
+    //this is the 3x3 skew-symmetric cross-product matrix of v
+    let vx = [[0, v[2], -1*v[1]],[-1*v[2], 0, v[0]],[v[1], -1*v[0], 0]]
+
+    let I = [[1,0,0],[0,1,0],[0,0,1]];
+
+    let factor = (1 - c) / (s * s);
+
+    let vx2 = matrixMultiplication(vx, vx);
+    let scaledVx2 = scaleMatrix(vx2, factor);
+
+    let matrixR = addMatrices(addMatrices(I, vx), scaledVx2);
+
+    let A = transpose(matrixR)
+    let SUV = SVD(A)
+    this.SUV = SUV
+}
 
 /**
  * gridVector and x y define a line y = mx + b
