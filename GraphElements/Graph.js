@@ -70,14 +70,47 @@ class Graph {
         this.animatingGaussianPlanes    = false
         this.gaussAnimationPercentage  = 0
         this.gaussAnimationTick        = 1/150
+        this.SUV                       = undefined
+        this.augmented2                = undefined
     }
 
-    animateGaussianPlanes(augmented1, augmented2, index, center) {
-        debugger
-        //should only work for systems that have a solution.
-        //first find the transformation matrix??
+     /**
+     *  <label>Show Grid</label>
+                    <input type="checkbox" class="show-grid-checkbox" checked></input>
+
+                    <button id="defaultZoom" class="default-zoom-button"> default zoom </button>
+     * 
+     */
+
+    /**
+     * 
+     * @param {*} finalMatrix 
+     * @param {*} fps 
+     */
+    setAnimationTo(finalMatrix, fps) {
+        if (this.gaussianPlanes === undefined) {
+            throw new Error("idiot")
+        } 
+
+        //determine start and end matrices
+        this.augmented2 = finalMatrix
+        let augmented1 = this.gaussianPlanes.planesStdForm
+
+        //figure out which rows need to be animated.
+        let rows = []
+        for (let i = 0; i < augmented1.length; i++) {
+            let v1 = Array.from(this.augmented2[i])
+            let v2 = Array.from(augmented1[i])
+            normalizeVector(v1)
+            normalizeVector(v2)
+
+            if (!vectorEquals(v1, v2, 12)) {
+                rows.push(i)
+            }
+        }
+
         let a = normalizeVector(arrayFirstN(augmented1[index], 3));
-        let b = normalizeVector(arrayFirstN(augmented2[index], 3));
+        let b = normalizeVector(arrayFirstN(this.augmented2[index], 3));
         //ref: https://math.stackexchange.com/questions/180418/calculate-rotation-matrix-to-align-vector-a-to-vector-b-in-3d/
         let v = crossProductR3(a, b);
         let s = vectorNormL2(v);
@@ -97,9 +130,37 @@ class Graph {
 
         let A = transpose(matrixR)
         let SUV = SVD(A)
-        let S = SUV[0]
-        let U = transpose(SUV[1])
-        let V = transpose(SUV[2])
+        this.SUV = SUV
+    }
+
+    animateGaussianPlanes(augmented1, augmented2, index, center) {
+        //debugger
+        //should only work for systems that have a solution.
+        //first find the transformation matrix??
+        // let a = normalizeVector(arrayFirstN(augmented1[index], 3));
+        // let b = normalizeVector(arrayFirstN(augmented2[index], 3));
+        // //ref: https://math.stackexchange.com/questions/180418/calculate-rotation-matrix-to-align-vector-a-to-vector-b-in-3d/
+        // let v = crossProductR3(a, b);
+        // let s = vectorNormL2(v);
+        // let c = dotProduct(a, b);
+
+        // //this is the 3x3 skew-symmetric cross-product matrix of v
+        // let vx = [[0, v[2], -1*v[1]],[-1*v[2], 0, v[0]],[v[1], -1*v[0], 0]]
+
+        // let I = [[1,0,0],[0,1,0],[0,0,1]];
+
+        // let factor = (1 - c) / (s * s);
+
+        // let vx2 = matrixMultiplication(vx, vx);
+        // let scaledVx2 = scaleMatrix(vx2, factor);
+
+        // let matrixR = addMatrices(addMatrices(I, vx), scaledVx2);
+
+        // let A = transpose(matrixR)
+        // let SUV = SVD(A)
+        let S = this.SUV[0]
+        let U = transpose(this.SUV[1])
+        let V = transpose(this.SUV[2])
 
         let R = matrixMultiplication(U, transpose(V))
         let angles  = this._decomposeRotation(R)
@@ -132,7 +193,7 @@ class Graph {
             this.gaussAnimationPercentage += this.gaussAnimationTick
         
             let vec = matrixVectorMultiplication(matrixMultiplication(transitionR, transitionS), a)
-            let newD = dotProduct(vec, center)
+            let newD = dotProduct(vec, this.gaussianPlanes.solution)
             vec.push(newD)
             augmented1[index] = vec
             this.gaussianPlanes = new GaussianPlanes(this, augmented1, this.gaussianPlanes.planeColors, this.gaussianPlanes.cubeBoundPlanes)

@@ -94,11 +94,13 @@ canvas:active {
 }
 
 .container {
+    padding: 10px;
     display: flex;
+    gap: 10px;
 }
 
 .canvas-and-settings {
-    margin: 10px;
+    /* margin: 10px; */
     display: flex;
     flex-direction: column;
 }
@@ -106,14 +108,14 @@ canvas:active {
 .matrix-container {
     /* width: 300px; */
     /* For scroll bar. */
-    padding-right: 10px;
+    padding: 10px;
+    padding-right: 20px;
     display: flex;
     flex-direction: column;
     /* flex-wrap: wrap; */
     justify-content: left;
     align-content: flex-start;
     gap: 10px 2px;
-    margin: 10px;
     overflow-y: scroll;
     max-height: 600px;
 
@@ -154,7 +156,7 @@ canvas:active {
 }
 
 .matrix.selected .name-bar {
-    background: lightseagreen/*rgb(61, 175, 67);*/
+    background: rgb(61, 175, 67);
     /* background: linear-gradient(140deg, rgba(48,168,77,1) 0%, rgba(36,187,174,1) 100%);
     background-size: 400% 400%;
     background-position: 50% 50%; */
@@ -201,9 +203,8 @@ table {
     display: flex;
     justify-content: flex-end;
     text-align: center;
-    background: #AFC2D5;
+    background: lightseagreen;
     border-radius: 3px 3px 0px 0px;
-    border-bottom: 2px solid gray;
 }
 
 .label {
@@ -239,21 +240,21 @@ table {
 }
 
 .row0 {
-    background-color: lightseagreen;
+    background-color: rgb(80, 80, 255);
 }
 
 .row1 {
-    background-color: #ff6db6;
+    background-color: rgb(255, 80, 80);
 }
 
 .row2 {
-    background-color: blue;
+    background-color: rgb(56, 189, 56);
 }
 
 .bar {
     /* background: rgb(37, 178, 233); */
     /* height: 20px; */
-    border-radius: 3px 3px 0px 0px;
+    border-radius: 7px 7px 0px 0px;
     border-style: solid;
     border-width: 1px 1px 0px 1px;
     display: flex;
@@ -283,9 +284,58 @@ div.bar button {
     transition: height .4s ease, border-top-left-radius .4s ease, border-top-right-radius .4s ease; /* Add CSS transitions for height, background-color, and border */
 }
 
+
 div.bar button:hover {
     height: 37px; border-top-left-radius: 0px; border-top-right-radius: 0px;
 }
+
+
+
+.bar-bottom {
+    /* background: rgb(37, 178, 233); */
+    /* height: 20px; */
+    border-radius: 0px 0px 7px 7px;
+    border-style: solid;
+    border-width: 0px 1px 1px 1px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    height: 36px;
+}
+
+div.bar-bottom button {
+    font-size: 1rem;
+    background: white;
+    margin: 0px 3px 3px 3px;
+    border-color: black;
+    border-radius: 0px 0px 3px 3px;
+    border-style: solid;
+    border-width: 0px 1px 1px 1px;
+    padding-right: 4px;
+    padding-left: 4px;
+    height: 30px;
+    transition: height .4s ease, border-bottom-left-radius .4s ease, border-bottom-right-radius .4s ease; /* Add CSS transitions for height, background-color, and border */
+}
+
+div.bar-bottom button:hover {
+    height: 37px; border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;
+}
+
+.bottom-left-container {
+    height: inherit;
+    display: flex;
+    padding-left: 3px;
+    align-items: flex-start;
+}
+
+.bottom-right-container {
+    height: inherit;
+    display: flex;
+    padding-right: 3px;
+    align-items: flex-start;
+}
+
+
 
 .emoji {
     display: inline-block;
@@ -472,6 +522,7 @@ div.bar button:hover {
 
 .canvas-container {
     position: relative;
+    display: flex;
 }
 
 .solution-overlay {
@@ -481,4 +532,28 @@ div.bar button:hover {
     padding: 5px;
     border: 1px solid black;
     border-bottom-right-radius: 10px;
+}
+
+.matrix-outer-wraper {
+    
+    border: 1px solid black;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    height:fit-content;
+}
+
+.matrix-outer-wraper .box-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    font-size: 1.25rem;
+    border-bottom: 1px solid black;
+    height: 36px;
+    /* padding: 7px 0px 7px 0px; */
+}
+
+.matrix-solution {
+    padding: 10px;
 }
