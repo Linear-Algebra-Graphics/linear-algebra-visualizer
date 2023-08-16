@@ -1,3 +1,12 @@
+function arrayFirstN(arr, n) {
+    let newArr = new Array(n).fill(0);
+    for (let i = 0; i < n; i++) {
+        newArr[i] = arr[i]
+    }
+    return newArr
+}
+
+
 /**
  * does Ax = b multiplication 
  * @param {Number[][]} matrix col row representation matrix A
@@ -45,6 +54,21 @@ function matrixMultiplication(leftMatrix, rightMatrix) {
     return returnMatrix
 }
 
+function addMatrices(matrix1, matrix2) {
+    if (matrix1.length != matrix2.length || matrix1[0].length != matrix2[0].length) {
+        throw new Error("adding matrices of diff dimensions!");
+    }
+
+    let output = new Array(matrix1.length);
+    for (let i = 0; i < output.length; i++) {
+        output[i] = new Array(matrix1[i].length).fill(0);
+        for (let j = 0; j < output[i].length; j++) {
+            output[i][j] = matrix1[i][j] + matrix2[i][j];
+        } 
+    }
+    return output;
+}
+
 /**
  * gets the dot product of two vectors
  * @param {Number[]} vector1 a vector in form [a1, a2, ... , an]
@@ -86,6 +110,17 @@ function vectorMultiplication(v1, v2) {
         }
     }
     return output
+}
+
+function scaleMatrix(matrix, scalar) {
+    let output = new Array(matrix.length);
+    for (let i = 0; i < output.length; i++) {
+        output[i] = new Array(matrix[i].length);
+        for (let j = 0; j < output[i].length; j++) {
+            output[i][j] = scalar * matrix[i][j];
+        }
+    }
+    return output;
 }
 
 
@@ -304,4 +339,39 @@ function det3x3(matrix) {
     
     let det = (e11*e22*e33) + (e12*e23*e31) + (e13*e21*e32) - (e11*e23*e32) - (e12*e21*e33) - (e13*e22*e31)
     return det
+}
+
+
+/**
+ * 
+ * @param {Number[]} vec1 
+ * @param {Number[]} vec2 
+ * @returns cross product of two R3 vectors
+ */
+function crossProductR3(vec1, vec2) {
+    // calculate crossproduct => vector perp to both normals => intersetion vector
+    // u x v = (u2v3 - u3v2, u3v1-u1v3, u1v2-u2v1)
+    let cx = (vec1[1] * vec2[2]) - (vec1[2] * vec2[1])
+    let cy = (vec1[2] * vec2[0]) - (vec1[0] * vec2[2])
+    let cz = (vec1[0] * vec2[1]) - (vec1[1] * vec2[0])
+
+    // correct fp error to 0 if needed (safer calculations)
+    if (numEqual(cx, 0, 12)) {
+        cx = 0
+    }
+    if (numEqual(cy, 0, 12)) {
+        cy = 0
+    }
+    if (numEqual(cz, 0, 12)) {
+        cz = 0
+    }
+    return [cx, cy, cz]
+}
+
+function vectorNormL2(vector) {
+    let sum = 0;
+    for (let i = 0; i < vector.length; i++) {
+        sum += (vector[i] * vector[i])
+    }
+    return Math.sqrt(sum)
 }

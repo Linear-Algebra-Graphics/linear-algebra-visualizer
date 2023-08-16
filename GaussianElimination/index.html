@@ -72,7 +72,7 @@
                     <div class="solution-overlay">One Solution ✅</div>
                     <canvas id="graph" style="border:1px solid #000000;"></canvas>
                 </div>
-                
+<!--                 
                 <div class="warning-banner bottom">
                     <div class="warning-words">
                         <div class="emoji">🚫</div>
@@ -83,7 +83,7 @@
                         &nbsp;No solution!&nbsp;
                         <div class="emoji">🚫</div>
                     </div>
-                </div>
+                </div> -->
                 <div class="button-container">
                     <button type="button" class="add-button">Add augmented matrix</button> 
                     <button type="button" class="remove-button">remove last matrix</button> 
@@ -91,9 +91,14 @@
                     <button type="button" class="animate-button">animate</button> 
                     <button type="button" class="solve-button">solve</button>
                     <button type="button" class="row-opp">NEW ROW OPERATION</button>
+
+                    <label>Show Grid</label>
+                    <input type="checkbox" class="show-grid-checkbox" checked></input>
+
+                    <button id="defaultZoom" class="default-zoom-button"> default zoom </button>
+
                     <button type="button" class="zoom-in-button">+</button>
                     <button type="button" class="zoom-out-button">-</button>
-
                 </div>
             </div>
             <div class="matrix-container">

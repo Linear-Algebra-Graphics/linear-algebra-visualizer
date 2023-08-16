@@ -154,7 +154,7 @@ canvas:active {
 }
 
 .matrix.selected .name-bar {
-    background: rgb(61, 175, 67);
+    background: lightseagreen/*rgb(61, 175, 67);*/
     /* background: linear-gradient(140deg, rgba(48,168,77,1) 0%, rgba(36,187,174,1) 100%);
     background-size: 400% 400%;
     background-position: 50% 50%; */
@@ -201,8 +201,9 @@ table {
     display: flex;
     justify-content: flex-end;
     text-align: center;
-    background: lightseagreen;
+    background: #AFC2D5;
     border-radius: 3px 3px 0px 0px;
+    border-bottom: 2px solid gray;
 }
 
 .label {
@@ -238,15 +239,15 @@ table {
 }
 
 .row0 {
-    background-color: rgb(80, 80, 255);
+    background-color: lightseagreen;
 }
 
 .row1 {
-    background-color: rgb(255, 80, 80);
+    background-color: #ff6db6;
 }
 
 .row2 {
-    background-color: rgb(56, 189, 56);
+    background-color: blue;
 }
 
 .bar {

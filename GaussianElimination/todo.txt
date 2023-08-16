@@ -1,45 +1,43 @@
 Features 🎬:
     High priorty:
-        (Medium) Add checker for all inputs so only valid inputs allowed.
-
-        (Easy) Add popup top left always open saying if solution, infinte solution, no solution.
-
         (Medium) Finish up matrix stuff so it works.
                     E.g when matrix is typed in show the solution.
 
     Medium priority:
-        (Medium) When editing orginal matrix give visual idication it is edited but NOT updated
-        (Medium) When updated clear all steps and change solution
+        (Easy) When updated clear all steps and change solution
 
         (Medium) MAKE LAST MATRIX HAVE REMOVE BUTTON OR HAVE REMOVE LAST OPERATION BUTTON OR SOMETHING
                 Remove all as well (Maybe)
-
-        (Medium) Add settings page
-            (Medium) Add settings like: Axis on and off, grid on and off, etc...
-            (Medium) ADD FPS CHANGE SETTINGS
-                (Medium) When someone goes to page do one draw operation and time it and give reccomended fps.
 
         (Hard) Add color picking page
 
         (Medium) Add minimzation of matricies (Make button work)
 
+        (Easy) Make fractions on top left solution be on top of eachother
+
     Low priority:
-        (Hard) Animate between planes
+        👀 (Hard) Animate between planes
+
+        (Medium) Add settings page
+        
+        (Medium) ADD FPS CHANGE SETTINGS
+        (Medium) When someone goes to page do one draw operation and time it and give reccomended fps.
+
     
-    Add help page
+        Add help page
 
-    Finish up matrix stuff so it works.
-        E.g when matrix is typed in show the solution.
-    
-    Add animate / animate button
+        Finish up matrix stuff so it works.
+            E.g when matrix is typed in show the solution.
+        
+        (Hard) Save steps in ? url
 
-        (Medium) Add animate / animate button
+        🧙‍♂️ (Medium) Add animate / animate button
 
-        (Easy) Choose better font
+        🧙‍♂️ (Easy) Choose better font
         
         (Hard) BE ABLE TO SAVE SOLUTOIN AS LATEX / SAVE AS IMAGE / SAVE AS TEXT
 
-        (Medium) Make the matrix look a little better
+        🧙‍♂️ (Medium) Make the matrix look a little better
         
         (Easy) Have base colors be color blind compatible
 
@@ -72,12 +70,8 @@ Linear Transformations page brainstorm 🧠:
 
     Choose better font
 
-Glitches 🐛:
-    CHANGE VIEW FORGETS SETTINGS
-
+Bugs 🐛:
     Zooming with scroll wheel is messed up. Zooming canvas should *only* zoom canvas.
         Track pad AND scroll wheel need help with this.
 
-    Input like: 2/-3 is invalid. Change regex / neg statmemnts to make valid
-
-    Clear matrix doesn't work. If step is selected then it breaks.
+    When zeroring out rows the result button makes graph glitch. To get it use default matrix with bottom two rows the same.

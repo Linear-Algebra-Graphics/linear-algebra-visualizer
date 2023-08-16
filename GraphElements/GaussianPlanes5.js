@@ -65,7 +65,9 @@ class GaussianPlanes {
         this.solution = [reduced[reduced.length - 1][0], reduced[reduced.length - 1][1], reduced[reduced.length - 1][2]]
         let matrix = transpose(planesStdForm)
 
-        this.hasSolution = this._hasSolution(reduced)
+        this.hasSingleSolution = this._hasSingleSolution(reduced)
+        this.hasSolution       = this._hasSolution(reduced)
+
         this.planeCenter = this._findPlaneCenters(matrix)
 
         // boolean array of the size of the number of rows in the augmented matrix, indicates if row is to be drawn or not
@@ -98,6 +100,19 @@ class GaussianPlanes {
             }
         }
         return planeCenter
+    }
+
+    _hasSingleSolution(reduced) {
+        let hasSingleSolution = true
+        //see if a solution 
+        for (let i = 0; i < reduced[0].length; i++) {
+            const col = leftMostNonZeroInRow(reduced, i)
+            if (col == reduced.length - 1 || col == reduced.length) {
+                hasSingleSolution = false
+                break
+            }
+        }
+        return hasSingleSolution
     }
 
     _hasSolution(reduced) {
@@ -654,7 +669,7 @@ class GaussianPlanes {
             this._drawPlaneBoundingCubeOutlines(cubePlanesStdForm, cubeSize, "#333333")
         }
 
-        if (this.hasSolution) {
+        if (this.hasSingleSolution) {
             //draw dot at solution
             this.graph.drawDotFromVector(this.solution, "pink", "black", 6)
         }
