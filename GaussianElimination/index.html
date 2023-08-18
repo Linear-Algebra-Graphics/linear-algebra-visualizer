@@ -50,10 +50,10 @@
                     </div>
 
                     <div class="settings-and-help-button-container">
-                        <button class="about-button"><div class="emoji">📖</div> About</button>
+                        <!-- <button class="help-button"><div class="emoji">🛟</div> Help</button>
+                        <button class="settings-button"><div class="emoji">🛠️</div> Settings</button>
+                        <button class="color-settings-button"><div class="emoji palette">🎨</div><div class="emoji paintbrush">🖌️</div> Color Settings</button> -->
 
-                        <button class="help-button"><div class="emoji">🛟</div> Help</button>
-                        <button class="color-settings-button"><div class="emoji palette">🎨</div><div class="emoji paintbrush">🖌️</div> Color Settings</button>
                     </div>
                     
                 </div>
@@ -62,6 +62,16 @@
                 <div class="canvas-container">
                     <div class="solution-overlay">One Solution ✅</div>
                     <canvas id="graph" style="border:1px solid #000000;"></canvas>
+                    <div class="zoom-overlay">
+                        <button class="default-zoom-button"><div class="emoji">🔄 Default zoom</div></button>
+                        <button class="zoom-out-button"><div class="emoji">➖</div></button>
+                        <button class="zoom-in-button"><div class="emoji">➕</div></button>
+
+                    </div>
+                    <!-- <div class="zoom-overlay2">
+                        <button class="default-zoom-button"><div class="emoji">Grid on</div></button>
+
+                    </div> -->
                 </div>
 
                 <div class="bar-bottom">
@@ -92,7 +102,23 @@
                 </div>
 
             </div>
-            <div class="matrix-outer-wraper">
+            
+            <div class="graph-settings-container box" style="display: none;">
+                <div class="box-label">Settings&nbsp;&nbsp;&nbsp;<button>close</button></div>
+                <div style = "display:flex; align-items: center; flex-direction: column; width: 250px; height: 100px;">
+                    <label for="fpsnumber">FPS: </label>
+                    <input type="number" class="fps-input" name="fpsnumber" min="1" max="120">
+                </div>
+            </div>
+
+            <div class="color-settings-container box" style="display: none;">
+                <div class="box-label">Color settings&nbsp;&nbsp;&nbsp;<button>close</button></div>
+                <div style = "display:flex; align-items: center; flex-direction: column; width: 250px; height: 100px;">
+                    Color stuff
+                </div>
+            </div>
+
+            <div class="matrix-outer-wraper box">
                 <div class="box-label">Steps</div>
                 <div class="matrix-container">
                     <div class="matrix selected" id="matrix0">
@@ -239,58 +265,63 @@
 
                 </div>
             </div>
-            <div class="matrix-outer-wraper">
-                <div class="box-label">Solution</div>
-                <div class="matrix-solution">
-                    <div class="matrix">
-                        <div class="name-bar">
-                            <button type="button" class="">-</button> 
-                            <div class="label"></div>
-                            <button type="button" class="select-button">graph</button> 
+
+            <div class="solution-and-settings-container box">
+                <div class="matrix-outer-wraper">
+                    <div class="box-label">Reduced Echelon Form</div>
+                    <div class="matrix-solution">
+                        <div class="matrix">
+                            <div class="name-bar">
+                                <button type="button" class="">-</button> 
+                                <div class="label">Matrix</div>
+                                <!-- <button type="button" class="select-button">graph</button>  -->
+                            </div>
+                            <div class="values">
+                            
+                                <div class="color-column">
+                                    <div class="color-box row0">
+                                        <input class="color-checkbox" type="checkbox" checked>
+                                    </div>
+                                    <div class="color-box row1">
+                                        <input class="color-checkbox" type="checkbox" checked>
+                                    </div>
+                                    <div class="color-box row2">
+                                        <input class="color-checkbox" type="checkbox" checked>
+                                    </div>
+                                </div>
+                            
+                                <div class="line"></div>
+                            
+                                <div class="column">
+                                    <input class="matrix-value" type="text" value="" readonly>
+                                    <input class="matrix-value" type="text" value="" readonly>
+                                    <input class="matrix-value" type="text" value="" readonly>
+                                </div>
+                                <div class="column">
+                                    <input class="matrix-value" type="text" value="" readonly>
+                                    <input class="matrix-value" type="text" value="" readonly>
+                                    <input class="matrix-value" type="text" value="" readonly>
+                                </div>
+                                <div class="column">
+                                    <input class="matrix-value" type="text" value="" readonly>
+                                    <input class="matrix-value" type="text" value="" readonly>
+                                    <input class="matrix-value" type="text" value="" readonly>
+                                </div>
+                                <div class="line-gray"></div>
+                                <div class="column">
+                                    <input class="matrix-value" type="text" value="" readonly>
+                                    <input class="matrix-value" type="text" value="" readonly>
+                                    <input class="matrix-value" type="text" value="" readonly>
+                                </div>
+                            
+                                <div class="line"></div>
+                            </div>
                         </div>
-                        <div class="values">
-                        
-                            <div class="color-column">
-                                <div class="color-box">
-                                    <input class="color-checkbox" type="checkbox">
-                                </div>
-                                <div class="color-box">
-                                    <input class="color-checkbox" type="checkbox">
-                                </div>
-                                <div class="color-box">
-                                    <input class="color-checkbox" type="checkbox">
-                                </div>
-                            </div>
-                        
-                            <div class="line"></div>
-                        
-                            <div class="column">
-                                <input class="matrix-value" type="text" value="">
-                                <input class="matrix-value" type="text" value="">
-                                <input class="matrix-value" type="text" value="">
-                            </div>
-                            <div class="column">
-                                <input class="matrix-value" type="text" value="">
-                                <input class="matrix-value" type="text" value="">
-                                <input class="matrix-value" type="text" value="">
-                            </div>
-                            <div class="column">
-                                <input class="matrix-value" type="text" value="">
-                                <input class="matrix-value" type="text" value="">
-                                <input class="matrix-value" type="text" value="">
-                            </div>
-                            <div class="line-gray"></div>
-                            <div class="column">
-                                <input class="matrix-value" type="text" value="">
-                                <input class="matrix-value" type="text" value="">
-                                <input class="matrix-value" type="text" value="">
-                            </div>
-                        
-                            <div class="line"></div>
-                        </div>
+                        <div style="width: 300px; margin-top: 10px;">If there is single valid solution, it will be graphed as a pink dot.</div>
                     </div>
                 </div>
-            </div>    
+            </div>
+
         
         </div>
 

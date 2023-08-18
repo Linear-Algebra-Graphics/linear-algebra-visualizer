@@ -13,7 +13,7 @@ class Axis {
     constructor(graph, xcolor, ycolor, zcolor, zeroZeroDotColor, axisLength) {
         this.axisLength = axisLength
         this.graph = graph
-        this.lineWidth = 6
+        this.lineWidth = 3
         
         //for finite axis
         this._xAxis = new Vector(this.graph, [this.axisLength,0,0], xcolor, this.lineWidth, false, "x")
@@ -28,7 +28,7 @@ class Axis {
         this.fullAxis         = true //if false draws only positive axis
         this.zeroZeroDot      = true
         this.zeroZeroDotColor = zeroZeroDotColor
-        this.zeroZeroDotSize  = 5
+        this.zeroZeroDotSize  = 4
     }
     
     /**
@@ -88,7 +88,7 @@ class Axis {
 
             let ctx = this.graph.ctx
               //label axis
-            ctx.font = "45px Monospace"
+            ctx.font = "30px Monospace"
             ctx.fillStyle = "black"
             ctx.textAlign = 'center'
             ctx.textBaseline = 'middle';

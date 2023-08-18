@@ -1,4 +1,3 @@
-
 let canvas = document.getElementById("graph")
 let xInput = document.getElementById("x")
 let yInput = document.getElementById("y")
@@ -7,7 +6,7 @@ let vectorColors = document.getElementById("vector colors")
 
 linearTransformation = new LinearTransformation([[1,0,0],[0,1,0],[0,0,1]])
 
-displayWidth  = 800
+displayWidth  = 700
 displayHeight = 600
 
 canvas.style.width = displayWidth + "px"
@@ -19,8 +18,9 @@ canvas.height = displayHeight * 2
 // canvas.height = displayHeight
 
 let test_graph = new Graph(canvas);
-test_graph.Axis = new Axis(test_graph, [255,255,255,.4], "black", "black", "black", 10)
+test_graph.Axis = new Axis(test_graph, "black", "black", "black", "black", 10)
 test_graph.showGaussianPlanes = true
+test_graph.showAxis = true;
 
 // test_graph.showAxis = false;
 test_graph.showGrid = true;
@@ -304,6 +304,8 @@ class GaussianElimStepsHTMLModel {
         this.selected          = {type:"matrix", index:0}
         this.view              = 1
         this.newOperationOpen  = false;
+        this.colorSettingsOpen = false;
+        this.settingsOpen      = false;
         this.planeColors            = ["lightseagreen", "#ff6db6", "blue", "purple"]
         //this._updateInputMatrix()
     }
@@ -330,9 +332,9 @@ class GaussianElimStepsHTMLModel {
 
 
     selectMatrix(index) {
-        if (index == 0) {
-            this._updateInputMatrix();
-        }
+        // if (index == 0) {
+        //     this._updateInputMatrix();
+        // }
 
         if (this.currMatrixIsValid) {
             // Unselect old.
@@ -455,10 +457,7 @@ class GaussianElimStepsHTMLModel {
     }
 
     _updateInputMatrix() {
-        let matrix = new Array(4)//[[undefined,undefined,undefined],[undefined,undefined,undefined],[undefined,undefined,undefined],[undefined,undefined,undefined]]
-        for (let i = 0; i < matrix.length; i++) {
-            matrix[i] = new Array(3).fill(undefined)
-        }
+        let matrix = [[undefined,undefined,undefined],[undefined,undefined,undefined],[undefined,undefined,undefined],[undefined,undefined,undefined]]
 
         let fractionFormat = true
         let selectedMatrix = document.getElementById("matrix0")
@@ -494,7 +493,7 @@ class GaussianElimStepsHTMLModel {
                     }
                 }
 
-                let minusSigns = [...regexGroups[0].matchAll(/-/g)].lengths
+                let minusSigns = [...regexGroups[0].matchAll(/-/g)].length
                 let neg = 1
                 if (minusSigns % 2 != 0) {
                     neg = -1
@@ -547,9 +546,46 @@ class GaussianElimStepsHTMLModel {
             document.getElementsByClassName("new-operation-button")[0].disabled = false
             this.matrixList[0] = matrix
             test_graph.gaussianPlanes = new GaussianPlanes(test_graph, transpose(numericMatrixFromFrac(matrix)), this.planeColors, (this.view == 2))
+            
+            // Update the solution matrix.
+
+            let solutionLocation = document.getElementsByClassName("matrix-solution")[0]
+            let solutoinMatrix = solutionLocation.getElementsByClassName("matrix")[0]
+            // let solutoinMatrix = this.defaultMatrix.cloneNode(true)
+            // let finalIndex = this.matrixList.length-1
+            // solutoinMatrix.getElementsByClassName("label")[0].innerHTML  = "Solution"
+            // solutoinMatrix.querySelectorAll(".name-bar button")[1].classList.add("matrix" + (finalIndex))
+            // solutoinMatrix.id                                            = "matrix" + (finalIndex)
+
+
+            // let colorBoxes = solutoinMatrix.getElementsByClassName("color-box")
+
+            // // console.log(colorBoxes)
+            // for (let i=0; i<colorBoxes.length; i++) {
+            //     colorBoxes[i].classList.add("row"+rowOrderList[steps.length-1][i])
+            //     colorBoxes[i].getElementsByClassName("color-checkbox")[0].checked = this.selectedPlanes[rowOrderList[steps.length-1][i]]
+            // }
+        
+            // let div = document.createElement("div")
+            // div.className = "locked"
+            // solutoinMatrix.getElementsByClassName("values")[0].appendChild(div)
+            
+            this._writeMatrix(solutoinMatrix, gaussianEliminationV3(matrix, false, true), true)
+
+            // let matrixValues = solutoinMatrix.getElementsByClassName("matrix-value")
+
+            // for (let i=0; i<matrixValues.length; i++) {
+            //     matrixValues[i].readOnly = true;
+            // }
+            
+            // solutionLocation.appendChild(solutoinMatrix)
+
+            // document.getElementsByClassName("solution-arrow")[0].style = "display: flex;"
         }
+
+
         // make clear work later!!
-        // this.clear()
+        this.clear()
         test_graph.draw()
 
     }
@@ -587,39 +623,6 @@ class GaussianElimStepsHTMLModel {
             this.addMatrix(steps[i], rowOrderList[i])
         }
 
-        // Add solution to right side.
-
-        let solutionLocation = document.getElementsByClassName("matrix-solution")[0]
-        let solutoinMatrix = this.defaultMatrix.cloneNode(true)
-        let finalIndex = this.matrixList.length-1
-        solutoinMatrix.getElementsByClassName("label")[0].innerHTML  = "Solution"
-        solutoinMatrix.querySelectorAll(".name-bar button")[1].classList.add("matrix" + (finalIndex))
-        solutoinMatrix.id                                            = "matrix" + (finalIndex)
-
-
-        let colorBoxes = solutoinMatrix.getElementsByClassName("color-box")
-
-        // console.log(colorBoxes)
-        for (let i=0; i<colorBoxes.length; i++) {
-            colorBoxes[i].classList.add("row"+rowOrderList[steps.length-1][i])
-            colorBoxes[i].getElementsByClassName("color-checkbox")[0].checked = this.selectedPlanes[rowOrderList[steps.length-1][i]]
-        }
-    
-        // let div = document.createElement("div")
-        // div.className = "locked"
-        // solutoinMatrix.getElementsByClassName("values")[0].appendChild(div)
-        
-        this._writeMatrix(solutoinMatrix, this.matrixList[this.matrixList.length-1], true)
-
-        let matrixValues = solutoinMatrix.getElementsByClassName("matrix-value")
-
-        for (let i=0; i<matrixValues.length; i++) {
-            matrixValues[i].readOnly = true;
-        }
-        
-        solutionLocation.appendChild(solutoinMatrix)
-
-        document.getElementsByClassName("solution-arrow")[0].style = "display: flex;"
     }
 
     addMatrix(matrix, rowOrderList) {
@@ -745,9 +748,7 @@ class GaussianElimStepsHTMLModel {
         for(let i=this.matrixList.length; i>1; i--) {
             this.removeLast()
         }
-        document.getElementsByClassName("matrix-solution")[0].getElementsByClassName("matrix")[0].remove()
-        document.getElementsByClassName("solution-arrow")[0].style = "display: none;"
-
+        
     }
 
     removeLast() {
@@ -790,7 +791,7 @@ class GaussianElimStepsHTMLModel {
     changeView(view) {
         // Remove old color
         
-        document.querySelectorAll(".view-button.view-" + this.view)[0].style="background: white;"
+        document.querySelectorAll(".view-button.view-" + this.view)[0].style="background: ;"
         this.view = view
         document.querySelectorAll(".view-button.view-" + this.view)[0].style="background: lightgray;"
         if(view == 1) {
@@ -829,7 +830,10 @@ class GaussianElimStepsHTMLModel {
 
             document.querySelectorAll(".new-operation .settings-container select")[0].value=""
             document.querySelectorAll(".new-operation .settings-container")[0].style="display: static;"
+            // Scroll the thing into view
+            document.querySelectorAll(".new-operation .settings-container")[0].scrollIntoView(true)
             
+
             document.querySelectorAll(".swap.specific-settings")[0].style = "display: none;";
             document.querySelectorAll(".combine.specific-settings")[0].style = "display: none;";
             document.querySelectorAll(".scale.specific-settings")[0].style = "display: none;";
@@ -867,6 +871,7 @@ class GaussianElimStepsHTMLModel {
             this.addRowOperation(rowOperation)
             this.addMatrix(matrix)
             this.toggleNewOperation()
+            document.querySelectorAll(".new-operation .new-operation-button")[0].scrollIntoView(true)
             
         } else {
             setTimeout(function() {
@@ -1004,6 +1009,7 @@ class GaussianElimStepsHTMLModel {
         }
 
         document.querySelectorAll(".new-operation button.apply-new-operation-button")[0].style="display: block;"
+        document.querySelectorAll(".new-operation button.apply-new-operation-button")[0].scrollIntoView(true)
     }
 
     parseInputFrac(input) {
@@ -1042,6 +1048,65 @@ class GaussianElimStepsHTMLModel {
         }
     }
 
+    toggleColorSettings() {
+
+        let settingsDiv    = document.getElementsByClassName("graph-settings-container")[0]
+        let settingsButton = document.getElementsByClassName("settings-button")[0]
+        let colorSettingsDiv    = document.getElementsByClassName("color-settings-container")[0]
+        let colorSettingsbutton = document.getElementsByClassName("color-settings-button")[0]
+        let steps          = document.getElementsByClassName("matrix-outer-wraper")[0]
+        let rowReduced     = document.getElementsByClassName("solution-and-settings-container")[0]
+
+        if (this.colorSettingsOpen == true) {
+            colorSettingsDiv.style    = "display: none;"
+            colorSettingsbutton.style = "background-color: ;"
+            steps.style               = "display: ;"
+            rowReduced.style          = "display: ;"
+
+            this.colorSettingsOpen = false
+        } else {
+            colorSettingsDiv.style = "display: ;"
+            colorSettingsbutton.style = "background-color: lightgray;"
+            settingsDiv.style    = "display: none;"
+            settingsButton.style = "background-color: ;"
+            this.settingsOpen = false;
+            steps.style               = "display: none;"
+            rowReduced.style          = "display: none;"
+
+            this.colorSettingsOpen = true
+
+        }
+    }
+
+    toggleSettings() {
+        let settingsDiv    = document.getElementsByClassName("graph-settings-container")[0]
+        let settingsButton = document.getElementsByClassName("settings-button")[0]
+        let colorSettingsDiv    = document.getElementsByClassName("color-settings-container")[0]
+        let colorSettingsbutton = document.getElementsByClassName("color-settings-button")[0]
+        let steps          = document.getElementsByClassName("matrix-outer-wraper")[0]
+        let rowReduced     = document.getElementsByClassName("solution-and-settings-container")[0]
+
+        if (this.settingsOpen == true) {
+            settingsDiv.style    = "display: none;"
+            settingsButton.style = "background-color: ;"
+            steps.style               = "display: ;"
+            rowReduced.style          = "display: ;"
+
+            this.settingsOpen = false
+        } else {
+            settingsDiv.style = "display: ;"
+            settingsButton.style = "background-color: lightgray;"
+            colorSettingsDiv.style    = "display: none;"
+            colorSettingsbutton.style = "background-color: ;"
+            this.colorSettingsOpen = false;
+            steps.style               = "display: none;"
+            rowReduced.style          = "display: none;"
+
+            this.settingsOpen = true
+
+        }
+    }
+
 }
 
 let gaussSteps = new GaussianElimStepsHTMLModel()
@@ -1054,7 +1119,7 @@ let gaussSteps = new GaussianElimStepsHTMLModel()
 // New matrix button
 // Remove last
 document.addEventListener("click", function() {
-
+    debugger
     const current = document.activeElement
     
     if (current.classList.contains("select-button")) {
@@ -1153,6 +1218,14 @@ document.addEventListener("click", function() {
         gaussSteps.applyNewOperation();
     }
 
+    if (current.classList.contains("color-settings-button")) {
+        gaussSteps.toggleColorSettings();
+    }
+
+    if (current.classList.contains("settings-button")) {
+        gaussSteps.toggleSettings();
+    }
+
 })
 
 document.addEventListener("change", function() {
@@ -1244,7 +1317,7 @@ document.addEventListener("input", function() {
     const current = document.activeElement
 
     if (current.classList.contains("matrix-value")) {
-        gaussSteps.selectMatrix(0)
+        gaussSteps._updateInputMatrix();
     }
     
 })
@@ -1256,5 +1329,7 @@ test_graph.rotateAboutX(2 * Math.PI * (y) / displayHeight)
 test_graph.draw()
 
 // Only for when we have default case might want to remove later
+
+gaussSteps._updateInputMatrix();
 
 gaussSteps.selectMatrix(0)

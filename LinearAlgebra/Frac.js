@@ -41,7 +41,7 @@ class Frac {
      */
     _gcd(a, b) {
         
-        if (a == 0) {
+        if (a == 0 || String(a).includes(".") || String(b).includes(".")) {
             return b
         } else {
             return this._gcd(b % a, a)

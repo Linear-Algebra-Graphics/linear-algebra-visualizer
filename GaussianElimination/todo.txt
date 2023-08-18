@@ -4,8 +4,6 @@ Features 🎬:
                     E.g when matrix is typed in show the solution.
 
     Medium priority:
-        (Easy) When updated clear all steps and change solution
-
         (Medium) MAKE LAST MATRIX HAVE REMOVE BUTTON OR HAVE REMOVE LAST OPERATION BUTTON OR SOMETHING
                 Remove all as well (Maybe)
 
@@ -23,11 +21,7 @@ Features 🎬:
         (Medium) ADD FPS CHANGE SETTINGS
         (Medium) When someone goes to page do one draw operation and time it and give reccomended fps.
 
-    
         Add help page
-
-        Finish up matrix stuff so it works.
-            E.g when matrix is typed in show the solution.
         
         (Hard) Save steps in ? url
 
@@ -74,4 +68,4 @@ Bugs 🐛:
     Zooming with scroll wheel is messed up. Zooming canvas should *only* zoom canvas.
         Track pad AND scroll wheel need help with this.
 
-    When zeroring out rows the result button makes graph glitch. To get it use default matrix with bottom two rows the same.
+    If zoomed in and add new row operation the page scrolls in an odd way.

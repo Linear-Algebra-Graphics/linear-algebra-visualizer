@@ -409,6 +409,7 @@ class Graph {
 
     // Draws all objects in the queue and the grid / axis if they are enabled.
     draw() {
+        // debugger
         // Clear screen / add background
         this.ctx.fillStyle = this.backgroundColor
         this.ctx.fillRect(0,0, this.canvas.width, this.canvas.height);
@@ -426,7 +427,7 @@ class Graph {
         }
 
         if (this.gaussianPlanes != undefined) {
-            this.gaussianPlanes.draw(this.gaussianPlanesToDraw)
+            this.gaussianPlanes.draw()
         }
         
         if (this.showAxis) {
