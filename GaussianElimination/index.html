@@ -2,6 +2,9 @@
 
 <html>
     <head>
+
+        <script src="https://unpkg.com/vanilla-picker@2"></script>
+
         <!-- Graph Imports -->
         <script src="../GraphElements/Axis.js"></script>
         <script src="../GraphElements/GaussianPlanes5.js"></script>
@@ -317,12 +320,33 @@
                                 <div class="line"></div>
                             </div>
                         </div>
-                        <div style="width: 300px; margin-top: 10px;">If there is single valid solution, it will be graphed as a pink dot.</div>
+                        <div style="width: 300px; margin-top: 10px;">If there is an unique solution, it will be graphed as a pink dot.</div>
                     </div>
+                </div>
+                
+            </div>
+            
+            <div class="color-settings-container box">
+                <div class="box-label">Color Settings</div>
+                <div class="color-settings-wrapper">
+                    <div class="free-color-selection">
+                        <a href="#" class="color-button" id="row-1-color">Row 1</a>
+                        <a href="#" class="color-button" id="row-2-color">Row 2</a>
+                        <a href="#" class="color-button" id="row-3-color">Row 3</a>
+                    </div>
+                    
+                    <!-- <div class="default colors">
+                        <select>
+                            <option value="volvo">Volvo</option>
+                            <option value="saab">Saab</option>
+                            <option value="mercedes">Mercedes</option>
+                            <option value="audi">Audi</option>
+                        </select>
+                    </div> -->
                 </div>
             </div>
 
-        
+            
         </div>
 
         <!-- <dialog id="row-operation-popup">

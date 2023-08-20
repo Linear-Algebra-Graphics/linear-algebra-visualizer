@@ -28,6 +28,11 @@ let y = 0;
 let delta_x = 0
 let delta_y = 0
 
+
+/* Basic example */
+
+
+
 canvas.addEventListener('mousemove', function(e) {    // return null
 
     // console.log("mouse on canvas!")
@@ -62,37 +67,56 @@ document.addEventListener('mouseup', function(event) {
 });
 
 
-canvas.addEventListener("wheel", event => {
-    //disableScroll()
-    debugger
+// canvas.addEventListener("wheel", event => {
+//     //disableScroll()
+//     //debugger
+//     const delta = Math.sign(event.deltaY);
+//     if (event.target.id == "graph") {
+        
+//         let rect = event.target.getBoundingClientRect()
+//         let x = event.clientX - rect.left; //x position within the element.
+//         let y = event.clientY - rect.top;  //y position within the element.
+
+//         if (delta==-1) {
+//         test_graph.zoomIn()
+//         // console.log("Increasing scale by 10%")
+//         }
+
+//         if (delta==1) {
+//         test_graph.zoomOut()
+//         // console.log("Decreasing scale by 10%")
+//         }
+        
+//     }
+//     //enableScroll()
+// });
+
+// function disableScroll() {
+//     document.body.classList.add("stop-scrolling");
+// }
+
+// function enableScroll() {
+//     document.body.classList.remove("stop-scrolling");
+// }
+
+function handleCanvasZoom(event) {
     const delta = Math.sign(event.deltaY);
-    if (event.target.id == "graph") {
-        
-        let rect = event.target.getBoundingClientRect()
-        let x = event.clientX - rect.left; //x position within the element.
-        let y = event.clientY - rect.top;  //y position within the element.
-
-        if (delta==-1) {
-        test_graph.zoomIn()
-        // console.log("Increasing scale by 10%")
+    //let delta = event.wheelDelta ? event.wheelDelta/40 : event.detail ? -event.detail : 0;
+    if (delta) {
+        if (delta < 0) {
+            test_graph.zoomIn()
+            test_graph.draw()
         }
-
-        if (delta==1) {
-        test_graph.zoomOut()
-        // console.log("Decreasing scale by 10%")
+        if (delta > 0) {
+            test_graph.zoomOut()
+            test_graph.draw()
         }
-        
     }
-    //enableScroll()
-});
-
-function disableScroll() {
-    document.body.classList.add("stop-scrolling");
+    return event.preventDefault() && false;
 }
 
-function enableScroll() {
-    document.body.classList.remove("stop-scrolling");
-}
+canvas.addEventListener("DOMMouseScroll", handleCanvasZoom, false);
+canvas.addEventListener("mousewheel", handleCanvasZoom, false);
 
 
 

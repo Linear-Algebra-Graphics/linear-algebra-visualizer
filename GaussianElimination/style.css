@@ -1,6 +1,45 @@
 /* * {
 
 } */
+.free-color-selection {
+    gap: 5px;
+    padding: 10px;
+    justify-content: space-evenly;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.color-settings-wrapper {
+    display: flex;
+    flex-direction: row;
+}
+
+.color-button {
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    padding: .5em 1em;
+    min-height: 2em;
+    border: none;
+    outline: none;
+    overflow: visible;
+    border-radius: 4px;
+    
+    background-color: dodgerblue;
+    color: white;
+
+    width: 80px;
+    height: 28.9px;
+
+    font-family: sans-serif;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+}
+
 
 body {
     margin: 0px;
@@ -612,7 +651,7 @@ div.bar-bottom button:active {
     font-size: 1.25rem;
     border-bottom: 1px solid black;
     height: 36px;
-    /* padding: 7px 0px 7px 0px; */
+    padding: 7px 0px 7px 0px;
 }
 
 .matrix-solution {

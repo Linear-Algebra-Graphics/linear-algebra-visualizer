@@ -415,12 +415,27 @@ function formatNumber(dist) {
         let split = expStr.split("e")
         // parse into int to get rid of floating point errors
         let coeff = Math.round(split[0])
+        if (coeff == 10) {
+            coeff = 1
+            split[1] = "" + (parseInt(split[1]) + 1)
+        }
+
         expStr = "" + coeff + "e" + split[1]
     } else {
-        if (dist >= 1) {
+        if (dist >= 1 || numEqual(dist, 1, 12)) {
             expStr = dist.toFixed(0)
         } else {
             expStr = dist.toFixed(2)
+        }
+    }
+    let decimalSplit = expStr.split(".")
+    if (decimalSplit.length == 2) {
+        let a = decimalSplit[0]
+        let b = decimalSplit[1]
+        b = b.replace(/0+$/, '');
+        expStr = a
+        if (b.length > 0) {
+            expStr = expStr + "." + b
         }
     }
     return expStr

@@ -49,25 +49,35 @@ class GaussianPlanes {
     /**
      * creates a new instance of the planes defined by a augmentted matrix system
      * @param {*} graph the graph on which the planes exist
-     * @param {Number[][]} planesStdForm an array of planes defined as [a, b, c, d] => ax + by + cz = d
+     * @param {Number[][]} planesStdForm an array of planes defined as [a, b, c, d] => ax + by + cz = d, row col form
      * @param {String[]} planeColors array of the plane colors in order
      * @param {Boolean} cubeBoundPlanes determines if the planes are bounded by a cube or not
      */
     constructor(graph, planesStdForm, planeColors, cubeBoundPlanes) {
         this.graph = graph
+        //the input augmented matrix in row col form.
         this.planesStdForm = planesStdForm
+        //colors of each plane in order of rows from top to bottom
         this.planeColors = planeColors
+        //true if in the cube bounded mode, or view 2 in gaussian elim
         this.cubeBoundPlanes = cubeBoundPlanes
+        //graph default zoom bounding cube sidelength
+        this.cubeHalfSideLength = 6
 
-        this.planeOrderFromInput = Array.from(Array(planesStdForm.length).keys());
+        this.planeOrderFromInput = Array.from(Array(planesStdForm.length).keys()); //tf is this for????
 
+        //reduced echelon form of input augmented matrix, col row form
         let reduced = gaussianEliminationV3(transpose(this.planesStdForm), false, false)
-        this.solution = [reduced[reduced.length - 1][0], reduced[reduced.length - 1][1], reduced[reduced.length - 1][2]]
-        let matrix = transpose(planesStdForm)
+        let matrix = transpose(this.planesStdForm)
 
-        this.hasSingleSolution = this._hasSingleSolution(reduced)
-        this.hasSolution       = this._hasSolution(reduced)
-
+        //holds solution point
+        this.solution = [0,0,0]
+        this.hasSingleSolution = true
+        this.hasSolution = true
+        //updates this.solution/hasSingleSolution/hasSolution to be correct for the given augmented matrix
+        this.getSolutionInfo(reduced)
+        
+        //contains the R3 point of the reference centerpoint of each plane from augmented matrix input.
         this.planeCenter = this._findPlaneCenters(matrix)
 
         // boolean array of the size of the number of rows in the augmented matrix, indicates if row is to be drawn or not
@@ -75,11 +85,19 @@ class GaussianPlanes {
 
         //floating point this.precision => 1e-this.precision
         this.precision = 12
-        this.cubeHalfSideLength = 6
     }
 
+    /**
+     * gets the R3 point of the reference centerpoint of each plane from augmented matrix input.
+     *      if no solution, simply finds an arbitrary point on each plane
+     *      if a solution exists, all planes have same centerpoint, being a shared solution between all planes 
+     * @param {Number[][]} matrix augmented matrix, col row form
+     * @returns {Number[][]} array of R3 centerpoints
+     */
     _findPlaneCenters(matrix) {
-        let planeCenter = new Array(this.planesStdForm.length)//.fill(new Array(3).fill(0)) //why does this not work??!!!!
+        let planeCenter = new Array(this.planesStdForm.length)
+
+        //zero it out.
         for (let i = 0; i < planeCenter.length; i++) {
             planeCenter[i] = new Array(3);
             for (let j = 0; j < 3; j++) {
@@ -87,11 +105,13 @@ class GaussianPlanes {
             }
         }
         
+        //has some solution case vs no solution case
         if (this.hasSolution) {
             for (let i = 0; i < planeCenter.length; i++) {
                 planeCenter[i] = this.solution
             }
         } else {
+            //find arbitrary point on ith plane
             for (let i = 0; i < matrix[0].length; i++) {
                 const col = leftMostNonZeroInRow(matrix, i)
                 if (col < matrix.length - 1) {
@@ -126,6 +146,34 @@ class GaussianPlanes {
             }
         }
         return hasSolution
+    }
+
+    /**
+     * finds if reduced matrix has a solution, has multiple solutions, and what that solution point might be
+     * stricley for 3x4 augmented matrix, must be R3!!!
+     * @param {Number[][]} reduced reduced echelon augmented matrix in col row format
+     * @modifies this.hasSolution, this.hasSingleSolution, this.solution
+     */
+    getSolutionInfo(reduced) {
+        //hardcoding 3 rows
+        for (let row = 0; row < 3; row++) {
+            const col = leftMostNonZeroInRow(reduced, row)
+
+            if (col == reduced.length - 1 && this.hasSolution) {
+                this.hasSolution = false
+            }
+
+            //can probably simplify if logic, but too tired rn
+            if (col == reduced.length - 1 || col == reduced.length && this.hasSolution && this.hasSingleSolution) {
+                this.hasSingleSolution = false
+            }
+
+            //the reason for doing this is the edge case of x has a value, y is free, z has a value or e.g. (1, y, 2) solution type, 
+            //in this case you cannot just take the augmented column as the solution point.
+            if (col < reduced.length - 1) {
+                this.solution[col] = reduced[reduced.length - 1][col]
+            }
+        }
     }
 
     /**
@@ -337,7 +385,7 @@ class GaussianPlanes {
     }
 
     /**
-     * 
+     * finds the inverse of the rotation matrix that takes this.graph from standard view to current view
      * @returns {Number[][]} the matrix that takes a rotated vector back to standard basis relative to graph
      */
     _inverseRotate() {
@@ -348,15 +396,24 @@ class GaussianPlanes {
         return inverseBasisRotationMatrix
     }
 
+    /**
+     * gets planeLines for all planes in this.planesStdForm where each plane has sideLength: planeLength
+     *      if plane is drawn, plane i has [line1, line2, line3, line4]
+     *      if plane is not drawn, plane i has [] as planeLines
+     * @param {Number} planeLength sidelength of plane
+     * @returns {Line[][]} 
+     */
     getFixedSizePlaneLines(planeLength) {
         let planeLines = []
 
         //get othonormal basis of two lines per plane 
         for (let i = 0; i < this.planesStdForm.length; i++) {
+            //get lines if plane is to be drawn
             if (this.planesToDraw[i]) {
                 let currPlaneLines = this.getPlaneLines(this.planesStdForm[i], planeLength, this.planeCenter[this.planeOrderFromInput[i]])
                 planeLines.push(currPlaneLines)
 
+                //get plane lines in current graph view rotation and basis (basis will basically never change)
                 for (let j = 0; j < currPlaneLines.length; j++) {
                     this._changeBasisAndRotate3DLine(currPlaneLines[j])
                 }
@@ -368,12 +425,15 @@ class GaussianPlanes {
     }
 
     /**
-     * 
+     * gets the line defining each plane when planes are restricted by a cube
      * @param {Number} cubeSize half the sidelength of the cube
-     * @param {Number[][]} cubePlanesStdForm standard forms of all 6 sides of the cube
+     * @param {Number[][]} cubePlanesStdForm standard forms of planes defining all 6 sides of the cube
      * @returns {Line[][]} each index has an array of lines defining one gaussian plane
      */
     getCubeBoundedPlaneLines(cubeSize, cubePlanesStdForm) {
+        //essentially initially the planes are set to be much larger than the cube itself, then 
+        //we can split the plane by the bounding cubes, and then filter to keep only the polygons within the bounds. 
+        
         let planeLines = []
 
         //get orthonormal basis of two lines per plane 
@@ -391,33 +451,41 @@ class GaussianPlanes {
                         this._changeBasisAndRotate3DLine(currPlaneLines[j])
                     }
 
+                    //intersections between the cube and the planeLines
                     let planeCubeIntersects = []
                     
                     for (let j = 0; j < cubePlanesStdForm.length; j++) {
                         let planeCubeIntersectLine = this.getPlanePlaneIntersectLine(this.planesStdForm[i], cubePlanesStdForm[j])
                         if (planeCubeIntersectLine != null) {
+                            //get intersect line in basis
                             this._changeBasisAndRotate3DLine(planeCubeIntersectLine)
 
                             planeCubeIntersects.push(planeCubeIntersectLine)
                         }
                     }
 
+                    //polygons defining ith plane
                     let planePolygons = this.splitPlanes(currPlaneLines, planeCubeIntersects, this.planeColors[i], "black", 0.6)
-                
+                    
+                    //just the polygons within the cube
                     let inCubePolygons = []
                     let inverseRotationMatrix = this._inverseRotate()
 
                     //write a specialized splitplanes function later to optimize? not needed?
+                    //filter through all plane polygons for those within cube bounds
                     for (let j = 0; j < planePolygons.length; j++) {
                         let inCube = true
                         for (let k = 0; k < planePolygons[j].lines.length; k++) {
                             let currLine = planePolygons[j].lines[k].point1
                             let currLineCopy = [currLine[0], currLine[1], currLine[2]]
-                    
+                            
+                            //take the line back to default because it is much easier to determine 
+                            //if something is inside or outside the cube
                             currLineCopy = matrixVectorMultiplication(inverseRotationMatrix, currLineCopy)
 
-                            let error = 0.00000001
+                            let error = 0.00000001 //this is wack
                             let cubeSizeAndError = cubeSize + error
+                            //some demonic check?? too tired
                             if (Math.abs(currLineCopy[0]) > cubeSizeAndError ||
                                 Math.abs(currLineCopy[1]) > cubeSizeAndError ||
                                 Math.abs(currLineCopy[2]) > cubeSizeAndError) {
@@ -425,15 +493,18 @@ class GaussianPlanes {
                                     break
                             }
                         }
+                        //keep if within bounding cube!!!
                         if (inCube) {
                             inCubePolygons.push(planePolygons[j].lines)
                         }
                     }
                     
+                    //bad algorithm, so keeping this for sanity
                     if (inCubePolygons.length > 1) {
                         debugger
                     }
                     if (inCubePolygons.length == 0) {
+                        //this means plane either has zero vector as norm, or is not to be drawn
                         currPlaneLines = []
                     } else {
                         currPlaneLines = inCubePolygons[0]
@@ -607,7 +678,6 @@ class GaussianPlanes {
                 planePolygon.fill = false
                 planePolygon.outline = true
                 planePolygon.draw()
-
             }
         }
     }
@@ -669,7 +739,15 @@ class GaussianPlanes {
             this._drawPlaneBoundingCubeOutlines(cubePlanesStdForm, cubeSize, "#333333")
         }
 
-        if (this.hasSingleSolution) {
+        let allPlanesDrawn = true
+        for (let i = 0; i < this.planesToDraw.length; i++) {
+            if (!this.planesToDraw[i]) {
+                allPlanesDrawn = false
+                break;
+            }
+        }
+        //want all planes to be drawn as only then will there be a single intersectino point.
+        if (this.hasSingleSolution && allPlanesDrawn) {
             //draw dot at solution
             this.graph.drawDotFromVector(this.solution, "pink", "black", 6)
         }
@@ -854,15 +932,23 @@ function pt3DToStr(point) {
 
 /**
  * 
- * @param {Number[][]} matrix col row format matrix
+ * @param {Number[][] | Frac[][]} matrix col row format matrix
  * @param {Number} row 
  * @returns {Number} index of the leftmost nonzero element in row of matrix
  */
 function leftMostNonZeroInRow(matrix, row) {
     let col = 0
     while (col < matrix.length) {
-        if (matrix[col][row] != 0) {
-            return col;
+        if (typeof matrix[col][row] == 'number') {
+            if (matrix[col][row] != 0) {
+                return col;
+            }
+        } else if (typeof matrix[col][row] == 'object') {
+            if (matrix[col][row].constructor.name == "Frac") {
+                if (matrix[col][row].getNumerator() != 0) {
+                    return col;
+                }
+            }
         }
         col++
     }
