@@ -56,12 +56,6 @@ Linear Transformations page brainstorm 🧠:
         If output is a vector or pedefined shape it gets graphed. Otherwise it doesn't.
         There is option not to graph
 
-    Add minimzation of matricies (Make button work)
-
-    Animate between planes
-
-    Choose better font
-
 Bugs 🐛:
     If zoomed in and add new row operation the page scrolls in an odd way.
 

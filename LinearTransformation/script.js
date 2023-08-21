@@ -115,8 +115,7 @@ function handleCanvasZoom(event) {
     return event.preventDefault() && false;
 }
 
-canvas.addEventListener("DOMMouseScroll", handleCanvasZoom, false);
-canvas.addEventListener("mousewheel", handleCanvasZoom, false);
+canvas.addEventListener("wheel", handleCanvasZoom, false);
 
 
 

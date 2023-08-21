@@ -171,7 +171,7 @@ class GaussianPlanes {
             //the reason for doing this is the edge case of x has a value, y is free, z has a value or e.g. (1, y, 2) solution type, 
             //in this case you cannot just take the augmented column as the solution point.
             if (col < reduced.length - 1) {
-                this.solution[col] = reduced[reduced.length - 1][col]
+                this.solution[col] = reduced[reduced.length - 1][row]
             }
         }
     }

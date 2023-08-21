@@ -43,12 +43,17 @@ let drawGraph = false;
 let rowColors = ["lightseagreen", "#ff6db6", "blue", "purple"]
 
 const parentBasic1 = document.getElementById("row-1-color"),
-      popupBasic1 = new Picker({parent: parentBasic1, color: rowColors[0]});
-      parentBasic1.style.backgroundColor = rowColors[0]
-      document.getElementsByClassName("color-box row0").backgroundColor = rowColors[0]
-      if (popupBasic1.color.hsla[2] > 0.5) {
-        parentBasic1.style.color = "black"
-      }
+popupBasic1 = new Picker({parent: parentBasic1, color: rowColors[0]});
+parentBasic1.style.backgroundColor = rowColors[0]
+document.getElementsByClassName("color-box row0").backgroundColor = rowColors[0]
+if (popupBasic1.color.hsla[2] > 0.5) {
+    parentBasic1.style.color = "black"
+}
+let matrixColorSquares1 = document.getElementsByClassName("row0")
+for (let i = 0; i < matrixColorSquares1.length; i++) {
+    matrixColorSquares1[i].style = "background-color: " + rowColors[0] + ";"
+}
+
 popupBasic1.onChange = function(color) {
     parentBasic1.style.backgroundColor = color.rgbaString;
     rowColors[0] = color.rgbaString;
@@ -57,17 +62,26 @@ popupBasic1.onChange = function(color) {
     } else {
         parentBasic1.style.color = "white"
     }
+    let matrixColorSquares = document.getElementsByClassName("row0")
+    for (let i = 0; i < matrixColorSquares.length; i++) {
+        matrixColorSquares[i].style = "background-color: " + color.rgbaString + ";"
+    }
     test_graph.draw()
 };
 //Open the popup manually:
-popupBasic1.openHandler();
+//popupBasic1.openHandler();
 
 const parentBasic2 = document.getElementById("row-2-color"),
-      popupBasic2 = new Picker({parent: parentBasic2, color: rowColors[1]});
-      parentBasic2.style.backgroundColor = rowColors[1]
-      if (popupBasic2.color.hsla[2] > 0.5) {
-        parentBasic2.style.color = "black"
-      }
+popupBasic2 = new Picker({parent: parentBasic2, color: rowColors[1]});
+parentBasic2.style.backgroundColor = rowColors[1]
+if (popupBasic2.color.hsla[2] > 0.5) {
+    parentBasic2.style.color = "black"
+}
+let matrixColorSquares2 = document.getElementsByClassName("row1")
+for (let i=0; i<matrixColorSquares2.length; i++) {
+    matrixColorSquares2[i].style = "background-color: " + rowColors[1] + ";"
+}
+    
 popupBasic2.onChange = function(color) {
     parentBasic2.style.backgroundColor = color.rgbaString;
     rowColors[1] = color.rgbaString;
@@ -76,17 +90,26 @@ popupBasic2.onChange = function(color) {
     } else {
         parentBasic2.style.color = "white"
     }
+    let matrixColorSquares = document.getElementsByClassName("row1")
+    for (let i=0; i<matrixColorSquares.length; i++) {
+        matrixColorSquares[i].style = "background-color: " + color.rgbaString + ";"
+    }
     test_graph.draw()
 };
 //Open the popup manually:
 //popupBasic2.openHandler();
 
 const parentBasic3 = document.getElementById("row-3-color"),
-      popupBasic3 = new Picker({parent: parentBasic3, color: rowColors[2]});
-      parentBasic3.style.backgroundColor = rowColors[2]
-      if (popupBasic3.color.hsla[2] > 0.5) {
-        parentBasic3.style.color = "black"
-      }
+popupBasic3 = new Picker({parent: parentBasic3, color: rowColors[2]});
+parentBasic3.style.backgroundColor = rowColors[2]
+if (popupBasic3.color.hsla[2] > 0.5) {
+    parentBasic3.style.color = "black"
+}
+let matrixColorSquares3 = document.getElementsByClassName("row2")
+for (let i=0; i<matrixColorSquares3.length; i++) {
+    matrixColorSquares3[i].style = "background-color: " + rowColors[2] + ";"
+}
+    
 popupBasic3.onChange = function(color) {
     parentBasic3.style.backgroundColor = color.rgbaString;
     rowColors[2] = color.rgbaString;
@@ -94,6 +117,10 @@ popupBasic3.onChange = function(color) {
         parentBasic3.style.color = "black"
     } else {
         parentBasic3.style.color = "white"
+    }
+    let matrixColorSquares = document.getElementsByClassName("row2")
+    for (let i=0; i<matrixColorSquares.length; i++) {
+        matrixColorSquares[i].style = "background-color: " + color.rgbaString + ";"
     }
     test_graph.draw()
 };
@@ -228,8 +255,10 @@ function handleCanvasZoom(event) {
     return event.preventDefault() && false;
 }
 
-canvas.addEventListener("DOMMouseScroll", handleCanvasZoom, false);
-canvas.addEventListener("mousewheel", handleCanvasZoom, false);
+
+canvas.addEventListener("wheel", handleCanvasZoom, false);
+// canvas.addEventListener("DOMMouseScroll", handleCanvasZoom, false);
+// canvas.addEventListener("mousewheel", handleCanvasZoom, false);
 
 
 function readMatrix(matrixNumber, fractionFormat) {
@@ -352,9 +381,18 @@ class GaussianElimStepsHTMLModel {
         this.defaultRowOperation.innerHTML = `
         <div class="operation-text"></div>
         <div class="operation-buttons">
-            <button type="button" class="select-button stepone">Select Planes</button> 
-            <button type="button" class="select-button steptwo">Combine Planes</button>
-            <button type="button" class="select-button stepthree">Result</button>
+            <div class="operation-text-button" style="display: flex; flex-direction: row; align-items: baseline;">
+                <button type="button" class="select-button stepone">graph</button>
+                <div></div>
+            </div>
+            <div class="operation-text-button" style="display: flex; flex-direction: row; align-items: baseline;">
+                <button type="button" class="select-button steptwo">graph</button>
+                <div></div>
+            </div>
+            <div class="operation-text-button" style="display: flex; flex-direction: row; align-items: baseline;">
+                <button type="button" class="select-button stepthree">graph</button>
+                <div></div>
+            </div>
         </div>
         `
         this.defaultRowOperation.className = "operation"
@@ -764,6 +802,24 @@ class GaussianElimStepsHTMLModel {
 
         let container = document.getElementsByClassName("matrix-container")[0]
         container.insertBefore(HTMLMatrix, container.getElementsByClassName("new-operation")[0])
+
+        let matrixColorSquares1 = document.getElementsByClassName("row0")
+        for (let i=0; i<matrixColorSquares1.length; i++) {
+            matrixColorSquares1[i].style = "background-color: " + rowColors[0] + ";"
+        }
+
+
+        let matrixColorSquares2 = document.getElementsByClassName("row1")
+        for (let i=0; i<matrixColorSquares2.length; i++) {
+            matrixColorSquares2[i].style = "background-color: " + rowColors[1] + ";"
+        }
+
+
+        let matrixColorSquares3 = document.getElementsByClassName("row2")
+        for (let i=0; i<matrixColorSquares3.length; i++) {
+            matrixColorSquares3[i].style = "background-color: " + rowColors[2] + ";"
+        }
+        
         
     }
 
@@ -772,6 +828,11 @@ class GaussianElimStepsHTMLModel {
         let index = this.operationList.length - 1
         let operationStr = ""
         
+        let step1Text
+        let step2Text
+        let step3Text
+
+
         if (operation.type == "swap") {
             operationStr = "<p>" + "R" + "<sub>" + (operation.row1+1) + "</sub>" + " &hArr; " + "R" + "<sub>" + (operation.row2+1) + "</sub>"  + "<p>"
         } else if (operation.type == "scale") {
@@ -817,11 +878,21 @@ class GaussianElimStepsHTMLModel {
 
 
             operationStr = "<p>" +"R"+"<sub>" + row1 + "</sub> " + additionorsubtraction + " " + stepString + " &rArr; " + "R" + "<sub>" + row1 + "</sub>" + "</p>"
+
+            // R1 and R2 
+            step1Text = "R<sub>"+row1 + " </sub>and R<sub>" + row2 +"</sub>"
+
+            // R1 + (1/6)R2 
+            step2Text = "R<sub>"+row1 + " </sub>, R<sub>" + row2 +"</sub>" + " and "+"R"+"<sub>" + row1 + "</sub> " + additionorsubtraction + " " + stepString
+            
+            // New R1
+            step3Text =  "New R<sub>" + row1 + "</sub>"
+
         } else {
             throw new Error("Invalid row operation!!")
         }
         
-
+        
         let HTMLOperation = this.defaultRowOperation.cloneNode(true)
         HTMLOperation.id = "operation" + (index)
         let allbuttons = HTMLOperation.querySelectorAll("button");
@@ -838,8 +909,20 @@ class GaussianElimStepsHTMLModel {
             buttons[0].remove()
             buttons[0].remove()
             buttons[0].remove()
+
+            let text = HTMLOperation.getElementsByClassName("operation-text-button")
+            text[0].remove()
+            text[0].remove()
+            text[0].remove()
         }
 
+        if (operation.type == "combine") {
+            let text = HTMLOperation.getElementsByClassName("operation-text-button")
+            text[0].getElementsByTagName("div")[0].innerHTML = step1Text
+            text[1].getElementsByTagName("div")[0].innerHTML = step2Text
+            text[2].getElementsByTagName("div")[0].innerHTML = step3Text
+
+        }
 
         let container = document.getElementsByClassName("matrix-container")[0]
         container.insertBefore(HTMLOperation, container.getElementsByClassName("new-operation")[0])
