@@ -1,7 +1,5 @@
 Features 🎬:
     High priorty:
-        (Medium) Finish up matrix stuff so it works.
-                    E.g when matrix is typed in show the solution.
 
     Medium priority:
         (Medium) MAKE LAST MATRIX HAVE REMOVE BUTTON OR HAVE REMOVE LAST OPERATION BUTTON OR SOMETHING
@@ -65,12 +63,7 @@ Linear Transformations page brainstorm 🧠:
     Choose better font
 
 Bugs 🐛:
-    Zooming with scroll wheel is messed up. Zooming canvas should *only* zoom canvas.
-        Track pad AND scroll wheel need help with this.
-
     If zoomed in and add new row operation the page scrolls in an odd way.
 
     Error Line 413 in gaussianElim script, cannot get classlist from null, don't know how to trigger this...
-
-    Solution shower needs to update when editing the input matrix
 

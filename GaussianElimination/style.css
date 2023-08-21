@@ -1,6 +1,12 @@
 /* * {
 
 } */
+.trying-to-be-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 10px
+}
+
 .free-color-selection {
     gap: 5px;
     padding: 10px;

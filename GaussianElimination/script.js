@@ -45,6 +45,7 @@ let rowColors = ["lightseagreen", "#ff6db6", "blue", "purple"]
 const parentBasic1 = document.getElementById("row-1-color"),
       popupBasic1 = new Picker({parent: parentBasic1, color: rowColors[0]});
       parentBasic1.style.backgroundColor = rowColors[0]
+      document.getElementsByClassName("color-box row0").backgroundColor = rowColors[0]
       if (popupBasic1.color.hsla[2] > 0.5) {
         parentBasic1.style.color = "black"
       }
