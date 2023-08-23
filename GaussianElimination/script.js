@@ -573,7 +573,7 @@ class GaussianElimStepsHTMLModel {
                 let row4 = transpose(this.matrixList[index+1])[this.operationList[index].row1]
 
                 let newMatrix = [row1, row2, row3, row4]
-                console.log(numericMatrixFromFrac(newMatrix))
+                //console.log(numericMatrixFromFrac(newMatrix))
 
                 test_graph.gaussianPlanes = new GaussianPlanes(test_graph, numericMatrixFromFrac(newMatrix), this.planeColors, (this.view == 2))
                 test_graph.gaussianPlanes.planesToDraw = [false, false, false, true]

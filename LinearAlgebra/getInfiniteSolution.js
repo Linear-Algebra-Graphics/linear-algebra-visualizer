@@ -68,10 +68,10 @@ function getInfiniteSolutionFrac(reduced) {
             output[0] = reduced[0][reduced[0].length - 1].toString()
 
         } else {
-            debugger
+            //debugger
             for (let col = 1; col < reduced[0].length - 1; col++) {
                 if (reduced[0][col].getNumerator() != 0) {
-                    debugger
+                    //debugger
                     
                     let fracFactor = divideFracs(new Frac(1, 1), reduced[0][col])
                     let factor = formatFracString(fracFactor)
@@ -161,7 +161,7 @@ function getInfiniteSolutionFrac(reduced) {
             output[1] = vars[1]
 
             let value = formatFracString(reduced[1][reduced[1].length - 1])
-            debugger
+            //debugger
             if (equalFrac(reduced[1][reduced[1].length - 1], new Frac(1,1))) {
                 value = "1"
             }
