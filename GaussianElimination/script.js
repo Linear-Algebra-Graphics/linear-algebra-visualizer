@@ -29,8 +29,8 @@ test_graph.currentZoom = 6/10
 test_graph.defaultZoom = 6/10
 
 
-const defaultX = 387
-const defaultY = -114
+const defaultX = 438
+const defaultY = -104
 //add mouse support
 let x = defaultX
 let y = defaultY
