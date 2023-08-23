@@ -40,7 +40,7 @@ let delta_y = 0
 
 let drawGraph = false;
 
-let rowColors = ["lightseagreen", "#ff6db6", "blue", "purple"]
+let rowColors = ["#39f4eaff", "#f51485ff", "#1515b4ff", "orange"]
 
 const parentBasic1 = document.getElementById("row-1-color"),
 popupBasic1 = new Picker({parent: parentBasic1, color: rowColors[0]});
@@ -459,20 +459,20 @@ class GaussianElimStepsHTMLModel {
             document.getElementsByClassName("solution-overlay")[0].style = "background: lightgreen;"
 
         } else if (solutions == "infinite") {
-            let solution = ["x", "y", "z"]
+            let solution = getInfiniteSolutionFrac(transpose(matrix))
 
-            for (let row = 0; row < matrix.length - 1; row++) {
-                //check if col is 0s
-                let index = leftMostNonZeroInRow(matrix, row)
-                if (index < matrix.length - 1) {
-                    solution[index] = matrix[matrix.length - 1][row].toString()
+            // for (let row = 0; row < matrix.length - 1; row++) {
+            //     //check if col is 0s
+            //     let index = leftMostNonZeroInRow(matrix, row)
+            //     if (index < matrix.length - 1) {
+            //         solution[index] = matrix[matrix.length - 1][row].toString()
 
-                    //if decimal round to thousandth
-                    if (solution[index].split(".").length == 2) {
-                        solution[index] = "" + parseFloat(solution[index]).toFixed(3)
-                    }
-                }
-            }
+            //         //if decimal round to thousandth
+            //         if (solution[index].split(".").length == 2) {
+            //             solution[index] = "" + parseFloat(solution[index]).toFixed(3)
+            //         }
+            //     }
+            // }
 
             document.getElementsByClassName("solution-overlay")[0].innerHTML = "Infinite solutions:〈" + solution[0] + ", " + solution[1] + ", " + solution[2] + "〉"
             document.getElementsByClassName("solution-overlay")[0].style = "background: lightblue;"

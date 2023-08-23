@@ -33,6 +33,8 @@ Features 🎬:
         
         (Easy) Have base colors be color blind compatible
 
+        allow user to create own default color combos
+
 Linear Transformations page brainstorm 🧠:
     Three different sections:
         left: equations

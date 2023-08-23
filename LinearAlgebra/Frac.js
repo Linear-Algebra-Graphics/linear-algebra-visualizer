@@ -88,6 +88,10 @@ class Frac {
 
 }
 
+function absValueOfFrac(frac) {
+    return new Frac(Math.abs(frac.getNumerator()), Math.abs(frac.getDenominator()))
+}
+
 /**
  * divides fractions
  * @param {Frac} frac1 a Frac object

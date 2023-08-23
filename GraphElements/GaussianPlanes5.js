@@ -930,30 +930,30 @@ function pt3DToStr(point) {
     return "" + point[0] + "," + point[1] + "," + point[2]
 }
 
-/**
- * 
- * @param {Number[][] | Frac[][]} matrix col row format matrix
- * @param {Number} row 
- * @returns {Number} index of the leftmost nonzero element in row of matrix
- */
-function leftMostNonZeroInRow(matrix, row) {
-    let col = 0
-    while (col < matrix.length) {
-        if (typeof matrix[col][row] == 'number') {
-            if (matrix[col][row] != 0) {
-                return col;
-            }
-        } else if (typeof matrix[col][row] == 'object') {
-            if (matrix[col][row].constructor.name == "Frac") {
-                if (matrix[col][row].getNumerator() != 0) {
-                    return col;
-                }
-            }
-        }
-        col++
-    }
-    return col
-}
+// /**
+//  * 
+//  * @param {Number[][] | Frac[][]} matrix col row format matrix
+//  * @param {Number} row 
+//  * @returns {Number} index of the leftmost nonzero element in row of matrix
+//  */
+// function leftMostNonZeroInRow(matrix, row) {
+//     let col = 0
+//     while (col < matrix.length) {
+//         if (typeof matrix[col][row] == 'number') {
+//             if (matrix[col][row] != 0) {
+//                 return col;
+//             }
+//         } else if (typeof matrix[col][row] == 'object') {
+//             if (matrix[col][row].constructor.name == "Frac") {
+//                 if (matrix[col][row].getNumerator() != 0) {
+//                     return col;
+//                 }
+//             }
+//         }
+//         col++
+//     }
+//     return col
+// }
 
 
 /**
