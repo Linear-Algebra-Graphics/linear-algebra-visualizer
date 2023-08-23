@@ -77,6 +77,10 @@ function getInfiniteSolutionFrac(reduced) {
                     let factor = formatFracString(fracFactor)
 
                     let value = formatFracString(reduced[0][reduced[0].length - 1])
+                    if (equalFrac(reduced[0][reduced[0].length - 1], new Frac(1,1))) {
+                        value = "1"
+                    }
+
                     output[col] = factor + "(" +value
 
                     for (let other = 0; other < reduced[0].length - 1; other++) {
@@ -117,14 +121,21 @@ function getInfiniteSolutionFrac(reduced) {
             output[0] = reduced[0][reduced[0].length - 1].toString()
         } else {
             output[0] = vars[0]
-            output[1] = "("+divideFracs(new Frac(1, 1), reduced[0][1]).toString()+")"+"("+reduced[0][reduced[0].length - 1].toString()
+            let coeff1 = formatFracString(divideFracs(new Frac(1, 1), reduced[0][1]))
+
+            let value = formatFracString(reduced[0][reduced[0].length - 1])
+            if (equalFrac(reduced[0][reduced[0].length - 1], new Frac(1,1))) {
+                value = "1"
+            }
+
+            output[1] = coeff1+"("+value
             for (let i = 0; i < reduced[0].length - 1; i++) {
                 if (i != 1 && reduced[0][i].getNumerator() != 0) {
                     let sign = "-"
                     if (reduced[0][i].getNumericalValue() < 0) {
                         sign = "+"
                     }
-                    output[1] += sign + "(" + absValueOfFrac(reduced[0][i]).toString() + ")" + vars[i]
+                    output[1] += sign + formatFracString(absValueOfFrac(reduced[0][i])) + vars[i]
                 }
             }
             output[1] += ")"
@@ -148,27 +159,40 @@ function getInfiniteSolutionFrac(reduced) {
         } else if (b.getNumerator() == 0) {
             output[0] = reduced[0][reduced[0].length - 1].toString()
             output[1] = vars[1]
-            output[2] = "("+divideFracs(new Frac(1, 1), reduced[1][2]).toString() + ")(" + "("+reduced[1][reduced[1].length - 1].toString()+")"
+
+            let value = formatFracString(reduced[1][reduced[1].length - 1])
+            debugger
+            if (equalFrac(reduced[1][reduced[1].length - 1], new Frac(1,1))) {
+                value = "1"
+            }
+
+            output[2] = formatFracString(divideFracs(new Frac(1, 1), reduced[1][2]))+"(" + value
             output[2] += "-" + vars[1] + ")"
         } else if (e.getNumerator() == 0) {
             output[1] = reduced[1][reduced[1].length - 1].toString()
             output[0] = vars[0]
-            output[2] = "("+divideFracs(new Frac(1, 1), reduced[0][2]).toString()+")("+"("+reduced[0][reduced[0].length - 1].toString()+")"
+
+            let value = formatFracString(reduced[0][reduced[0].length - 1])
+            if (equalFrac(reduced[0][reduced[0].length - 1], new Frac(1,1))) {
+                value = "1"
+            }
+
+            output[2] = formatFracString(divideFracs(new Frac(1, 1), reduced[0][2]))+"("+value
             output[2] += "-" + vars[0] + ")"   
         } else {
-            output[0] = "" + +"("+reduced[0][reduced[0].length - 1].toString()+")"
+            output[0] = "" + formatFracString(reduced[0][reduced[0].length - 1])
             let sign = "-"
             if (b.getNumericalValue() < 0) {
                 sign = "+"
             }
-            output[0] += sign + "(" + absValueOfFrac(b).toString() + ")" + vars[2]
+            output[0] += sign + formatFracString(absValueOfFrac(b)) + vars[2]
 
-            output[1] = "" + "("+reduced[1][reduced[0].length - 1].toString()+")"
+            output[1] = "" + formatFracString(reduced[1][reduced[0].length - 1])
             sign = "-"
             if (e.getNumericalValue() < 0) {
                 sign = "+"
             }
-            output[1] += sign + "(" + absValueOfFrac(e).toString() + ")" +  vars[2]
+            output[1] += sign + formatFracString(absValueOfFrac(e)) +  vars[2]
         }
     }
     return output

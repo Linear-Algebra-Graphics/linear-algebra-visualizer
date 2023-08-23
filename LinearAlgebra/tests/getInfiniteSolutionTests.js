@@ -25,7 +25,7 @@
 //case 1
 checkEqual(getInfiniteSolution([[1,0,0,0],[0,0,0,0],[0,0,0,0]]), ["0","y","z"], "test 1")
 checkEqual(getInfiniteSolution([[1,2,3,4],[0,0,0,0],[0,0,0,0]]), ["x","(1/2)(4-x-3z)","(1/3)(4-x-2y)"], "test 1")
-checkEqual(getInfiniteSolution([[1,0,3,-4],[0,0,0,0],[0,0,0,0]]), ["x","y","(1/3)(4-x)"], "test 1")
+checkEqual(getInfiniteSolution([[1,0,3,-4],[0,0,0,0],[0,0,0,0]]), ["x","y","(1/3)(-4-x)"], "test 1")
 checkEqual(getInfiniteSolution([[1,0,0,4],[0,0,0,0],[0,0,0,0]]), ["4","y","z"], "test 1")
 checkEqual(getInfiniteSolution([[1,0,-3,0],[0,0,0,0],[0,0,0,0]]), ["x","y","(1/-3)(0-x)"], "test 1")
 checkEqual(getInfiniteSolution([[1,5,-3,0],[0,0,0,0],[0,0,0,0]]), ["x","(1/5)(0-x+3z)","(1/-3)(0-x-5y)"], "test 1")
