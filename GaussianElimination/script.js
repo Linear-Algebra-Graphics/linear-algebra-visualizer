@@ -40,6 +40,7 @@ let delta_y = 0
 
 let drawGraph = false;
 
+const defaultColors = ["#39f4eaff", "#f51485ff", "#1515b4ff", "orange"]
 let rowColors = ["#39f4eaff", "#f51485ff", "#1515b4ff", "orange"]
 
 const parentBasic1 = document.getElementById("row-1-color"),
@@ -62,10 +63,8 @@ popupBasic1.onChange = function(color) {
     } else {
         parentBasic1.style.color = "white"
     }
-    let matrixColorSquares = document.getElementsByClassName("row0")
-    for (let i = 0; i < matrixColorSquares.length; i++) {
-        matrixColorSquares[i].style = "background-color: " + color.rgbaString + ";"
-    }
+    gaussSteps.updateColors()
+
     test_graph.draw()
 };
 //Open the popup manually:
@@ -90,10 +89,8 @@ popupBasic2.onChange = function(color) {
     } else {
         parentBasic2.style.color = "white"
     }
-    let matrixColorSquares = document.getElementsByClassName("row1")
-    for (let i=0; i<matrixColorSquares.length; i++) {
-        matrixColorSquares[i].style = "background-color: " + color.rgbaString + ";"
-    }
+    gaussSteps.updateColors()
+
     test_graph.draw()
 };
 //Open the popup manually:
@@ -118,10 +115,8 @@ popupBasic3.onChange = function(color) {
     } else {
         parentBasic3.style.color = "white"
     }
-    let matrixColorSquares = document.getElementsByClassName("row2")
-    for (let i=0; i<matrixColorSquares.length; i++) {
-        matrixColorSquares[i].style = "background-color: " + color.rgbaString + ";"
-    }
+    gaussSteps.updateColors()
+
     test_graph.draw()
 };
 //Open the popup manually:
@@ -256,7 +251,7 @@ function handleCanvasZoom(event) {
 }
 
 
-canvas.addEventListener("wheel", handleCanvasZoom, false);
+canvas.addEventListener("wheel", handleCanvasZoom, {capture: false});
 // canvas.addEventListener("DOMMouseScroll", handleCanvasZoom, false);
 // canvas.addEventListener("mousewheel", handleCanvasZoom, false);
 
@@ -310,17 +305,17 @@ var myFunction = function(){
 var bigLoop = setInterval(myFunction, 1000/fps);
 
 
-setInterval(function() {
+// setInterval(function() {
 
-    // test_graph.rotateAboutZ(2 * Math.PI * (x) / displayWidth)
+//     // test_graph.rotateAboutZ(2 * Math.PI * (x) / displayWidth)
 
-    // test_graph.rotateAboutX(2 * Math.PI * (y) / displayHeight)
+//     // test_graph.rotateAboutX(2 * Math.PI * (y) / displayHeight)
 
-    if (test_graph.animatingGaussianPlanes) {
-        test_graph.draw()
-    }
+//     if (test_graph.animatingGaussianPlanes) {
+//         test_graph.draw()
+//     }
 
-}, 1000/fps)
+// }, 1000/fps)
 
 
 
@@ -421,22 +416,11 @@ class GaussianElimStepsHTMLModel {
     }
     
     animate() {
-        const matrixList = this.matrixList
-        const operationList = this.operationList
         for (let i = 0; i < this.matrixList.length; i++) {
             this.selectMatrix(i)
-            
-            //if (i < this.matrixList.length - 2 && this.operationList[i].type == "combine") {
-                setInterval(function() {
-                    //debugger
-                    test_graph.draw()
-                    //debugger
-                    // let start = transpose(numericMatrixFromFrac(matrixList[i]))
-                    // let end = transpose(numericMatrixFromFrac(matrixList[i + 1]))
-                    // //debugger
-                    // test_graph.animateGaussianPlanes(start, end, operationList[i].row1, test_graph.gaussianPlanes.solution)
-                }, 1000);
-            //}
+            setTimeout(function() {
+                test_graph.draw()
+            }, 1000 * i);
         }
     }
 
@@ -900,6 +884,7 @@ class GaussianElimStepsHTMLModel {
             HTMLOperation.querySelectorAll("button")[i].classList.add("operation" + (index))
         }
 
+        //debugger
         HTMLOperation.getElementsByClassName("operation-text")[0].innerHTML = operationStr
         
         // Remove select buttons if not subtract.
@@ -921,7 +906,6 @@ class GaussianElimStepsHTMLModel {
             text[0].getElementsByTagName("div")[0].innerHTML = step1Text
             text[1].getElementsByTagName("div")[0].innerHTML = step2Text
             text[2].getElementsByTagName("div")[0].innerHTML = step3Text
-
         }
 
         let container = document.getElementsByClassName("matrix-container")[0]
@@ -1055,6 +1039,9 @@ class GaussianElimStepsHTMLModel {
 
             this.addRowOperation(rowOperation)
             this.addMatrix(matrix)
+            //when applying a row operation, select the latest matrix to be graphed
+            this.selectMatrix(this.matrixList.length - 1)
+
             this.toggleNewOperation()
             document.querySelectorAll(".new-operation .new-operation-button")[0].scrollIntoView(true)
             
@@ -1292,6 +1279,23 @@ class GaussianElimStepsHTMLModel {
         }
     }
 
+    updateColors() {
+        let matrixColorSquares1 = document.getElementsByClassName("row0")
+        let matrixColorSquares2 = document.getElementsByClassName("row1")
+        let matrixColorSquares3 = document.getElementsByClassName("row2")
+
+
+        for (let i=0; i<matrixColorSquares1.length; i++) {
+            matrixColorSquares1[i].style = "background-color: " + rowColors[0] + ";"
+        }
+        for (let i=0; i<matrixColorSquares2.length; i++) {
+            matrixColorSquares2[i].style = "background-color: " + rowColors[1] + ";"
+        }
+        for (let i=0; i<matrixColorSquares3.length; i++) {
+            matrixColorSquares3[i].style = "background-color: " + rowColors[2] + ";"
+        }
+    }
+
 }
 
 let gaussSteps = new GaussianElimStepsHTMLModel()
@@ -1350,7 +1354,7 @@ document.addEventListener("click", function() {
         gaussSteps.animate()
     }
 
-    if (current.classList.contains("clear-button")) {
+    if (current.classList.contains("clear-all-steps")) {
         // Clear everything but first matrix
         gaussSteps.clear()
     }
@@ -1359,7 +1363,7 @@ document.addEventListener("click", function() {
         // Add matrix at the end
     }
 
-    if (current.classList.contains("remove-button")) {
+    if (current.classList.contains("undo-operation-button")) {
         gaussSteps.removeLast()
     }
 
@@ -1409,6 +1413,19 @@ document.addEventListener("click", function() {
 
     if (current.classList.contains("settings-button")) {
         gaussSteps.toggleSettings();
+    }
+
+    if(current.classList.contains("color-button-1")) {
+        popupBasic1.openHandler();
+    }
+    if(current.classList.contains("color-button-2")) {
+        popupBasic2.openHandler();
+    }
+    if(current.classList.contains("color-button-3")) {
+        popupBasic3.openHandler();
+    }
+    if(current.classList.contains("bug-button")) {
+        document.getElementsByClassName("bug-report-popup")[0].showModal();
     }
 
 })
@@ -1496,6 +1513,59 @@ document.addEventListener("change", function() {
             scale2Select.value = selection
         }
     }
+
+    if(current.classList.contains("color-blind-settings")) {
+        if(current.value == "default") {
+            rowColors[0] = parentBasic1.style.backgroundColor
+            rowColors[1] = parentBasic2.style.backgroundColor
+            rowColors[2] = parentBasic3.style.backgroundColor
+            rowColors[3] = "orange" //thats right, just orange
+        }
+        if(current.value == "deuteranomaly") {
+            rowColors[0] = "#990F0F"
+            rowColors[1] = "#6B990F"
+            rowColors[2] = "#0F6B99"
+            rowColors[3] = "#260F99"
+        }
+        if(current.value == "protanomaly") {
+            rowColors[0] = "#ffff6d"
+            rowColors[1] = "#b66dff"
+            rowColors[2] = "#24ff24"
+            rowColors[3] = "#490092"
+        }
+        if(current.value == "protanopia") {
+            rowColors[0] = "#990F0F"
+            rowColors[1] = "#85B22C"
+            rowColors[2] = "#2C85B2"
+            rowColors[3] = "#260F99"
+        }
+        if(current.value == "deuteranopia") {
+            rowColors[0] = "#FFFF32"
+            rowColors[1] = "#32FF00"
+            rowColors[2] = "#CCBFFF"
+            rowColors[3] = "#654CFF"
+        }
+        if(current.value == "tritanopia") {
+            rowColors[0] = "#990F0F"
+            rowColors[1] = "#99540F"
+            rowColors[2] = "#51A3CC"
+            rowColors[3] = "#260F99"
+        }
+        if(current.value == "tritanomaly") {
+            rowColors[0] = "#990F0F"
+            rowColors[1] = "#85B22C"
+            rowColors[2] = "#51A3CC"
+            rowColors[3] = "#260F99"
+        }
+        gaussSteps.updateColors()
+        test_graph.draw()
+    }
+
+    if (current.classList.contains("fps-slider")) {
+        fps = current.value
+        document.getElementsByClassName("fps-counter")[0].innerHTML = fps
+    }
+
 })
 
 document.addEventListener("input", function() {

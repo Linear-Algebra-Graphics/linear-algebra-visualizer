@@ -24,7 +24,6 @@
         <script src="../LinearAlgebra/GaussianElimination.js"></script>
         <script src="../LinearAlgebra/GramSchmidt.js"></script>
         <script src="../LinearAlgebra/SVD.js"></script>
-        <script src="../LinearAlgebra/getInfiniteSolution.js"></script>
 
         <!-- Basic script import -->
         <script src="script.js" defer></script>
@@ -39,6 +38,31 @@
 
     </head>
     <body>
+        <dialog class="bug-report-popup">
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                Send an email to one or both of these adresses:
+                <div style="display: flex; flex-direction: column; gap: 5px; align-items: center;">
+                    <div style="font-weight: bold;" class="email"></div>
+                    <div style="font-weight: bold;" class="email"></div>
+                </div>
+                <div>
+                    Please add as much detail as you can with screenshots if possible.<br>
+                    If you can, give steps to recreate the bug! For example:
+                </div>
+                <i>
+                    "When I put a matrix like this: [MATRIX] and try to do the <br>
+                    swap operation nothing happens."
+                </i>
+
+            <div>
+            <form method="dialog">
+                <button>Close</button>
+            </form>
+            <script>
+                document.getElementsByClassName("email")[0].innerHTML = "edison" + ".hao112" + "&#64;" + "gmail"   + ".com"
+                document.getElementsByClassName("email")[1].innerHTML = "beck"   + "314159"  + "&#64;" + "hotmail" + ".com"
+            </script>
+        </dialog>
         <div class="topnav">
             <a href="..\LinearTransformation\index.html">Linear Transformation</a>
             <a href="..\Problems\index.html">Problems</a>
@@ -54,6 +78,7 @@
                     </div>
 
                     <div class="settings-and-help-button-container">
+                        <button class="bug-button"><div class="emoji">🐛</div> REPORT BUGS <div class="emoji">🐛</div></button>
                         <button class="help-button"><div class="emoji">🛟</div> Help</button>
                         <button class="settings-button"><div class="emoji">🛠️</div> Settings</button>
                         <!-- <button class="color-settings-button"><div class="emoji palette">🎨</div><div class="emoji paintbrush">🖌️</div> Color Settings</button> -->
@@ -79,8 +104,12 @@
 
                 <div class="bar-bottom">
                     <div class="bottom-left-container">
-                        <button class="zoom-in-button"><div class="emoji">➕</div></button>
-                        <button class="zoom-out-button"><div class="emoji">➖</div></button>
+                        <div class = "fps-container">
+                            <div>Frames per second: </div>
+                            <div class="fps-counter">60</div>
+                            <input class="fps-slider" type="range" min="10" max="100" value="60">
+                            <!-- <div> Lower to increase performance</div> -->
+                        </div>
                     </div>
 
                     <div class="bottom-right-container">
@@ -89,18 +118,10 @@
                 </div>
 
                 <div class="button-container">
-                    <button type="button" class="add-button">Add augmented matrix</button> 
-                    <button type="button" class="remove-button">remove last matrix</button> 
-                    <button type="button" class="clear-button">clear</button> 
                     <button type="button" class="animate-button">animate</button> 
                     <button type="button" class="solve-button">solve</button>
-                    <button type="button" class="row-opp">NEW ROW OPERATION</button>
                     <label>Show Grid</label>
                     <input type="checkbox" class="show-grid-checkbox" checked></input>
-
-                    <button id="defaultZoom" class="default-zoom-button"> default zoom </button>
-                    <button type="button" class="zoom-in-button">+</button>
-                    <button type="button" class="zoom-out-button">-</button>
                 </div>
 
             </div>
@@ -121,7 +142,10 @@
             </div>
 
             <div class="matrix-outer-wraper box">
-                <div class="box-label">Steps</div>
+                <div class="box-label">
+                    <a>Steps</a>
+                    <button class="clear-all-steps" >Clear All</button>
+                </div>
                 <div class="matrix-container">
                     <div class="matrix selected" id="matrix0">
                         <div class="name-bar">
@@ -146,32 +170,35 @@
                         
                             <div class="line"></div>
                             <div class="column">
-                                <input class="matrix-value" type="text" value="1">
-                                <input class="matrix-value" type="text" value="1">
+                                <input class="matrix-value" type="text" value="2/3">
+                                <input class="matrix-value" type="text" value="1/6">
+                                <input class="matrix-value" type="text" value="1/2">
+                            </div>
+                            <div class="column">
+                                <input class="matrix-value" type="text" value="1/3">
+                                <input class="matrix-value" type="text" value="1/2">
                                 <input class="matrix-value" type="text" value="0">
                             </div>
                             <div class="column">
-                                <input class="matrix-value" type="text" value="1">
-                                <input class="matrix-value" type="text" value="0">
-                                <input class="matrix-value" type="text" value="1">
-                            </div>
-                            <div class="column">
-                                <input class="matrix-value" type="text" value="0">
-                                <input class="matrix-value" type="text" value="1">
+                                <input class="matrix-value" type="text" value="25/60">
+                                <input class="matrix-value" type="text" value="25/60">
                                 <input class="matrix-value" type="text" value="1">
                             </div>
                             <div class="line-gray"></div>
                             <div class="column">
-                                <input class="matrix-value" type="text" value="4">
-                                <input class="matrix-value" type="text" value="4">
-                                <input class="matrix-value" type="text" value="4">
+                                <input class="matrix-value" type="text" value="2">
+                                <input class="matrix-value" type="text" value="2">
+                                <input class="matrix-value" type="text" value="1">
                             </div>
                         
                             <div class="line"></div>
                         </div>
                     </div>
                     <div class="new-operation">
-                        <button class="new-operation-button closed">➕ Apply new row operation</button>
+                        <div style="display: flex; flex-direction: row;">
+                            <button class="new-operation-button closed">➕ Apply new row operation</button>
+                            <button class="undo-operation-button" style="width: 5rem;">Undo</button>
+                        </div>
                         <div class="settings-container" style="display: none;">
                             <div class="settings">
                                 <label for="operations">Row Operation:</label>
@@ -328,19 +355,32 @@
                     <div class="box-label">Color Settings</div>
                     <div class="color-settings-wrapper">
                         <div class="free-color-selection">
-                            <a href="#" class="color-button" id="row-1-color">Row 1</a>
-                            <a href="#" class="color-button" id="row-2-color">Row 2</a>
-                            <a href="#" class="color-button" id="row-3-color">Row 3</a>
+                            <div style="display: flex; align-items: baseline; gap: 5px;">
+                                <button class="color-button" id="row-1-color">Row 1</button>
+                                <button class="color-button-1">Change</button>
+                            </div>
+                            <div style="display: flex; align-items: baseline; gap: 5px;">
+                                <button class="color-button" id="row-2-color">Row 2</button>
+                                <button class="color-button-2">Change</button>
+                            </div>
+                            <div style="display: flex; align-items: baseline; gap: 5px;">
+                                <button class="color-button" id="row-3-color">Row 3</button>
+                                <button class="color-button-3">Change</button>
+                            </div>
                         </div>
                         
-                        <!-- <div class="default colors">
-                            <select>
-                                <option value="volvo">Volvo</option>
-                                <option value="saab">Saab</option>
-                                <option value="mercedes">Mercedes</option>
-                                <option value="audi">Audi</option>
+                        <div class="default colors">
+                            <select class="color-blind-settings">
+                                <option value="" selected disabled hidden>Color blind Defaults</option>
+                                <option value="default">Default</option>
+                                <option value="deuteranomaly">Deuteranomaly</option>
+                                <option value="protanomaly">Protanomaly</option>
+                                <option value="protanopia">Protanopia</option>
+                                <option value="deuteranopia">Deuteranopia</option>
+                                <option value="tritanopia">Tritanopia</option>
+                                <option value="tritanomaly">Tritanomaly</option>
                             </select>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
             </div>

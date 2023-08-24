@@ -13,8 +13,11 @@
     margin-bottom: 5px;
     display: flex;
     flex-direction: column;
+    border: 1px solid black;
+    border-radius: 10px;
+    margin-left: 10px;
+    margin-bottom: 11px;
 }
-
 
 .color-settings-wrapper {
     display: flex;
@@ -47,6 +50,7 @@
 
 body {
     margin: 0px;
+    font-family: "Computer Modern", sans-serif !important;
 }
 
 p {
@@ -108,6 +112,7 @@ canvas:active {
 .operation-text {
     display: flex;
     justify-content: center;
+    position:relative;
 }
 
 .button-container {
@@ -387,7 +392,7 @@ div.bar-bottom button:active {
     height: inherit;
     display: flex;
     padding-left: 3px;
-    align-items: flex-start;
+    align-items: center;
 }
 
 .bottom-right-container {
@@ -407,6 +412,11 @@ div.bar-bottom button:active {
 
 .help-button:hover .emoji {
     transform: rotate(360deg);
+}
+
+.bug-button:hover .emoji {
+    transform: rotate(360deg) scale(2);
+
 }
 
 .view-button:hover .emoji {
@@ -545,7 +555,7 @@ div.bar-bottom button:active {
 
 .new-operation button:hover {
     /* font-size: 1.1rem; */
-    width: 250px;
+    /* width: 250px; */
     background-color: lightgray;
 }
 
@@ -664,4 +674,29 @@ div.bar-bottom button:active {
 
 .matrix-solution {
     padding: 10px;
+}
+
+.color-blind-settings {
+    margin-left: 7px;
+    margin-right: 7px;
+    margin-top: 7px;
+}
+
+.fps-container {
+    gap: 5px;
+    margin-left: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+    display: flex;
+    flex-direction: row;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+.fps-container input {
+    margin: 0px;
+}
+
+.fps-counter {
+    color: red;
 }

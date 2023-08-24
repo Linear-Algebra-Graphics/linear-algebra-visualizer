@@ -429,7 +429,6 @@ class Graph {
         if (this.gaussianPlanes != undefined) {
             this.gaussianPlanes.draw()
         }
-        
         if (this.showAxis) {
             this.Axis.draw()
         }

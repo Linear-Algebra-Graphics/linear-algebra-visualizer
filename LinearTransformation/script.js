@@ -115,7 +115,7 @@ function handleCanvasZoom(event) {
     return event.preventDefault() && false;
 }
 
-canvas.addEventListener("wheel", handleCanvasZoom, false);
+canvas.addEventListener("wheel", handleCanvasZoom, {capture: false});
 
 
 
