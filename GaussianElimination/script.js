@@ -412,18 +412,37 @@ class GaussianElimStepsHTMLModel {
 
         //this should keep track of solution status for when operation gaussianPlanes are displayed
         this.hasSolution       = false;
+        this.isAnimating       = false;
         //this._updateInputMatrix()
     }
-    
+
     animate() {
-        for (let i = 0; i < this.matrixList.length; i++) {
+        const GaussIanElimStepsObject = this
+        if(this.isAnimating == false) {
+            this.isAnimating = true;
+
+            for (let i = 0; i < this.matrixList.length-1; i++) {
+                (function(ind) {
+                    // if(GaussIanElimStepsObject.isAnimating == true) {
+                        setTimeout(function(){
+                            GaussIanElimStepsObject.selectMatrix(ind)
+                            test_graph.draw()
+                        }, (1000 * ind));
+                    // }
+                })(i);
+            }
+
             (function(ind) {
                 setTimeout(function(){
-                    gaussSteps.selectMatrix(ind)
-                    test_graph.draw()
+                    
+                    // if(GaussIanElimStepsObject.isAnimating == true) {
+                        GaussIanElimStepsObject.selectMatrix(ind)
+                        test_graph.draw()
+                        GaussIanElimStepsObject.isAnimating = false
+                    // }
                 }, (1000 * ind));
-            })(i);
-         }
+            })(this.matrixList.length-1);
+        }
     }
 
     updateSolutionIndicator() {
@@ -495,6 +514,7 @@ class GaussianElimStepsHTMLModel {
 
 
     selectMatrix(index) {
+        
         // if (index == 0) {
         //     this._updateInputMatrix();
         // }
@@ -502,6 +522,16 @@ class GaussianElimStepsHTMLModel {
         if (this.currMatrixIsValid) {
             // Unselect old.
             let oldMatrix = document.getElementById(this.selected.type + this.selected.index)
+            let child1     = oldMatrix.getElementsByClassName("stepone")[0]
+            let child2     = oldMatrix.getElementsByClassName("steptwo")[0]
+            let child3     = oldMatrix.getElementsByClassName("stepthree")[0]    
+    
+            if (child1 != undefined) {
+                child1.parentElement.classList.remove("selected")
+                child2.parentElement.classList.remove("selected")
+                child3.parentElement.classList.remove("selected")
+    
+            }
             oldMatrix.classList.remove("selected");
 
             // Select new.
@@ -525,12 +555,37 @@ class GaussianElimStepsHTMLModel {
     }
 
     selectOperation(index, step) {
+        this.isAnimating = false
         // Unselect old.
+        
         let oldMatrix = document.getElementById(this.selected.type + this.selected.index)
-        oldMatrix.classList.remove("selected");
+        let child1     = oldMatrix.getElementsByClassName("stepone")[0]
+        let child2     = oldMatrix.getElementsByClassName("steptwo")[0]
+        let child3     = oldMatrix.getElementsByClassName("stepthree")[0]
 
+        if (child1 != undefined) {
+            child1.parentElement.classList.remove("selected")
+            child2.parentElement.classList.remove("selected")
+            child3.parentElement.classList.remove("selected")
+
+        }
+        // oldMatrix.getElementsByClassName("operation"+index)[0].parentElement.classList.add("selected")
+
+        oldMatrix.classList.remove("selected");
+        // debugger
         // Select new.
         document.getElementById("operation"+index).classList.add("selected")
+        let textStep = ""
+        if(step == 0) {
+            textStep="one"
+        }
+        if(step == 1) {
+            textStep="two"
+        }
+        if(step == 2) {
+            textStep="three"
+        }
+        document.getElementById("operation"+index).getElementsByClassName("step"+textStep)[0].parentElement.classList.add("selected")
         this.selected = {type:"operation", index: index}
 
 
@@ -615,7 +670,7 @@ class GaussianElimStepsHTMLModel {
 
         for (let c = 0; c < columbs.length && matrixValid; c++) {
             let values = columbs[c].getElementsByTagName("input")
-            for(let v = 0; v < values.length; v++) {
+            for (let v = 0; v < values.length; v++) {
                 //debugger
                 //build up a faction value of the value at the matrix[c][v] input cell
                 let fracAnswer
@@ -971,7 +1026,7 @@ class GaussianElimStepsHTMLModel {
                     </math>\
                 </div>'
 
-            debugger
+            // debugger
 
 
             // let additionorsubtraction = operation.sign;
@@ -1151,6 +1206,7 @@ class GaussianElimStepsHTMLModel {
         }
     }
 
+    // Uses latest Brain
     applyNewOperation() {
         
         let button = document.querySelectorAll(".apply-new-operation-button")[0]
@@ -1314,7 +1370,7 @@ class GaussianElimStepsHTMLModel {
         const regex = /^(-*)(((\d*\.*\d*)\/(\d*\.*\d*))|\d*\.*\d*)$/;
         let regexGroups = (input).match(regex)
 
-        if (regexGroups != null) {
+        if (regexGroups != null && input != "") {
             let minusSigns  = regexGroups[1]
 
             let neg = 1
@@ -1436,29 +1492,35 @@ document.addEventListener("click", function() {
     const current = document.activeElement
     
     if (current.classList.contains("select-button")) {
-        // Figure out what is selected and update graph
-        // to show correctly
-        for (let i=0; i<current.classList.length; i++) {
-            if (current.classList[i].match(/(\D*)(\d*)/)[2] != "") {
-                let type  = current.classList[i].match(/(\D*)(\d*)/)[1]
-                let index = parseInt(current.classList[i].match(/(\D*)(\d*)/)[2])
+        if(gaussSteps.isAnimating == false) {
+            gaussSteps.isAnimating = false;
 
-                if(type == "matrix") {
-                    gaussSteps.selectMatrix(index)
-                } else if(type == "operation") {
-                    
-                    if(current.classList.contains("stepone")) {
-                        gaussSteps.selectOperation(index, 0)
-                    } else if(current.classList.contains("steptwo")) {
-                        gaussSteps.selectOperation(index, 1)
-                    } else if(current.classList.contains("stepthree")) {
-                        gaussSteps.selectOperation(index, 2)
+            // Figure out what is selected and update graph
+            // to show correctly
+            for (let i=0; i<current.classList.length; i++) {
+                if (current.classList[i].match(/(\D*)(\d*)/)[2] != "") {
+                    let type  = current.classList[i].match(/(\D*)(\d*)/)[1]
+                    let index = parseInt(current.classList[i].match(/(\D*)(\d*)/)[2])
+
+                    if(type == "matrix") {
+                        gaussSteps.selectMatrix(index)
+                    } else if(type == "operation") {
+                        
+                        if(current.classList.contains("stepone")) {
+                            gaussSteps.selectOperation(index, 0)
+                        } else if(current.classList.contains("steptwo")) {
+                            gaussSteps.selectOperation(index, 1)
+                        } else if(current.classList.contains("stepthree")) {
+                            gaussSteps.selectOperation(index, 2)
+                        }
+
                     }
+                    break
                 }
-                break
             }
+            test_graph.draw()
         }
-        test_graph.draw()
+        
 
     }
 
@@ -1468,19 +1530,25 @@ document.addEventListener("click", function() {
     }
 
     if (current.classList.contains("solve-button")) {
-        // Get the latest matrix.
-        // Add matrices and steps from then on.
-        gaussSteps.solve()
+        if (gaussSteps.isAnimating == false) {
+            // Get the latest matrix.
+            // Add matrices and steps from then on.
+            gaussSteps.solve()
+        }
     }
 
     if (current.classList.contains("animate-steps-button")) {
-        // Select first to last matrix
-        gaussSteps.animate()
+        if (gaussSteps.isAnimating == false) {
+            // Select first to last matrix
+            gaussSteps.animate()
+        }
     }
 
     if (current.classList.contains("clear-all-steps")) {
-        // Clear everything but first matrix
-        gaussSteps.clear()
+        if (gaussSteps.isAnimating == false) {
+            // Clear everything but first matrix
+            gaussSteps.clear()
+        }
     }
 
     if (current.classList.contains("add-button")) {
@@ -1488,7 +1556,9 @@ document.addEventListener("click", function() {
     }
 
     if (current.classList.contains("undo-operation-button")) {
-        gaussSteps.removeLast()
+        if (gaussSteps.isAnimating == false) {
+            gaussSteps.removeLast()
+        }
     }
 
     if (current.classList.contains("show-grid-checkbox")) {
@@ -1524,11 +1594,15 @@ document.addEventListener("click", function() {
     }
 
     if (current.classList.contains("new-operation-button") ) {
-        gaussSteps.toggleNewOperation();
+        if (gaussSteps.isAnimating == false) {
+            gaussSteps.toggleNewOperation();
+        }
     }
 
     if (current.classList.contains("apply-new-operation-button")) {
-        gaussSteps.applyNewOperation();
+        if (gaussSteps.isAnimating == false) {
+            gaussSteps.applyNewOperation();
+        }
     }
 
     if (current.classList.contains("color-settings-button")) {
@@ -1548,6 +1622,7 @@ document.addEventListener("click", function() {
     if(current.classList.contains("color-button-3")) {
         popupBasic3.openHandler();
     }
+
     if(current.classList.contains("bug-button")) {
         document.getElementsByClassName("bug-report-popup")[0].showModal();
     }
