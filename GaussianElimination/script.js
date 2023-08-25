@@ -30,7 +30,7 @@ test_graph.defaultZoom = 6/10
 
 
 const defaultX = 438
-const defaultY = -104
+const defaultY = -91
 //add mouse support
 let x = defaultX
 let y = defaultY
@@ -417,11 +417,13 @@ class GaussianElimStepsHTMLModel {
     
     animate() {
         for (let i = 0; i < this.matrixList.length; i++) {
-            this.selectMatrix(i)
-            setTimeout(function() {
-                test_graph.draw()
-            }, 1000 * i);
-        }
+            (function(ind) {
+                setTimeout(function(){
+                    gaussSteps.selectMatrix(ind)
+                    test_graph.draw()
+                }, (1000 * ind));
+            })(i);
+         }
     }
 
     updateSolutionIndicator() {
@@ -430,36 +432,60 @@ class GaussianElimStepsHTMLModel {
 
         if (solutions == "one") {
 
-            //array of [x, y, z] solution
-            let solution = [matrix[3][0].toString(), matrix[3][1].toString(), matrix[3][2].toString()]
-            //if a decimal value, round to thousandth place
-            for (let i = 0; i < solution.length; i++) {
-                if (solution[i].split(".").length == 2) {
-                    solution[i] = "" + parseFloat(solution[i]).toFixed(3)
+            let solution = new Array(3)
+            for (let i = 0; i < 3; i++) {
+                if (equalFrac(new Frac(0, 1), matrix[3][i])) {
+                    solution[i] = "<mn>0</mn>"
+                } else if (equalFrac(new Frac(1, 1), matrix[3][i])) {
+                    solution[i] = "<mn>1</mn>"
+                } else {
+                    solution[i] = formatFracString(matrix[3][i])
                 }
             }
+
+            // //array of [x, y, z] solution
+            // let solution = [matrix[3][0], matrix[3][1].toString(), matrix[3][2].toString()]
+            // //if a decimal value, round to thousandth place
+            // for (let i = 0; i < solution.length; i++) {
+            //     if (solution[i].split(".").length == 2) {
+            //         solution[i] = "" + parseFloat(solution[i]).toFixed(3)
+            //     }
+            // }
             
-            document.getElementsByClassName("solution-overlay")[0].innerHTML = "One solution: (" + solution[0] + ", " + solution[1] + ", " + solution[2] + ")"
+            document.getElementsByClassName("solution-overlay")[0].innerHTML =   
+                '<math display="inline">\
+                    <mtext>One Solution: </mtext>\
+                    <mo>(</mo>'
+                    + solution[0] +
+                    '<mo>,</mo>'
+                    + solution[1] + 
+                    '<mo>,</mo>' 
+                    + solution[2] + 
+                    '<mo>)</mo>\
+                </math>'
             document.getElementsByClassName("solution-overlay")[0].style = "background: lightgreen;"
 
         } else if (solutions == "infinite") {
             let solution = getInfiniteSolutionFrac(transpose(matrix))
 
-            // for (let row = 0; row < matrix.length - 1; row++) {
-            //     //check if col is 0s
-            //     let index = leftMostNonZeroInRow(matrix, row)
-            //     if (index < matrix.length - 1) {
-            //         solution[index] = matrix[matrix.length - 1][row].toString()
+            //document.getElementsByClassName("solution-overlay")[0].innerHTML = "Infinite solutions:〈" + solution[0] + ", " + solution[1] + ", " + solution[2] + "〉"
+            // document.getElementsByClassName("solution-overlay")[0].style = "background: lightblue;"
 
-            //         //if decimal round to thousandth
-            //         if (solution[index].split(".").length == 2) {
-            //             solution[index] = "" + parseFloat(solution[index]).toFixed(3)
-            //         }
-            //     }
-            // }
-
-            document.getElementsByClassName("solution-overlay")[0].innerHTML = "Infinite solutions:〈" + solution[0] + ", " + solution[1] + ", " + solution[2] + "〉"
+            // let math = document.createElement("math")
+            // math.innerHTML = '<mo>[</mo>'+ solution[0] + '<mo>,</mo>' + solution[1] + '<mo>,</mo>' + solution[2] +'<mo>]</mo>'
+            document.getElementsByClassName("solution-overlay")[0].innerHTML = 
+                '<math display="inline">\
+                    <mtext>Infinite Solutions: </mtext>\
+                    <mo>[</mo>'
+                    + solution[0] + 
+                    '<mo>,</mo>' 
+                    + solution[1] + 
+                    '<mo>,</mo>' 
+                    + solution[2] +
+                    '<mo>]</mo>\
+                </math>'
             document.getElementsByClassName("solution-overlay")[0].style = "background: lightblue;"
+
 
         } else if(solutions == "none") {
             document.getElementsByClassName("solution-overlay")[0].innerHTML = "No Solution"
@@ -807,6 +833,10 @@ class GaussianElimStepsHTMLModel {
         
     }
 
+    /**
+     * https://temml.org/ for conversion from latex to MathML
+     * @param {*} operation 
+     */
     addRowOperation(operation) {
         this.operationList.push(operation)
         let index = this.operationList.length - 1
@@ -818,24 +848,62 @@ class GaussianElimStepsHTMLModel {
 
 
         if (operation.type == "swap") {
-            operationStr = "<p>" + "R" + "<sub>" + (operation.row1+1) + "</sub>" + " &hArr; " + "R" + "<sub>" + (operation.row2+1) + "</sub>"  + "<p>"
+            operationStr = 
+                '<math>\
+                    <msub>\
+                        <mi>R</mi>\
+                        <mn>'+(operation.row1+1)+'</mn>\
+                    </msub>\
+                    <mo stretchy="false">⟺</mo>\
+                    <msub>\
+                        <mi>R</mi>\
+                        <mn>'+(operation.row2+1)+'</mn>\
+                    </msub>\
+                </math>'
+            
+            //operationStr = "<p>" + "R" + "<sub>" + (operation.row1+1) + "</sub>" + " &hArr; " + "R" + "<sub>" + (operation.row2+1) + "</sub>"  + "<p>"
         } else if (operation.type == "scale") {
             let value       = operation.value
-            let numerator   = value.getNumerator()
-            let denominator = value.getDenominator()
+            // let numerator   = value.getNumerator()
+            // let denominator = value.getDenominator()
             let row         = operation.row + 1
 
-            let stepString = "<p>"
+            // let stepString = "<p>"
 
-            if ((numerator == 0 || denominator == 1) && numerator != 1) {
-                stepString = stepString + "(" + numerator + ") R" + "<sub>" + row + "</sub>";
-            } else if (numerator == 1 && denominator == 1) {
-                stepString = stepString + "R" + "<sub>" + row + "</sub>";
-            } else {
-                stepString = stepString + "(<sup>" + numerator + "</sup>/<sub>" + denominator + "</sub>) R" + "<sub>" + row + "</sub>";
-            }
+            // if ((numerator == 0 || denominator == 1) && numerator != 1) {
+            //     stepString = stepString + "(" + numerator + ") R" + "<sub>" + row + "</sub>";
+            // } else if (numerator == 1 && denominator == 1) {
+            //     stepString = stepString + "R" + "<sub>" + row + "</sub>";
+            // } else {
+            //     stepString = stepString + "(<sup>" + numerator + "</sup>/<sub>" + denominator + "</sub>) R" + "<sub>" + row + "</sub>";
+            // }
             
-            operationStr = stepString + " &rArr; " + "R" + "<sub>" + row + "</sub>" + "</p>"
+            //operationStr = stepString + " &rArr; " + "R" + "<sub>" + row + "</sub>" + "</p>"
+            let fracString = ""
+            if (equalFrac(new Frac(0, 1), value)) {
+                fracString = "<mn>0</mn>"
+            } else if (equalFrac(new Frac(1,1), value)) {
+                fracString = "<mn>1</mn>"
+            } else if (equalFrac(new Frac(-1, 1), value)) {
+                fracString = "<mo>-</mo>"
+            } else {
+                fracString = formatFracString(value)
+            }
+            operationStr = 
+                '<math>'
+                    +fracString+
+                    '<msub>\
+                        <mi>R</mi>\
+                        <mn>'+row+'</mn>\
+                    </msub>\
+                    <mo stretchy="false">⇒</mo>\
+                    <msub>\
+                        <mi>R</mi>\
+                        <mn>'+row+'</mn>\
+                    </msub>\
+                </math>'
+
+
         } else if (operation.type == "combine") {
             let value = operation.value
             let numerator   = value.getNumerator()
@@ -843,34 +911,90 @@ class GaussianElimStepsHTMLModel {
             let row1 = operation.row1 + 1
             let row2 = operation.row2 + 1
 
-            let additionorsubtraction = operation.sign;
-            if (String(numerator)[0] == "-" && additionorsubtraction == "-") {
-                additionorsubtraction = "+"
-                numerator = -1 * numerator
+            let sign = '<mo>+</mo>'
+            if (value.getNumericalValue() < 0) {
+                sign = '<mo>-</mo>'
             }
-            
-            // Check edge cases
-            let stepString
-            if ((numerator == 0 || denominator == 1) && numerator != 1) {
-                stepString = "((" + numerator + ") R" + "<sub>" + row2 + "</sub>" + ")"
-            } else if(numerator == 1 && denominator == 1) {
-                stepString = "R" + "<sub>" + row2 + "</sub>"
-            } else {
-                stepString = "((<sup>" + numerator + "</sup>/<sub>"  + denominator + "</sub>) R" + "<sub>" + row2 + "</sub>" + ")"
+            let absValue = '<mn></mn>'
+            if (equalFrac(new Frac(0,1), value)) {
+                absValue = '<mn>0</mn>'
+            } else if (!equalFrac(new Frac(1,1), value)) {
+                absValue = formatFracString(absValueOfFrac(value))
             }
 
+            operationStr = 
+                '<math>\
+                    <msub>\
+                        <mi>R</mi><mn>'+row1+'</mn>\
+                    </msub>\
+                    <mo>+</mo>'+
+                    absValue +
+                    '<msub>\
+                        <mi>R</mi><mn>'+row2+'</mn>\
+                    </msub>\
+                    <mo stretchy="false">⇒</mo>\
+                    <msub>\
+                        <mi>R</mi><mn>'+row1+'</mn>\
+                    </msub>\
+                </math>'
+
+            step1Text = 
+                '<div>\
+                    <math><msub><mi>R</mi><mn>'+row1+'</mn></msub></math>\
+                    <mtext>and</mtext>\
+                    <math><msub><mi>R</mi><mn>'+row2+'</mn></msub></math>\
+                </div>'
+
+            step2Text = 
+                '<div>\
+                    <math><msub><mi>R</mi><mn>'+row1+'</mn></msub><mo>, </mo><msub><mi>R</mi><mn>'+row2+'</mn></msub></math>\
+                    <mtext>and</mtext>\
+                    <math>\
+                        <msub>\
+                            <mi>R</mi><mn>'+row1+'</mn>\
+                        </msub>\
+                        <mo>+</mo>'+
+                        absValue+
+                        '<msub>\
+                            <mi>R</mi><mn>'+row2+'</mn>\
+                        </msub>\
+                    </math>\
+                </div>'
+
+            step3Text = 
+                '<div>\
+                    <math>\
+                        <mtext>New:&nbsp;</mtext>\
+                        <msub>\
+                            <mi>R</mi><mn>'+row1+'</mn>\
+                        </msub>\
+                    </math>\
+                </div>'
+
+            debugger
 
 
-            operationStr = "<p>" +"R"+"<sub>" + row1 + "</sub> " + additionorsubtraction + " " + stepString + " &rArr; " + "R" + "<sub>" + row1 + "</sub>" + "</p>"
-
-            // R1 and R2 
-            step1Text = "R<sub>"+row1 + " </sub>and R<sub>" + row2 +"</sub>"
-
-            // R1 + (1/6)R2 
-            step2Text = "R<sub>"+row1 + " </sub>, R<sub>" + row2 +"</sub>" + " and "+"R"+"<sub>" + row1 + "</sub> " + additionorsubtraction + " " + stepString
-            
-            // New R1
-            step3Text =  "New R<sub>" + row1 + "</sub>"
+            // let additionorsubtraction = operation.sign;
+            // if (String(numerator)[0] == "-" && additionorsubtraction == "-") {
+            //     additionorsubtraction = "+"
+            //     numerator = -1 * numerator
+            // }     
+            // // Check edge cases
+            // let stepString
+            // if ((numerator == 0 || denominator == 1) && numerator != 1) {
+            //     stepString = "((" + numerator + ") R" + "<sub>" + row2 + "</sub>" + ")"
+            // } else if(numerator == 1 && denominator == 1) {
+            //     stepString = "R" + "<sub>" + row2 + "</sub>"
+            // } else {
+            //     stepString = "((<sup>" + numerator + "</sup>/<sub>"  + denominator + "</sub>) R" + "<sub>" + row2 + "</sub>" + ")"
+            // }
+            // operationStr = "<p>" +"R"+"<sub>" + row1 + "</sub> " + additionorsubtraction + " " + stepString + " &rArr; " + "R" + "<sub>" + row1 + "</sub>" + "</p>"
+            // // R1 and R2 
+            // step1Text = "R<sub>"+row1 + " </sub>and R<sub>" + row2 +"</sub>"
+            // // R1 + (1/6)R2 
+            // step2Text = "R<sub>"+row1 + " </sub>, R<sub>" + row2 +"</sub>" + " and "+"R"+"<sub>" + row1 + "</sub> " + additionorsubtraction + " " + stepString
+            // // New R1
+            // step3Text =  "New R<sub>" + row1 + "</sub>"
 
         } else {
             throw new Error("Invalid row operation!!")
@@ -1349,7 +1473,7 @@ document.addEventListener("click", function() {
         gaussSteps.solve()
     }
 
-    if (current.classList.contains("animate-button")) {
+    if (current.classList.contains("animate-steps-button")) {
         // Select first to last matrix
         gaussSteps.animate()
     }

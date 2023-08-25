@@ -15,16 +15,22 @@ function formatFracString(frac) {
     let output = ""
     if (!equalFrac(frac, new Frac(1,1)) && !equalFrac(frac, new Frac(0,1))) {
         if (frac.getDenominator() == 1) {
+            //x/1 case
             //check for decimal
-            let stringNum = "" + frac.getNumerator()
+            let stringNum = "<mn>" + frac.getNumerator()+"</mn>"
             if (stringNum.indexOf(".") > -1) {
                 //has decimal point
-                output = "" + frac.getNumerator().toFixed(2)
+                output = "<mn>" + frac.getNumerator().toFixed(2) + "</mn>"
             } else {
-                output = "" + frac.toString()
+                output = "<mn>" + frac.toString() + "</mn>"
             }
         } else {
-            output = "(" + frac.toString() + ")"
+            //x/y case
+            output = 
+                '<mfrac>\
+                    <mn>'+frac.getNumerator()+'</mn>\
+                    <mn>'+frac.getDenominator()+'</mn>\
+                </mfrac>'
         }
     }
     return output
@@ -41,8 +47,8 @@ function getInfiniteSolutionFrac(reduced) {
         }
     }
 
-    let output = ["x", "y", "z"]
-    const vars = ["x", "y", "z"]
+    let output = ["<mn>x</mn>", "<mn>y</mn>", "<mn>z</mn>"]
+    const vars = ["<mn>x</mn>", "<mn>y</mn>", "<mn>z</mn>"]
     //debugger
     if (secondRowPivot == -1) {
         /**
@@ -65,7 +71,7 @@ function getInfiniteSolutionFrac(reduced) {
              * 0 0 0 0
              * 0 0 0 0
              */
-            output[0] = reduced[0][reduced[0].length - 1].toString()
+            output[0] = "<mn>"+reduced[0][reduced[0].length - 1].toString()+"</mn>"
 
         } else {
             //debugger
@@ -78,16 +84,20 @@ function getInfiniteSolutionFrac(reduced) {
 
                     let value = formatFracString(reduced[0][reduced[0].length - 1])
                     if (equalFrac(reduced[0][reduced[0].length - 1], new Frac(1,1))) {
-                        value = "1"
+                        value = "<mn>1</mn>"
                     }
 
-                    output[col] = factor + "(" +value
+                    if (factor == "") {
+                        output[col] = value
+                    } else {
+                        output[col] = factor + "<mo>(</mo>" +value
+                    }
 
                     for (let other = 0; other < reduced[0].length - 1; other++) {
                         if (other != col && reduced[0][other].getNumerator() != 0) {
-                            let sign = "-"
+                            let sign = "<mo>-</mo>"
                             if (reduced[0][other].getNumericalValue() < 0) {
-                                sign = "+"
+                                sign = "<mo>+</mo>"
                             }
 
                             let coefficient = absValueOfFrac(reduced[0][other])
@@ -96,7 +106,9 @@ function getInfiniteSolutionFrac(reduced) {
                             output[col] += "" + sign + coeffString + vars[other]
                         }
                     }
-                    output[col] += ")"
+                    if (factor != "") {
+                        output[col] += "<mo>)</mo>"
+                    }   
 
                     // "z = (x+y)"
                 }
@@ -109,7 +121,7 @@ function getInfiniteSolutionFrac(reduced) {
          * 0 0 e f
          * 0 0 0 0
          */
-        output[2] = "" + reduced[1][reduced[1].length - 1].toString()
+        output[2] = "<mn>"+reduced[1][reduced[1].length - 1].toString()+"</mn>"
 
         if (reduced[0][1] == 0) {
             /** 
@@ -118,27 +130,35 @@ function getInfiniteSolutionFrac(reduced) {
              * 0 0 e f
              * 0 0 0 0 
              */
-            output[0] = reduced[0][reduced[0].length - 1].toString()
+            output[0] = "<mn>"+reduced[0][reduced[0].length - 1].toString()+"</mn>"
         } else {
             output[0] = vars[0]
             let coeff1 = formatFracString(divideFracs(new Frac(1, 1), reduced[0][1]))
 
             let value = formatFracString(reduced[0][reduced[0].length - 1])
             if (equalFrac(reduced[0][reduced[0].length - 1], new Frac(1,1))) {
-                value = "1"
+                value = "<mn>1</mn>"
             }
 
-            output[1] = coeff1+"("+value
+            if (coeff1 != "") {
+                output[1] = coeff1+"<mo>(</mo>"+value
+            } else {
+                output[1] = value
+            }
+
             for (let i = 0; i < reduced[0].length - 1; i++) {
                 if (i != 1 && reduced[0][i].getNumerator() != 0) {
-                    let sign = "-"
+                    let sign = "<mo>-</mo>"
                     if (reduced[0][i].getNumericalValue() < 0) {
-                        sign = "+"
+                        sign = "<mo>+</mo>"
                     }
                     output[1] += sign + formatFracString(absValueOfFrac(reduced[0][i])) + vars[i]
                 }
             }
-            output[1] += ")"
+
+            if (coeff1 != "") {
+                output[1] += "<mo>)</mo>"
+            }
         }
 
     } else if (secondRowPivot == 1) {
@@ -154,45 +174,77 @@ function getInfiniteSolutionFrac(reduced) {
         const e = reduced[1][2]
 
         if (b.getNumerator() == 0 && e.getNumerator() == 0) {
-            output[0] = reduced[0][reduced[0].length - 1].toString()
-            output[1] = reduced[1][reduced[1].length - 1].toString()
+            output[0] = "<mn>"+reduced[0][reduced[0].length - 1].toString()+"</mn>"
+            output[1] = "<mn>"+reduced[1][reduced[1].length - 1].toString()+"</mn>"
         } else if (b.getNumerator() == 0) {
-            output[0] = reduced[0][reduced[0].length - 1].toString()
+            output[0] = "<mn>"+reduced[0][reduced[0].length - 1].toString()+"</mn>"
             output[1] = vars[1]
 
             let value = formatFracString(reduced[1][reduced[1].length - 1])
             //debugger
             if (equalFrac(reduced[1][reduced[1].length - 1], new Frac(1,1))) {
-                value = "1"
+                value = "<mn>1</mn>"
             }
 
-            output[2] = formatFracString(divideFracs(new Frac(1, 1), reduced[1][2]))+"(" + value
-            output[2] += "-" + vars[1] + ")"
+            let coeff = formatFracString(divideFracs(new Frac(1, 1), reduced[1][2]))
+
+            if (coeff != "") {
+                output[2] = coeff +"<mo>(</mo>" + value
+            } else {
+                output[2] = value
+            }
+
+            output[2] += "<mo>-</mo>" + vars[1]
+
+            if (coeff != "") {
+                output[2] += "<mo>)</mo>"
+            }
+
         } else if (e.getNumerator() == 0) {
-            output[1] = reduced[1][reduced[1].length - 1].toString()
+            output[1] = "<mn>"+reduced[1][reduced[1].length - 1].toString()+"</mn>"
             output[0] = vars[0]
 
             let value = formatFracString(reduced[0][reduced[0].length - 1])
             if (equalFrac(reduced[0][reduced[0].length - 1], new Frac(1,1))) {
-                value = "1"
+                value = "<mn>1</mn>"
             }
 
-            output[2] = formatFracString(divideFracs(new Frac(1, 1), reduced[0][2]))+"("+value
-            output[2] += "-" + vars[0] + ")"   
+            let coeff = formatFracString(divideFracs(new Frac(1, 1), reduced[0][2]))
+            if (coeff != "") {
+                output[2] = coeff+"<mo>(</mo>"+value
+            } else {
+                output[2] = value
+            }
+
+            output[2] += "<mo>-</mo>" + vars[0]
+            
+            if (coeff != "") {
+                output[2] += "<mo>)</mo>"
+            }
+
         } else {
             output[0] = "" + formatFracString(reduced[0][reduced[0].length - 1])
-            let sign = "-"
+            let sign = "<mo>-</mo>"
             if (b.getNumericalValue() < 0) {
-                sign = "+"
+                sign = "<mo>+</mo>"
             }
-            output[0] += sign + formatFracString(absValueOfFrac(b)) + vars[2]
+            if (output[0] == "" && sign == "<mo>+</mo>") {
+                output[0] += formatFracString(absValueOfFrac(b)) + vars[2]
+            } else {
+                output[0] += sign + formatFracString(absValueOfFrac(b)) + vars[2]
+            }
 
             output[1] = "" + formatFracString(reduced[1][reduced[0].length - 1])
-            sign = "-"
+            sign = "<mo>-</mo>"
             if (e.getNumericalValue() < 0) {
-                sign = "+"
+                sign = "<mo>+</mo>"
             }
-            output[1] += sign + formatFracString(absValueOfFrac(e)) +  vars[2]
+
+            if (output[1] == "" && sign == "<mo>+</mo>") {
+                output[1] = formatFracString(absValueOfFrac(e)) +  vars[2]
+            } else {
+                output[1] += sign + formatFracString(absValueOfFrac(e)) +  vars[2]
+            }
         }
     }
     return output
@@ -328,192 +380,4 @@ function getInfiniteSolution(reduced) {
     }
     return output
 }
-
-// /**
-//  * the input must have infinite solutions!!!!
-//  * @param {*} reduced row col form
-//  */
-// function getInfiniteSolution(reduced) {
-//     //iterate from last row to first
-//     //reduced is in row col form
-//     let nonZerosPerRow = new Array(reduced.length)
-//     for (let row = 0; row < reduced.length; row++) {
-//         let count = 0
-//         for (let col = 0; col < reduced[row].length - 1; col++) {
-//             if (reduced[row][col] != 0) {
-//                 count++
-//             }
-//         }
-//         nonZerosPerRow[row] = count
-//     }
-
-
-//     let free = -1
-//     for (let col = 0; col < reduced[0].length - 1; col++) {
-//         let nonZeroCount = 0
-//         for (let row = 0; row < reduced.length; row++) {
-//             if (reduced[row][col] != 0) {
-//                 nonZeroCount++
-//             }
-//         }
-//         if (nonZeroCount > 1) {
-//             free = col
-//         }
-//     }
-//     console.log(free)
-
-//     //debugger
-//     let prevCol = reduced[0].length - 1
-//     const vars = ["x","y","z"]
-//     let output = ["x", "y", "z"]
-//     for (let row = reduced.length - 1; row >= 0; row--) {
-//         let column = leftMostNonZeroInRow(transpose(reduced), row)
-//         //try and find a column with more than one nonzero values
-//         debugger
-//         for (let col = column; col < prevCol; col++) {
-//             if (col == free) {
-//                 output[col] = vars[col]
-//             } else if (reduced[row][col] != 0) {
-//                 //count num zeros from col to end
-//                 let count = 0;
-//                 for (let i = col; i < reduced[row].length - 1; i++) {
-//                     if (reduced[row][i] != 0) {
-//                         count++
-//                     }
-//                 }
-
-//                 //debugger
-//                 if (((col == column && prevCol - column > 1) || reduced[row][col] == 0) && free == -1 && count > 1) {
-//                     output[col] = "" + vars[col]
-//                 } else {
-//                     let factor = ""
-//                     if (reduced[row][col] == -1) {
-//                         factor = "-"
-//                     } else if (reduced[row][col] != 1) {
-//                         factor = "(1/" + reduced[row][col] + ")"
-//                     }
-
-//                     output[col] = factor + "(" + reduced[row][reduced[row].length - 1]
-
-
-//                     let count = 0
-//                     for (let other = column; other < prevCol; other++) {
-//                         if ((other != col && reduced[row][other] != 0) || other == free) {
-//                             count++
-//                             let sign = "+"
-//                             if (reduced[row][other] > 0) {
-//                                 sign = "-"
-//                             }
-
-//                             if (reduced[row][other] == 1) {
-//                                 output[col] += "" + sign + vars[other]
-//                             } else {
-//                                 output[col] += "" + sign + Math.abs(reduced[row][other]) +"" + vars[other]
-//                             }
-                            
-//                         }
-//                     }
-//                     output[col] += ")"
-//                 }
-//                 //debugger
-//             }
-//         }
-
-
-//         if (column == reduced[0].length) {
-//             prevCol = reduced[0].length -1
-//         } else if (free == -1) {
-//             prevCol = column
-//         }
-//         // } else {
-//         //     prevCol = free + 1
-//         // }
-//     }
-//     return output
-// }
-
-
-
-
-// /**
-//  * the input must have infinite solutions!!!!
-//  * @param {*} reduced row col form
-//  */
-// function getInfiniteSolution(reduced) {
-//     //iterate from last row to first
-//     //reduced is in row col form
-//     let free = -1
-//     for (let col = 0; col < reduced[0].length - 1; col++) {
-//         let nonZeroCount = 0
-//         for (let row = 0; row < reduced.length; row++) {
-//             if (reduced[row][col] != 0) {
-//                 nonZeroCount++
-//             }
-//         }
-//         if (nonZeroCount > 1) {
-//             free = col
-//         }
-//     }
-//     console.log(free)
-
-//     //debugger
-//     let prevCol = reduced[0].length - 1
-//     const vars = ["x","y","z"]
-//     let output = ["", "", ""]
-//     for (let row = reduced.length - 1; row >= 0; row--) {
-//         let column = leftMostNonZeroInRow(transpose(reduced), row)
-//         //try and find a column with more than one nonzero values
-        
-//         for (let col = column; col < prevCol; col++) {
-//             if (col == free) {
-//                 output[col] = vars[col]
-//             } else {
-//                 //debugger
-//                 if (((col == column && prevCol - column > 1) && reduced[row][col] == 0) && free == -1) {
-//                     output[col] = "" + vars[col]
-//                 } else if (reduced[row][col] != 0) {
-//                     let factor = ""
-//                     if (reduced[row][col] == -1) {
-//                         factor = "-"
-//                     } else if (reduced[row][col] != 1) {
-//                         factor = "(1/" + reduced[row][col] + ")"
-//                     }
-
-//                     output[col] = factor + "(" + reduced[row][reduced[row].length - 1]
-
-
-
-//                     for (let other = column; other < prevCol; other++) {
-//                         if ((other != col && reduced[row][other] != 0) || other == free) {
-
-//                             let sign = "+"
-//                             if (reduced[row][other] > 0) {
-//                                 sign = "-"
-//                             }
-
-//                             if (reduced[row][other] == 1) {
-//                                 output[col] += "" + sign + vars[other]
-//                             } else {
-//                                 output[col] += "" + sign + Math.abs(reduced[row][other]) +"" + vars[other]
-//                             }
-                            
-//                         }
-//                     }
-//                     output[col] += ")"
-//                 }
-//                 //debugger
-//             }
-//         }
-
-
-//         if (column == reduced[0].length) {
-//             prevCol = reduced[0].length -1
-//         } else if (free == -1) {
-//             prevCol = column
-//         } else {
-//             prevCol = free + 1
-//         }
-//     }
-//     return output
-// }
 
