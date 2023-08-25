@@ -2,38 +2,18 @@ Features 🎬:
     High priorty:
 
     Medium priority:
-        (Medium) MAKE LAST MATRIX HAVE REMOVE BUTTON OR HAVE REMOVE LAST OPERATION BUTTON OR SOMETHING
-                Remove all as well (Maybe)
-
-        (Hard) Add color picking page
-
         (Medium) Add minimzation of matricies (Make button work)
 
-        (Easy) Make fractions on top left solution be on top of eachother
-
     Low priority:
-        👀 (Hard) Animate between planes
-
-        (Medium) Add settings page
-        
-        (Medium) ADD FPS CHANGE SETTINGS
         (Medium) When someone goes to page do one draw operation and time it and give reccomended fps.
-
-        Add help page
         
         (Hard) Save steps in ? url
-
-        🧙‍♂️ (Medium) Add animate / animate button
-
-        🧙‍♂️ (Easy) Choose better font
         
         (Hard) BE ABLE TO SAVE SOLUTOIN AS LATEX / SAVE AS IMAGE / SAVE AS TEXT
 
         🧙‍♂️ (Medium) Make the matrix look a little better
-        
-        (Easy) Have base colors be color blind compatible
 
-        allow user to create own default color combos
+        allow for [[],[],[]] input field at the top bar of input matrix? and to be able to copy a step i as this format.
 
 Linear Transformations page brainstorm 🧠:
     Three different sections:

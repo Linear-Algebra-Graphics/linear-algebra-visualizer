@@ -512,7 +512,6 @@ class GaussianElimStepsHTMLModel {
         }
     }
 
-
     selectMatrix(index) {
         
         // if (index == 0) {
