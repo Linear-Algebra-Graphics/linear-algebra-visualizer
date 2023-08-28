@@ -1,10 +1,14 @@
 Features 🎬:
     High priorty:
+        text when hovering for: view 1, view 2, clear all, undo last, apply new row operation, default zoom, animate steps
 
     Medium priority:
         (Medium) Add minimzation of matricies (Make button work)
 
     Low priority:
+
+        (Medium) When solution is out of the 10x10x10 grid show warning
+
         (Medium) When someone goes to page do one draw operation and time it and give reccomended fps.
         
         (Hard) Save steps in ? url

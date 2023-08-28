@@ -413,7 +413,19 @@ class GaussianElimStepsHTMLModel {
         //this should keep track of solution status for when operation gaussianPlanes are displayed
         this.hasSolution       = false;
         this.isAnimating       = false;
+        this.reportBugOpen     = false;
         //this._updateInputMatrix()
+    }
+
+    toggleBugPopup() {
+
+        if (document.getElementsByClassName("bug-report-popup")[0].open == false) {
+            document.getElementsByClassName("bug-report-popup")[0].showModal();
+            document.getElementsByClassName("bug-button")[0].style = "height: 37px; background-color: lightgray;"
+        } else {
+            document.getElementsByClassName("bug-button")[0].style = ""
+        }
+
     }
 
     animate() {
@@ -422,26 +434,52 @@ class GaussianElimStepsHTMLModel {
             this.isAnimating = true;
 
             for (let i = 0; i < this.matrixList.length-1; i++) {
-                (function(ind) {
-                    // if(GaussIanElimStepsObject.isAnimating == true) {
-                        setTimeout(function(){
-                            GaussIanElimStepsObject.selectMatrix(ind)
-                            test_graph.draw()
-                        }, (1000 * ind));
-                    // }
-                })(i);
+                setTimeout(function(){
+                    if(GaussIanElimStepsObject.isAnimating == true) {
+                        GaussIanElimStepsObject.selectMatrix(i)
+                        test_graph.draw()
+                    }
+                }, (1000 * i));
+                // console.log(i)
             }
 
-            (function(ind) {
-                setTimeout(function(){
-                    
-                    // if(GaussIanElimStepsObject.isAnimating == true) {
-                        GaussIanElimStepsObject.selectMatrix(ind)
+            setTimeout(function(){
+                    if(GaussIanElimStepsObject.isAnimating == true) {
+                        GaussIanElimStepsObject.selectMatrix(GaussIanElimStepsObject.matrixList.length-1)
                         test_graph.draw()
-                        GaussIanElimStepsObject.isAnimating = false
-                    // }
-                }, (1000 * ind));
-            })(this.matrixList.length-1);
+                        GaussIanElimStepsObject.toggleAnimation()
+                    } else {
+
+                    }
+            }, (1000 * (this.matrixList.length-1)));
+            // console.log((this.matrixList.length-1))
+
+        }
+    }
+
+    toggleAnimation() {
+        if (this.isAnimating == true) {
+            this.isAnimating = false
+            let button = document.getElementsByClassName("animate-steps-button")[0];
+            button.innerHTML = "<div class='emoji'>🎥</div> Animate steps"
+            button.style = ""
+            button.getElementsByClassName("emoji")[0].classList.remove("full-rotate-emoji");
+
+        } else {
+            this.animate();
+            let button = document.getElementsByClassName("animate-steps-button")[0];
+
+            button.innerHTML = "<div class='emoji'>📀</div> Animating..."
+            button.style = "background-color: #9b9b9b; height: 37px; border-radius:0px;"
+            button.getElementsByClassName("emoji")[0].classList.add("full-rotate-emoji");
+        }
+    }
+
+    stopAnimating() {
+        if(this.isAnimating == true) {
+            this.toggleAnimation();
+        } else {
+
         }
     }
 
@@ -473,7 +511,7 @@ class GaussianElimStepsHTMLModel {
             
             document.getElementsByClassName("solution-overlay")[0].innerHTML =   
                 '<math display="inline">\
-                    <mtext>One Solution: </mtext>\
+                    <mtext>One Solution:&nbsp;</mtext>\
                     <mo>(</mo>'
                     + solution[0] +
                     '<mo>,</mo>'
@@ -494,7 +532,7 @@ class GaussianElimStepsHTMLModel {
             // math.innerHTML = '<mo>[</mo>'+ solution[0] + '<mo>,</mo>' + solution[1] + '<mo>,</mo>' + solution[2] +'<mo>]</mo>'
             document.getElementsByClassName("solution-overlay")[0].innerHTML = 
                 '<math display="inline">\
-                    <mtext>Infinite Solutions: </mtext>\
+                    <mtext>Infinite Solutions:&nbsp;</mtext>\
                     <mo>[</mo>'
                     + solution[0] + 
                     '<mo>,</mo>' 
@@ -658,6 +696,13 @@ class GaussianElimStepsHTMLModel {
         }
     }
 
+    clearDefaultMatrix() {
+        this.clear()
+        // this.matrixList[0] = [[new Frac(1,1),new Frac(0,1),new Frac(0,1)],[new Frac(0,1),new Frac(1,1),new Frac(0,1)],[new Frac(0,1),new Frac(0,1),new Frac(1,1)],[new Frac(0,1),new Frac(0,1),new Frac(0,1)]]
+        this._writeMatrix(document.getElementsByClassName("matrix")[0], [["","",""],["","",""],["","",""],["","",""]], false)
+        this._updateInputMatrix()
+    }
+
     _updateInputMatrix() {
         let matrix = [[undefined,undefined,undefined],[undefined,undefined,undefined],[undefined,undefined,undefined],[undefined,undefined,undefined]]
 
@@ -734,8 +779,12 @@ class GaussianElimStepsHTMLModel {
         this.currMatrixIsValid = matrixValid
 
         if (!matrixValid) {
-            document.getElementsByClassName("solution-overlay")[0].innerHTML = "Invalid matrix"
+            document.getElementsByClassName("solution-overlay")[0].innerHTML = "Invalid input matrix!"
             document.getElementsByClassName("solution-overlay")[0].style = "background: #FFEB3B;"
+            
+
+            document.getElementsByClassName("warning-overlay")[0].style = "display: flex;"
+
             if (this.newOperationOpen) {
                 this.toggleNewOperation()
             }
@@ -743,6 +792,7 @@ class GaussianElimStepsHTMLModel {
             
             test_graph.gaussianPlanes = undefined;
         } else {
+            document.getElementsByClassName("warning-overlay")[0].style = "display: none;"
             document.getElementsByClassName("new-operation-button")[0].disabled = false
             this.matrixList[0] = matrix
             test_graph.gaussianPlanes = new GaussianPlanes(test_graph, transpose(numericMatrixFromFrac(matrix)), this.planeColors, (this.view == 2))
@@ -1491,34 +1541,33 @@ document.addEventListener("click", function() {
     const current = document.activeElement
     
     if (current.classList.contains("select-button")) {
-        if(gaussSteps.isAnimating == false) {
-            gaussSteps.isAnimating = false;
+        gaussSteps.stopAnimating()
+        gaussSteps.isAnimating = false;
 
-            // Figure out what is selected and update graph
-            // to show correctly
-            for (let i=0; i<current.classList.length; i++) {
-                if (current.classList[i].match(/(\D*)(\d*)/)[2] != "") {
-                    let type  = current.classList[i].match(/(\D*)(\d*)/)[1]
-                    let index = parseInt(current.classList[i].match(/(\D*)(\d*)/)[2])
+        // Figure out what is selected and update graph
+        // to show correctly
+        for (let i=0; i<current.classList.length; i++) {
+            if (current.classList[i].match(/(\D*)(\d*)/)[2] != "") {
+                let type  = current.classList[i].match(/(\D*)(\d*)/)[1]
+                let index = parseInt(current.classList[i].match(/(\D*)(\d*)/)[2])
 
-                    if(type == "matrix") {
-                        gaussSteps.selectMatrix(index)
-                    } else if(type == "operation") {
-                        
-                        if(current.classList.contains("stepone")) {
-                            gaussSteps.selectOperation(index, 0)
-                        } else if(current.classList.contains("steptwo")) {
-                            gaussSteps.selectOperation(index, 1)
-                        } else if(current.classList.contains("stepthree")) {
-                            gaussSteps.selectOperation(index, 2)
-                        }
-
+                if(type == "matrix") {
+                    gaussSteps.selectMatrix(index)
+                } else if(type == "operation") {
+                    
+                    if(current.classList.contains("stepone")) {
+                        gaussSteps.selectOperation(index, 0)
+                    } else if(current.classList.contains("steptwo")) {
+                        gaussSteps.selectOperation(index, 1)
+                    } else if(current.classList.contains("stepthree")) {
+                        gaussSteps.selectOperation(index, 2)
                     }
-                    break
+
                 }
+                break
             }
-            test_graph.draw()
         }
+        test_graph.draw()
         
 
     }
@@ -1529,35 +1578,28 @@ document.addEventListener("click", function() {
     }
 
     if (current.classList.contains("solve-button")) {
-        if (gaussSteps.isAnimating == false) {
-            // Get the latest matrix.
-            // Add matrices and steps from then on.
-            gaussSteps.solve()
-        }
+        gaussSteps.stopAnimating()
+        // Get the latest matrix.
+        // Add matrices and steps from then on.
+        gaussSteps.solve()
+
     }
 
     if (current.classList.contains("animate-steps-button")) {
-        if (gaussSteps.isAnimating == false) {
-            // Select first to last matrix
-            gaussSteps.animate()
-        }
+        // Select first to last matrix
+        gaussSteps.toggleAnimation()
+        
     }
 
     if (current.classList.contains("clear-all-steps")) {
-        if (gaussSteps.isAnimating == false) {
-            // Clear everything but first matrix
-            gaussSteps.clear()
-        }
-    }
-
-    if (current.classList.contains("add-button")) {
-        // Add matrix at the end
+        gaussSteps.stopAnimating()
+        gaussSteps.clear()
+        
     }
 
     if (current.classList.contains("undo-operation-button")) {
-        if (gaussSteps.isAnimating == false) {
-            gaussSteps.removeLast()
-        }
+        gaussSteps.stopAnimating()
+        gaussSteps.removeLast()
     }
 
     if (current.classList.contains("show-grid-checkbox")) {
@@ -1593,15 +1635,14 @@ document.addEventListener("click", function() {
     }
 
     if (current.classList.contains("new-operation-button") ) {
-        if (gaussSteps.isAnimating == false) {
-            gaussSteps.toggleNewOperation();
-        }
+        gaussSteps.stopAnimating()
+        gaussSteps.toggleNewOperation();
     }
 
     if (current.classList.contains("apply-new-operation-button")) {
-        if (gaussSteps.isAnimating == false) {
-            gaussSteps.applyNewOperation();
-        }
+        gaussSteps.stopAnimating()
+        gaussSteps.applyNewOperation();
+
     }
 
     if (current.classList.contains("color-settings-button")) {
@@ -1623,7 +1664,17 @@ document.addEventListener("click", function() {
     }
 
     if(current.classList.contains("bug-button")) {
-        document.getElementsByClassName("bug-report-popup")[0].showModal();
+        gaussSteps.toggleBugPopup()
+    }
+
+    if(current.classList.contains("close-bug-popup")) {
+        gaussSteps.toggleBugPopup()
+    }
+
+    if(current.classList.contains("clear-default-matrix-button")) {
+        gaussSteps.stopAnimating()
+        gaussSteps.clearDefaultMatrix();
+        test_graph.draw()
     }
 
 })

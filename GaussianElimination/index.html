@@ -57,7 +57,7 @@
 
             <div>
             <form method="dialog">
-                <button>Close</button>
+                <button class="close-bug-popup">Close</button>
             </form>
             <script>
                 document.getElementsByClassName("email")[0].innerHTML = "edison" + ".hao112" + "&#64;" + "gmail"   + ".com"
@@ -79,7 +79,7 @@
                     </div>
 
                     <div class="settings-and-help-button-container">
-                        <button class="bug-button"><div class="emoji">🐛</div> REPORT BUGS <div class="emoji">🐛</div></button>
+                        <button class="bug-button"><div class="emoji">🪰</div> REPORT BUGS <div class="emoji">🪰</div></button>
                         <!-- <button class="help-button"><div class="emoji">🛟</div> Help</button>
                         <button class="settings-button"><div class="emoji">🛠️</div> Settings</button> -->
                         <!-- <button class="color-settings-button"><div class="emoji palette">🎨</div><div class="emoji paintbrush">🖌️</div> Color Settings</button> -->
@@ -159,7 +159,8 @@
                     <div class="matrix selected" id="matrix0">
                         <div class="name-bar">
                             <button type="button" class="">-</button> 
-                            <div class="label">🔢 Input</div>
+                            <div class="label">🔢 Input Matrix</div>
+                            <button type="button" class="clear-default-matrix-button">clear</button> 
                             <button type="button" class="select-button matrix0">graph</button> 
                         </div>
                         <div class="values">
@@ -225,7 +226,7 @@
                                         <option value="R2">R3</option>
                                     </select>
                             
-                                    <div class="arrow-text"> &hArr; </div>
+                                    <math><mo stretchy="false">⟺</mo></math>
                             
                                     <select class="row swap-2" style="width: fit-content;">
                                         <option value="" selected disabled hidden>...</option>
@@ -250,7 +251,7 @@
                             
                                     <input class="combine-3" type="text" id="fname" name="fname" style="width: 20px;">
 
-                                    <div class="arrow-text">*</div>
+                                    <math><mo>&times;</mo></math>
 
                                     <select class="row combine-4" style="width: fit-content;">
                                         <option value="" selected disabled hidden>...</option>
@@ -259,7 +260,7 @@
                                         <option value="R2">R3</option>
                                     </select>
 
-                                    <div class="arrow-text">&rArr;</div>
+                                    <math><mo stretchy="false">⇒</mo></math>
 
                                     <select class="row combine-5" class="" style="width: fit-content;">
                                         <option value="" selected disabled hidden>...</option>
@@ -272,7 +273,7 @@
 
                                     <input class="row scale-1" type="text" id="fname" name="fname" style="width: 20px;">
 
-                                    <div class="arrow-text">*</div>
+                                    <math><mo>&times;</mo></math>
 
                                     <select class="row scale-2" style="width: fit-content;">
                                         <option value="" selected disabled hidden>...</option>
@@ -281,7 +282,7 @@
                                         <option value="R2">R3</option>
                                     </select>
 
-                                    <div class="arrow-text">&rArr;</div>
+                                    <math><mo stretchy="false">⇒</mo></math>
 
                                     <select class="row scale-3" style="width: fit-content;">
                                         <option value="" selected disabled hidden>...</option>
@@ -315,7 +316,11 @@
                                     <!-- <button type="button" class="select-button">graph</button>  -->
                                 </div>
                                 <div class="values">
-                                
+                                    
+                                    <div class="warning-overlay">
+                                        <div class="warning-overlay-text">INVALID MATRIX</div>
+                                    </div>
+                                    
                                     <div class="color-column">
                                         <div class="color-box row0">
                                             <input class="color-checkbox" type="checkbox" checked>
@@ -363,6 +368,7 @@
                     <div class="box-label">Color Settings</div>
                     <div class="color-settings-wrapper">
                         <div class="free-color-selection">
+                            Default colors: 
                             <div style="display: flex; align-items: baseline; gap: 5px;">
                                 <button class="color-button" id="row-1-color">Row 1</button>
                                 <button class="color-button-1">Change</button>
@@ -379,7 +385,7 @@
                         
                         <div class="default colors">
                             <select class="color-blind-settings">
-                                <option value="" selected disabled hidden>Color blind Defaults</option>
+                                <option value="" selected disabled hidden>Color Blind Defaults</option>
                                 <option value="default">Default</option>
                                 <option value="deuteranomaly">Deuteranomaly</option>
                                 <option value="protanomaly">Protanomaly</option>
@@ -391,6 +397,14 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="info box">
+                    <div class="box-label">Info: </div>
+                    <div class="info-container">
+                        
+                    </div>
+                </div>
+                
             </div>
 
             

@@ -749,7 +749,7 @@ class GaussianPlanes {
         //want all planes to be drawn as only then will there be a single intersectino point.
         if (this.hasSingleSolution && allPlanesDrawn) {
             //draw dot at solution
-            this.graph.drawDotFromVector(this.solution, "pink", "black", 6)
+            this.graph.drawDotFromVector(this.solution, "white", "black", 8)
         }
     }
 
