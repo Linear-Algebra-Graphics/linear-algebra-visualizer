@@ -24,7 +24,7 @@
 
         <!-- CSS imports -->
         <!-- <link rel="stylesheet" href="style.css"> -->
-        <link rel="stylesheet" href="../style.css">
+        <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="../navigationBar.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </head>
@@ -34,113 +34,24 @@
             <a href="../Problems/index.html">Problems</a>
             <a href="../GaussianElimination/index.html">Gaussian Elimination</a>
         </div>
-        <div class="box">
-            <title>Change of basis Example</title>
-            <div id="graph-container">
-                <canvas id="graph" style="border:1px solid #000000;"></canvas>
+
+        <div class="everything-container">
+            <div class="equation-container">
+
             </div>
-            <div class="matrixAndSlider" marginLeft="20px">
-                <h2 >Transformation Matrices</h2>
-                <div id="slider-container">
-                    <input type="range" min="0" max="3" value="0" id="slider">
-                </div>
 
-                <div id="matrix-container">
-                    <table id="matrix-C" class="matrix-table">
-                        <tr>
-                            <td><input value= "1" type="text" autocomplete="off"/></td>
-                            <td><input value= "0" type="text" autocomplete="off"/></td>
-                            <td><input value= "0" type="text" autocomplete="off"/></td>
-
-                        </tr>
-                        <tr>
-                            <td><input value= "0" type="text" autocomplete="off"/></td>
-                            <td><input value= "1" type="text" autocomplete="off"/></td>
-                            <td><input value= "0" type="text" autocomplete="off"/></td>
-
-                        </tr>
-                        <tr>
-                            <td><input value= "0" type="text" autocomplete="off"/></td>
-                            <td><input value= "0" type="text" autocomplete="off"/></td>
-                            <td><input value= "1" type="text" autocomplete="off"/></td>
-                        </tr>
-                    </table>
-                    <table id="matrix-B" class="matrix-table">
-                        <tr>
-                            <td><input value= "1" type="text" autocomplete="off"/></td>
-                            <td><input value= "0" type="text" autocomplete="off"/></td>
-                            <td><input value= "0" type="text" autocomplete="off"/></td>
-
-                        </tr>
-                        <tr>
-                            <td><input value= "0" type="text" autocomplete="off"/></td>
-                            <td><input value= "1" type="text" autocomplete="off"/></td>
-                            <td><input value= "0" type="text" autocomplete="off"/></td>
-
-                        </tr>
-                        <tr>
-                            <td><input value= "0" type="text" autocomplete="off"/></td>
-                            <td><input value= "0" type="text" autocomplete="off"/></td>
-                            <td><input value= "1" type="text" autocomplete="off"/></td>
-                        </tr>
-                    </table>
-                    <table id="matrix-A" class="matrix-table">
-                        <tr>
-                            <td><input value= "1" type="text" autocomplete="off"/></td>
-                            <td><input value= "0" type="text" autocomplete="off"/></td>
-                            <td><input value= "0" type="text" autocomplete="off"/></td>
-                        </tr>
-                        <tr>
-                            <td><input value= "0" type="text" autocomplete="off"/></td>
-                            <td><input value= "1" type="text" autocomplete="off"/></td>
-                            <td><input value= "0" type="text" autocomplete="off"/></td>
-                        </tr>
-                        <tr>
-                            <td><input value= "0" type="text" autocomplete="off"/></td>
-                            <td><input value= "0" type="text" autocomplete="off"/></td>
-                            <td><input value= "1" type="text" autocomplete="off"/></td>
-                        </tr>
-                    </table>
-                    
-                </div>
-                <h2>Vector Input</h2>
-                <div id="vector-input">
-                    <input id="x" size="5px" class="arrow-togglable" type="text" autocomplete="off"/>
-                    <input id="y" size="5px" class="arrow-togglable" type="text" autocomplete="off"/>
-                    <input id="z" size="5px" class="arrow-togglable" type="text" autocomplete="off"/>
-                    <input type="color" id="vector colors" value="#000000">
-                    <!-- <select id="vector colors" default="black">
-                        <option value="black">black</option>
-                        <option value="green">green</option>
-                        <option value="blue">blue</option>
-                        <option value="white">white</option>
-                    </select> -->
-                    <button id="graphButton" marginLeft="10px">graph!</button>
-                    <!-- <button id="showGrid" marginLeft="10px">show grid!</button> -->
-                </div>
-                <div id="adjustment-buttons">
-                    <label>Infinite Axis</label>
-                    <input type="checkbox" id="infiniteAxis" ></input>
-                    <label>Show Grid</label>
-                    <input type="checkbox" id="showGrid" checked=""></input>
-                    <label> zoom: </label>
-                    <button id="zoomIn" marginLeft="10px">+</button>
-                    <button id="zoomOut" marginLeft="10px"> - </button>
-                    <button id="defaultZoom" marginLeft="10px"> default zoom </button>
-                    <button id="defaultOrientation" marginLeft="10px"> default orientation</button>
-                    <button id="darkMode">Dark Mode!</button>
-                </div>
-                <div id="cube-adder">
-                    <label>Type:</label>
-                    <select id="cube-options" default="centered">
-                        <option value="centered">centered</option>
-                        <option value="unit">unit</option>
-                    </select>
-                    <label>Color:</label>
-                    <input type="color" id="cube-color" value="#0000ff">
-                    <button id="addCube" marginLeft="10px">Add Cube</button>
-                </div>
+            <div class="graph-container">
+                <canvas id="graph"></canvas>
             </div>
+
+            <div class="problem-container">
+
+            </div>
+            
         </div>
+
+
+
+
     </body>
 </html>

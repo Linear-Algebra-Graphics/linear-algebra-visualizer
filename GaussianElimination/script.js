@@ -42,8 +42,10 @@ let delta_y = 0
 
 let drawGraph = false;
 
-const defaultColors = ["#39f4eaff", "#f51485ff", "#1515b4ff", "orange"]
-let rowColors = ["#39f4eaff", "#f51485ff", "#1515b4ff", "orange"]
+const defaultColors = ["#990F0F","#85B22C","#51A3CC","#260F99"]
+// const defaultColors = ["#39f4eaff", "#f51485ff", "#1515b4ff", "orange"]
+let rowColors = ["#990F0F","#85B22C","#51A3CC","#260F99"]
+// let rowColors = ["#39f4eaff", "#f51485ff", "#1515b4ff", "orange"]
 
 const parentBasic1 = document.getElementById("row-1-color"),
 popupBasic1 = new Picker({parent: parentBasic1, color: rowColors[0]});
@@ -1442,59 +1444,21 @@ class GaussianElimStepsHTMLModel {
 
     toggleColorSettings() {
 
-        let settingsDiv    = document.getElementsByClassName("graph-settings-container")[0]
-        let settingsButton = document.getElementsByClassName("settings-button")[0]
         let colorSettingsDiv    = document.getElementsByClassName("color-settings-container")[0]
         let colorSettingsbutton = document.getElementsByClassName("color-settings-button")[0]
-        let steps          = document.getElementsByClassName("matrix-outer-wraper")[0]
-        let rowReduced     = document.getElementsByClassName("solution-and-settings-container")[0]
+
 
         if (this.colorSettingsOpen == true) {
             colorSettingsDiv.style    = "display: none;"
-            colorSettingsbutton.style = "background-color: ;"
-            steps.style               = "display: ;"
-            rowReduced.style          = "display: ;"
+            colorSettingsbutton.style = ""
+
 
             this.colorSettingsOpen = false
         } else {
             colorSettingsDiv.style = "display: ;"
-            colorSettingsbutton.style = "background-color: lightgray;"
-            settingsDiv.style    = "display: none;"
-            settingsButton.style = "background-color: ;"
-            this.settingsOpen = false;
-            steps.style               = "display: none;"
-            rowReduced.style          = "display: none;"
+            colorSettingsbutton.style = "background-color: lightgray; height: 37px; border-radius: 0px;"
 
             this.colorSettingsOpen = true
-
-        }
-    }
-
-    toggleSettings() {
-        let settingsDiv    = document.getElementsByClassName("graph-settings-container")[0]
-        let settingsButton = document.getElementsByClassName("settings-button")[0]
-        let colorSettingsDiv    = document.getElementsByClassName("color-settings-container")[0]
-        let colorSettingsbutton = document.getElementsByClassName("color-settings-button")[0]
-        let steps          = document.getElementsByClassName("matrix-outer-wraper")[0]
-        let rowReduced     = document.getElementsByClassName("solution-and-settings-container")[0]
-
-        if (this.settingsOpen == true) {
-            settingsDiv.style    = "display: none;"
-            settingsButton.style = "background-color: ;"
-            steps.style               = "display: ;"
-            rowReduced.style          = "display: ;"
-
-            this.settingsOpen = false
-        } else {
-            settingsDiv.style = "display: ;"
-            settingsButton.style = "background-color: lightgray;"
-            colorSettingsDiv.style    = "display: none;"
-            colorSettingsbutton.style = "background-color: ;"
-            this.colorSettingsOpen = false;
-            steps.style               = "display: none;"
-            rowReduced.style          = "display: none;"
-
-            this.settingsOpen = true
 
         }
     }
@@ -1633,7 +1597,6 @@ document.addEventListener("click", function() {
     if (current.classList.contains("apply-new-operation-button")) {
         gaussSteps.stopAnimating()
         gaussSteps.applyNewOperation();
-
     }
 
     if (current.classList.contains("color-settings-button")) {
@@ -1810,25 +1773,39 @@ document.addEventListener("change", function() {
 
 
 document.addEventListener("mouseover", function(event) {
-    const info = document.getElementsByClassName("info-container")[0];
+    
+    debugger
+    const info = document.getElementsByClassName("info")[0];
+    const infoContainer  = info.getElementsByClassName("info-container")[0];
+    const title = info.getElementsByClassName("box-label")[0];
+
     switch(event.target.className) {
-        case "view-button view-1": 
-            info.innerHTML = '<div>View 1:</div><div>Shows graph of the planes defined by the selected system of equations. Infinite planes are all a fixed size.</div>';
+        case "view-button view-1":
+            title.innerHTML = 'View 1:'
+            infoContainer.innerHTML  = '<div>Shows graph of the planes defined by the selected system of equations. The infinite plane defined by each row is represented by a 12x12 plane.</div>';
             break
-        case "view-button view-2": 
-            info.innerHTML = '<div>View 2:</div><div>Shows graph of the planes defined by the selected system of equations. Infinite planes are bound by a cube.</div>';
+        case "view-button view-2":
+            title.innerHTML = 'View 2:'
+            infoContainer.innerHTML  = '<div>Shows graph of the planes defined by the selected system of equations. The infinite plane defined by each row is bounded by a cube.</div>';
             break
         case "animate-steps-button": 
-            info.innerHTML = '<div>Animate steps:</div><div>Automatically graphs each step in sequence</div>';
+            title.innerHTML = 'Animate steps:'
+            infoContainer.innerHTML  = '<div>Automatically graphs each step in sequence</div>';
             break
-        case "clear-default-matrix-button": 
-            info.innerHTML = '<div>clear:</div><div>Clears all inputs to the input matrix</div>';
+        case "clear-default-matrix-button":
+            title.innerHTML = 'clear:'
+            infoContainer.innerHTML  = '<div>Clears all inputs to the input matrix</div>';
             break
         case "clear-all-steps":
-            info.innerHTML = '<div>Clear All:</div><div>Clears all row operations</div>';
+            title.innerHTML = `Clear All:`
+            infoContainer.innerHTML  = '<div>Clears all row operations</div>';
             break
         case "undo-operation-button":
-            info.innerHTML = '<div>Undo last:</div><div>Undos the previous row operation</div>';
+            title.innerHTML = `Undo last:`
+            infoContainer.innerHTML  = '<div>Undos the previous row operation</div>';
+        case "fps-container":
+            title.innerHTML = `FPS:`
+            infoContainer.innerHTML  = 'FPS determines the number times the planes are drawn per second. Increase FPS for a smoother experience, decrease FPS to get better preformance.</div>';
         default:
     }
     //test_graph.draw()

@@ -83,7 +83,7 @@
                         <button class="bug-button"><div class="emoji">🪰</div> REPORT BUGS <div class="emoji">🪰</div></button>
                         <!-- <button class="help-button"><div class="emoji">🛟</div> Help</button>
                         <button class="settings-button"><div class="emoji">🛠️</div> Settings</button> -->
-                        <!-- <button class="color-settings-button"><div class="emoji palette">🎨</div><div class="emoji paintbrush">🖌️</div> Color Settings</button> -->
+                        <button class="color-settings-button"><div class="emoji palette">🎨</div><div class="emoji paintbrush">🖌️</div> Color Settings</button>
                     </div>
                     
                 </div>
@@ -110,7 +110,7 @@
                 <div class="bar-bottom">
                     <div class="bottom-left-container">
                         <div class = "fps-container">
-                            <div>Frames per second: </div>
+                            <div>FPS: </div>
                             <div class="fps-counter">60</div>
                             <input class="fps-slider" type="range" min="10" max="100" value="60">
                             <!-- <div> Lower to increase performance</div> -->
@@ -132,21 +132,6 @@
                     <input type="checkbox" class="show-grid-checkbox" checked></input> -->
                 </div>
 
-            </div>
-            
-            <div class="graph-settings-container box" style="display: none;">
-                <div class="box-label">Settings&nbsp;&nbsp;&nbsp;<button>close</button></div>
-                <div style = "display:flex; align-items: center; flex-direction: column; width: 250px; height: 100px;">
-                    <label for="fpsnumber">FPS: </label>
-                    <input type="number" class="fps-input" name="fpsnumber" min="1" max="120">
-                </div>
-            </div>
-
-            <div class="color-settings-container box" style="display: none;">
-                <div class="box-label">Color settings&nbsp;&nbsp;&nbsp;<button>close</button></div>
-                <div style = "display:flex; align-items: center; flex-direction: column; width: 250px; height: 100px;">
-                    Color stuff
-                </div>
             </div>
 
             <div class="matrix-outer-wraper box">
@@ -365,7 +350,15 @@
                         </div>
                     </div>
                 </div>
-                <div class="color-settings-container box">
+
+                <div class="info box">
+                    <div class="box-label">Info:</div>
+                    <div class="info-container">
+                        
+                    </div>
+                </div>
+
+                <div class="color-settings-container box" style="display: none;">
                     <div class="box-label">Color Settings</div>
                     <div class="color-settings-wrapper">
                         <div class="free-color-selection">
@@ -399,12 +392,6 @@
                     </div>
                 </div>
 
-                <div class="info box">
-                    <div class="box-label">Info: </div>
-                    <div class="info-container">
-                        
-                    </div>
-                </div>
                 
             </div>
 

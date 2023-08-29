@@ -443,7 +443,6 @@ class Graph {
         for(let i = 0; i < this.drawnObjects.length; i++) {
             this.drawnObjects[i].draw();
         }
-        console.log(this.currentZoom)
     }
     
     /**

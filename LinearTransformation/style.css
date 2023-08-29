@@ -1,0 +1,26 @@
+body {
+    margin: 0px;
+    font-family: "Computer Modern", sans-serif !important;
+}
+
+.everything-container {
+    position: relative;
+}
+
+.equation-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 400px;
+    height: 100%;
+    background-color: lightslategray;
+}
+
+.problem-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 100%;
+    background-color: lavender;
+}

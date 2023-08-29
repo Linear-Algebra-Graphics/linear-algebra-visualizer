@@ -1,0 +1,22 @@
+Linear Transformations page brainstorm 🧠:
+    Three different sections:
+        left: equations
+        mid: graph
+        right: question problems directory
+
+    Question directory:
+        All on same page, questions go down out like directory,
+        when click on question hide directory and show questio info and stuff and have back arrow to go back to directory
+
+    Equations:
+        Coppy desmos ideas
+        Both "direct" and or "formated" matrix input
+
+        Demo:
+            A = [[],[],[]] (Not graphed)
+            v = [1,2,3]    (Graphed)
+            Av             (Graphed)
+            m = Av         (Graphed)
+
+        If output is a vector or pedefined shape it gets graphed. Otherwise it doesn't.
+        There is option not to graph
