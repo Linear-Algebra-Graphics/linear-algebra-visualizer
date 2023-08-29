@@ -30,13 +30,15 @@ class Graph {
         // This is the number of graph units from edge to edge. E.g if the canvas is 600x600px we want
         // the length of 20 units to be 600 px.
         this.numOfGraphUnitsEdgeToEdge = this.canvas.width / 60;
-        this.scale                     = this.canvas.width / this.numOfGraphUnitsEdgeToEdge
-        this.backgroundColor           = "white"
+        this.scale = this.canvas.width / this.numOfGraphUnitsEdgeToEdge
+        this.backgroundColor = "white"
         // I matrix is default
-        this.basis                     = [[1,0,0],[0,1,0],[0,0,1]]
-        this.defaultZoom               = 1
-        this.currentZoom               = 1
-        this.zoomIncrement             = 1.1
+        this.basis = [[1,0,0],[0,1,0],[0,0,1]]
+        this.defaultZoom = 1
+        this.currentZoom = 1
+        this.zoomIncrement = 1.1
+        this.maxZoom = 28000000//730000
+        this.minZoom = 0
         
         //this.finalBasis                = [[0.44838321609003245,0.8938414241512637,0],[-0.3586652681480998,0.17991948245712944,-0.9159629933881666],[-0.8187256664799333, 0.41070243279483926,0.4012627502564743]]//[[1,1,0],[1,1,0],[0,0,1]]
         
@@ -379,14 +381,18 @@ class Graph {
      * zooms in graph view
      */
     zoomIn() {
-        this.currentZoom = this.currentZoom * this.zoomIncrement 
+        if (this.currentZoom < this.maxZoom) {
+            this.currentZoom = this.currentZoom * this.zoomIncrement 
+        }
     }
 
     /**
      * zooms out in graph view
      */
     zoomOut() {
-        this.currentZoom =this.currentZoom / this.zoomIncrement 
+        if (this.currentZoom > this.minZoom) {
+            this.currentZoom =this.currentZoom / this.zoomIncrement 
+        }
     }
 
     /**
@@ -437,6 +443,7 @@ class Graph {
         for(let i = 0; i < this.drawnObjects.length; i++) {
             this.drawnObjects[i].draw();
         }
+        console.log(this.currentZoom)
     }
     
     /**

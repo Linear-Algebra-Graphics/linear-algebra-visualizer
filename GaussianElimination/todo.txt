@@ -52,3 +52,5 @@ Bugs 🐛:
             in this case the algorithm does not know these are the same polygon
             => either figure out why this happens or go through all polygons to catch and modify these polygons.
 
+    when there is an intersection between vectors that goes over (0,0,0), in large zoom ins the floating point error makes it not actually over the origin.
+

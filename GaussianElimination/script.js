@@ -19,6 +19,8 @@ canvas.height = displayHeight * 2
 
 let test_graph = new Graph(canvas);
 test_graph.Axis = new Axis(test_graph, "black", "black", "black", "black", 10)
+test_graph.maxZoom = 730000
+test_graph.minZoom = 0
 test_graph.showGaussianPlanes = true
 test_graph.showAxis = true;
 
@@ -1179,8 +1181,11 @@ class GaussianElimStepsHTMLModel {
         document.querySelectorAll(".view-button.view-" + this.view)[0].style="background: lightgray;"
         if(view == 1) {
             test_graph.gaussianPlanes.cubeBoundPlanes = false
+            test_graph.maxZoom = 730000
         } else if (view == 2) {
             test_graph.gaussianPlanes.cubeBoundPlanes = true
+            test_graph.maxZoom = 730000
+            test_graph.minZoom = 0.015
         }
         test_graph.draw()
     }

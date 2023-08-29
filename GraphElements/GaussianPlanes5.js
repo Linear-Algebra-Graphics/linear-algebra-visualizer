@@ -84,7 +84,7 @@ class GaussianPlanes {
         this.planesToDraw = new Array(this.planesStdForm.length).fill(true)
 
         //floating point this.precision => 1e-this.precision
-        this.precision = 9
+        this.precision = 6
     }
 
     /**
@@ -199,7 +199,6 @@ class GaussianPlanes {
             polygon.fill = true
             polygon.outline = false
             output.push(polygon)
-
         } else {
             //recursive case
 
@@ -227,11 +226,31 @@ class GaussianPlanes {
                         vectorEquals(splitLines[1].point1, splitLines[1].point2, this.precision)) {
                             //case where intersect point is the exact endpoint of a line
                             if (vectorEquals(splitLines[0].point1, splitLines[0].point2, this.precision)) {
+                                //for debugging
+                                if (vectorEquals(splitLines[1].point1, splitLines[1].point2, 5)) {
+                                    debugger
+                                }
+                                //end for debugging
                                 linesWithSplit.set(pt3DToStr(splitLines[0].point1), splitLines[1])
                             } else {
+                                //for debugging
+                                if (vectorEquals(splitPt1, splitLines[1].point2, 7)) {
+                                    debugger
+                                }
+                                //end for debugging
+
                                 linesWithSplit.set(pt3DToStr(splitPt1), new Line(this.graph, splitPt1, splitLines[1].point2, splitLines[0].inf))
                             }
                     } else {
+                        //for debugging
+                        if (vectorEquals(splitLines[0].point1, splitLines[0].point2, 7)) {
+                            debugger
+                        }
+                        if (vectorEquals(splitLines[1].point1, splitLines[1].point2, 7)) {
+                            debugger
+                        }
+                        //end for debugging
+                        
                         linesWithSplit.set(pt3DToStr(splitPt1), splitLines[0])
                         linesWithSplit.set(pt3DToStr(splitPt2), splitLines[1])
                     }
@@ -240,6 +259,12 @@ class GaussianPlanes {
                     splitLinesRef = splitLines
                     foundSplitPoints.push(splitLines[0].point2)
                 } else {
+                    //for debugging
+                    if (vectorEquals(polygonLines[i].point1, polygonLines[i].point2, 7)) {
+                        debugger
+                    }
+                    //end for debugging
+                    
                     linesWithSplit.set(pt3DToStr(polygonLines[i].point1), polygonLines[i])
                 }
             }
@@ -289,6 +314,13 @@ class GaussianPlanes {
                 while (!vectorEquals(currPoint, splitPoints[0], this.precision)) {
                     i++
                     leftPolygonLines.push(linesWithSplit.get(pt3DToStr(currPoint)))
+                    if (linesWithSplit.get(pt3DToStr(currPoint)) === undefined) {
+                        debugger
+                    }
+
+                    if (i > 10) {
+                        debugger
+                    }
                     currPoint = linesWithSplit.get(pt3DToStr(currPoint)).point2
                 }
                 leftPolygonLines.push(new Line(this.graph, currPoint, splitPoints[1], false))
@@ -298,11 +330,45 @@ class GaussianPlanes {
                 while (!vectorEquals(currPoint, splitPoints[1], this.precision)) {
                     i++
                     rightPolygonLines.push(linesWithSplit.get(pt3DToStr(currPoint)))
+                    if (linesWithSplit.get(pt3DToStr(currPoint)) === undefined) {
+                        debugger
+                    }
+
+                    if (i > 10) {
+                        debugger
+                    }
                     currPoint = linesWithSplit.get(pt3DToStr(currPoint)).point2
                 }
                 
                 rightPolygonLines.push(new Line(this.graph, currPoint, splitPoints[0], false))
 
+
+
+                //for debugging
+                // for (let i = 0; i < leftPolygonLines.length-1; i++) {
+                //     const lineA = leftPolygonLines[i]
+                //     const lineB = leftPolygonLines[i+1]
+
+                //     let vec1 = [lineA.point1[0] - lineA.point2[0], lineA.point1[1] - lineA.point2[1], lineA.point1[2] - lineA.point2[2]]
+                //     let vec2 = [lineB.point1[0] - lineB.point2[0], lineB.point1[1] - lineB.point2[1], lineB.point1[2] - lineB.point2[2]]
+
+                //     if (leftPolygonLines.length > 2 && vectorEquals(crossProductR3(vec1, vec2), [0,0,0], 6)) {
+                //         debugger
+                //     }
+                // }  
+                // for (let i = 0; i < rightPolygonLines.length-1; i++) {
+                //     const lineA = rightPolygonLines[i]
+                //     const lineB = rightPolygonLines[i+1]
+
+                //     let vec1 = [lineA.point1[0] - lineA.point2[0], lineA.point1[1] - lineA.point2[1], lineA.point1[2] - lineA.point2[2]]
+                //     let vec2 = [lineB.point1[0] - lineB.point2[0], lineB.point1[1] - lineB.point2[1], lineB.point1[2] - lineB.point2[2]]
+
+                //     if (rightPolygonLines.length > 2 && vectorEquals(crossProductR3(vec1, vec2), [0,0,0], 6)) {
+                //         debugger
+                //     }
+                // }
+                //end for debugging
+                
 
 
                 //filter for lines that have point1 == point2 for whatever reason... may not be needed? keep to be safe
@@ -682,13 +748,25 @@ class GaussianPlanes {
 
             for (let i = 0; i < map.get(key).length; i++) {
                 let polygon = map.get(key)[i]
-                //if (planesToDrawColors.has(polygon.fillColor)) {
+                //if (planesToDrawColors.has(polygon.fillColor)) 
+
                 for (let j = 0; j < polygon.lines.length; j++) {
-                    polygon.lines[j].point1 = this.graph.applyZoom(polygon.lines[j].point1)
-                    polygon.lines[j].point2 = this.graph.applyZoom(polygon.lines[j].point2)
+
+                    // if (vectorEquals(polygon.lines[j].point1, polygon.lines[j].point2, 7)) {
+                    //     debugger
+                    // }
+                    if (!vectorEquals(polygon.lines[j].point1, this.solution, 7)) {
+                        polygon.lines[j].point1 = this.graph.applyZoom(polygon.lines[j].point1)
+                    }
+                    if (!vectorEquals(polygon.lines[j].point2, this.solution, 7)) {
+                        polygon.lines[j].point2 = this.graph.applyZoom(polygon.lines[j].point2)
+                    }
+                    // polygon.lines[j].point1 = this.graph.applyZoom(polygon.lines[j].point1)
+                    // polygon.lines[j].point2 = this.graph.applyZoom(polygon.lines[j].point2)
                 }
                 //debugger
                 polygon.draw()
+                //debugger
                 let h = 0
                 //debugger
                 //}
@@ -764,7 +842,19 @@ class GaussianPlanes {
             planeLines = this.getFixedSizePlaneLines(6)
         }
         let polygons = this._getPlanePolygons(planeLines)
-        console.log(polygons.length)
+
+        let ct = 0
+        for (let i = 0; i < polygons.length; i++) {
+            for (let j = 0; j < polygons[i].lines.length; j++) {
+                if (vectorEquals(polygons[i].lines[j].point1, polygons[i].lines[j].point2, 5)) {
+                    ct++;
+                }
+            }
+        }
+        //console.log(ct)
+
+
+
         this._drawPlanes(polygons)
 
         //draw outlines
