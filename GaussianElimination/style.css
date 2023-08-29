@@ -837,5 +837,8 @@ button.new-operation-button {
 }
 
 .info-container {
-    height: 200px;
+    padding:10px 10px 10px 10px;
+    height: 148px;
+    width: 338px;
+    text-align:left;
 }

@@ -84,7 +84,7 @@ class GaussianPlanes {
         this.planesToDraw = new Array(this.planesStdForm.length).fill(true)
 
         //floating point this.precision => 1e-this.precision
-        this.precision = 12
+        this.precision = 9
     }
 
     /**
@@ -303,6 +303,25 @@ class GaussianPlanes {
                 
                 rightPolygonLines.push(new Line(this.graph, currPoint, splitPoints[0], false))
 
+
+
+                //filter for lines that have point1 == point2 for whatever reason... may not be needed? keep to be safe
+                let filteredLeft = []
+                let filteredRight = []
+                for (let i = 0; i < leftPolygonLines.length; i++) {
+                    if (!vectorEquals(leftPolygonLines[i].point1, leftPolygonLines[i].point2, this.precision)) {
+                        filteredLeft.push(leftPolygonLines[i])
+                    }
+                }
+                for (let i = 0; i < rightPolygonLines.length; i++) {
+                    if (!vectorEquals(rightPolygonLines[i].point1, rightPolygonLines[i].point2, this.precision)) {
+                        filteredRight.push(rightPolygonLines[i])
+                    }
+                }
+                leftPolygonLines = filteredLeft
+                rightPolygonLines = filteredRight
+                //
+
                 //valid split recursive calls
                 intersectLinesIndex = intersectLinesIndex + 1  
 
@@ -433,7 +452,7 @@ class GaussianPlanes {
     getCubeBoundedPlaneLines(cubeSize, cubePlanesStdForm) {
         //essentially initially the planes are set to be much larger than the cube itself, then 
         //we can split the plane by the bounding cubes, and then filter to keep only the polygons within the bounds. 
-        
+        //debugger
         let planeLines = []
 
         //get orthonormal basis of two lines per plane 
@@ -483,25 +502,38 @@ class GaussianPlanes {
                             //if something is inside or outside the cube
                             currLineCopy = matrixVectorMultiplication(inverseRotationMatrix, currLineCopy)
 
-                            let error = 0.00000001 //this is wack
-                            let cubeSizeAndError = cubeSize + error
+                            //let error = 0.1 //this is wack
+                            let adjustedCubeSize = 10
                             //some demonic check?? too tired
-                            if (Math.abs(currLineCopy[0]) > cubeSizeAndError ||
-                                Math.abs(currLineCopy[1]) > cubeSizeAndError ||
-                                Math.abs(currLineCopy[2]) > cubeSizeAndError) {
-                                    inCube = false
-                                    break
+                            const absX = Math.abs(currLineCopy[0]) / (cubeSize / 10)
+                            const absY = Math.abs(currLineCopy[1]) / (cubeSize / 10)
+                            const absZ = Math.abs(currLineCopy[2]) / (cubeSize / 10)
+                            //debugger
+                            if (!(absX < adjustedCubeSize || numEqual(absX, adjustedCubeSize, 3)) ||
+                                !(absY < adjustedCubeSize || numEqual(absY, adjustedCubeSize, 3)) ||
+                                !(absZ < adjustedCubeSize || numEqual(absZ, adjustedCubeSize, 3))) {
+                                    inCube = false;
+                                    break;
                             }
+
+
+
+                            // if (Math.abs(currLineCopy[0]) > cubeSizeAndError ||
+                            //     Math.abs(currLineCopy[1]) > cubeSizeAndError ||
+                            //     Math.abs(currLineCopy[2]) > cubeSizeAndError) {
+                            //         inCube = false
+                            //         break
+                            // }
                         }
                         //keep if within bounding cube!!!
                         if (inCube) {
                             inCubePolygons.push(planePolygons[j].lines)
                         }
                     }
-                    
+                    //debugger
                     //bad algorithm, so keeping this for sanity
                     if (inCubePolygons.length > 1) {
-                        debugger
+                        //debugger
                     }
                     if (inCubePolygons.length == 0) {
                         //this means plane either has zero vector as norm, or is not to be drawn
@@ -637,6 +669,7 @@ class GaussianPlanes {
             }
         }
 
+        //console.log(polygons)
         map.forEach((value, key, map) => {
             const numericPrecision = this.precision
             map.get(key).sort(function(a, b) {
@@ -654,7 +687,10 @@ class GaussianPlanes {
                     polygon.lines[j].point1 = this.graph.applyZoom(polygon.lines[j].point1)
                     polygon.lines[j].point2 = this.graph.applyZoom(polygon.lines[j].point2)
                 }
+                //debugger
                 polygon.draw()
+                let h = 0
+                //debugger
                 //}
             }
         })
@@ -727,8 +763,8 @@ class GaussianPlanes {
         } else {
             planeLines = this.getFixedSizePlaneLines(6)
         }
-
         let polygons = this._getPlanePolygons(planeLines)
+        console.log(polygons.length)
         this._drawPlanes(polygons)
 
         //draw outlines
@@ -873,6 +909,13 @@ class GaussianPlanes {
         //remove lines that are 0 length
         let lines = [line1, line2, line3, line4]
         return lines
+        // let outputLines = []
+        // for (let i = 0; i < lines.length; i++) {
+        //     if (!vectorEquals(lines[i].point1, lines[i].point2, this.precision)) {
+        //         outputLines.push(lines[i])
+        //     }
+        // }
+        // return outputLines
     }
 
     /**

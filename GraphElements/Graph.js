@@ -602,7 +602,7 @@ class Graph {
     xAxisVisible() {
         let upperBound = 0.0000000000001
         let lowerBound = -0.0000000000001
-        let xAxis = this.changeBasisZoomAndRotate([1, 0, 0])
+        let xAxis = this.changeBasisAndRotate([1, 0, 0])
         let x = xAxis[0]
         let y = xAxis[1]
         // if (x <= upperBound && x >= lowerBound) {
@@ -617,7 +617,7 @@ class Graph {
     yAxisVisible() {
         let upperBound = 0.0000000000001
         let lowerBound = -0.0000000000001
-        let yAxis = this.changeBasisZoomAndRotate([0, 1, 0])
+        let yAxis = this.changeBasisAndRotate([0, 1, 0])
         let x = yAxis[0]
         let y = yAxis[1]
         // if (x <= upperBound && x >= lowerBound) {
@@ -632,7 +632,7 @@ class Graph {
     zAxisVisible() {
         let upperBound = 0.0000000000001
         let lowerBound = -0.0000000000001
-        let zAxis = this.changeBasisZoomAndRotate([0, 0, 1])
+        let zAxis = this.changeBasisAndRotate([0, 0, 1])
         let x = zAxis[0]
         let y = zAxis[1]
         // if (x <= upperBound && x >= lowerBound) {

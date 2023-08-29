@@ -47,3 +47,8 @@ Bugs 🐛:
 
     Error Line 413 in gaussianElim script, cannot get classlist from null, don't know how to trigger this...
 
+    view 2 has a seizure if zoomed out alot, one found issue => 
+        eg: given 3 sided polygon if a 4th point is added, such that the polygon is still the same, the centroid changes. 
+            in this case the algorithm does not know these are the same polygon
+            => either figure out why this happens or go through all polygons to catch and modify these polygons.
+

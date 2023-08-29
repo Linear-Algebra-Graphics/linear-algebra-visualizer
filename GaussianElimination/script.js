@@ -305,20 +305,6 @@ var myFunction = function(){
 var bigLoop = setInterval(myFunction, 1000/fps);
 
 
-// setInterval(function() {
-
-//     // test_graph.rotateAboutZ(2 * Math.PI * (x) / displayWidth)
-
-//     // test_graph.rotateAboutX(2 * Math.PI * (y) / displayHeight)
-
-//     if (test_graph.animatingGaussianPlanes) {
-//         test_graph.draw()
-//     }
-
-// }, 1000/fps)
-
-
-
 class GaussianElimStepsHTMLModel {
 
     constructor() {
@@ -1816,6 +1802,34 @@ document.addEventListener("change", function() {
     }
 
 })
+
+
+document.addEventListener("mouseover", function(event) {
+    const info = document.getElementsByClassName("info-container")[0];
+    switch(event.target.className) {
+        case "view-button view-1": 
+            info.innerHTML = '<div>View 1:</div><div>Shows graph of the planes defined by the selected system of equations. Infinite planes are all a fixed size.</div>';
+            break
+        case "view-button view-2": 
+            info.innerHTML = '<div>View 2:</div><div>Shows graph of the planes defined by the selected system of equations. Infinite planes are bound by a cube.</div>';
+            break
+        case "animate-steps-button": 
+            info.innerHTML = '<div>Animate steps:</div><div>Automatically graphs each step in sequence</div>';
+            break
+        case "clear-default-matrix-button": 
+            info.innerHTML = '<div>clear:</div><div>Clears all inputs to the input matrix</div>';
+            break
+        case "clear-all-steps":
+            info.innerHTML = '<div>Clear All:</div><div>Clears all row operations</div>';
+            break
+        case "undo-operation-button":
+            info.innerHTML = '<div>Undo last:</div><div>Undos the previous row operation</div>';
+        default:
+    }
+    //test_graph.draw()
+})
+
+
 
 document.addEventListener("input", function() {
     const current = document.activeElement
