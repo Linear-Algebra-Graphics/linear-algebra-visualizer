@@ -6,8 +6,8 @@ let vectorColors = document.getElementById("vector colors")
 
 linearTransformation = new LinearTransformation([[1,0,0],[0,1,0],[0,0,1]])
 
-displayWidth  = 700
-displayHeight = 600
+displayWidth  = window.innerWidth - document.getElementsByClassName('graph-inputs')[0].offsetWidth - 50//700
+displayHeight = window.innerHeight - document.getElementsByClassName("topnav")[0].offsetHeight - 100 //600
 
 canvas.style.width = displayWidth + "px"
 canvas.style.height = displayHeight + "px"
