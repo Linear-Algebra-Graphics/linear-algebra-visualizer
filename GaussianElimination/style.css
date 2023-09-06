@@ -634,7 +634,7 @@ div.bar button.bug-button:hover {
     left: 0;
     padding: 5px;
     border: 1px solid black;
-    height: 25px;
+    height: 30px;
     border-bottom-right-radius: 10px;
 }
 
@@ -699,6 +699,7 @@ div.bar button.bug-button:hover {
     border-bottom: 1px solid black;
     height: 36px;
     /* padding: 7px 0px 7px 0px; */
+    /* background-color: gray; */
 }
 
 .matrix-solution {
@@ -738,13 +739,14 @@ math {
     line-height: normal;
     word-spacing: normal;
     font-family: math;
-    font-size: inherit;
+    font-size: 1rem;
     font-style: normal;
     font-weight: normal;
     display: inline math;
     math-shift: normal;
-    math-style: compact;
+    math-style: normal;
     math-depth: 0;
+    
 }
 math[display="block" i] {
 display: block math;
