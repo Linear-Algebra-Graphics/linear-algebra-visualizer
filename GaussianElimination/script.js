@@ -500,8 +500,10 @@ class GaussianElimStepsHTMLModel {
             // }
             
             document.getElementsByClassName("solution-overlay")[0].innerHTML =   
-                '<math display="inline">\
+                '<math>\
                     <mtext>One Solution:&nbsp;</mtext>\
+                </math>\
+                <math style="font-size:0.8rem">\
                     <mo>(</mo>'
                     + solution[0] +
                     '<mo>,</mo>'
@@ -521,8 +523,10 @@ class GaussianElimStepsHTMLModel {
             // let math = document.createElement("math")
             // math.innerHTML = '<mo>[</mo>'+ solution[0] + '<mo>,</mo>' + solution[1] + '<mo>,</mo>' + solution[2] +'<mo>]</mo>'
             document.getElementsByClassName("solution-overlay")[0].innerHTML = 
-                '<math display="inline">\
+                '<math>\
                     <mtext>Infinite Solutions:&nbsp;</mtext>\
+                </math>\
+                <math style="font-size:0.8rem">\
                     <mo>[</mo>'
                     + solution[0] + 
                     '<mo>,</mo>' 
@@ -1773,8 +1777,7 @@ document.addEventListener("change", function() {
 
 
 document.addEventListener("mouseover", function(event) {
-    
-    debugger
+
     const info = document.getElementsByClassName("info")[0];
     const infoContainer  = info.getElementsByClassName("info-container")[0];
     const title = info.getElementsByClassName("box-label")[0];
