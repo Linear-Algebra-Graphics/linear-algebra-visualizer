@@ -500,10 +500,8 @@ class GaussianElimStepsHTMLModel {
             // }
             
             document.getElementsByClassName("solution-overlay")[0].innerHTML =   
-                '<math>\
+                '<math style="font-size:0.9rem">\
                     <mtext>One Solution:&nbsp;</mtext>\
-                </math>\
-                <math style="font-size:0.8rem">\
                     <mo>(</mo>'
                     + solution[0] +
                     '<mo>,</mo>'
@@ -523,10 +521,8 @@ class GaussianElimStepsHTMLModel {
             // let math = document.createElement("math")
             // math.innerHTML = '<mo>[</mo>'+ solution[0] + '<mo>,</mo>' + solution[1] + '<mo>,</mo>' + solution[2] +'<mo>]</mo>'
             document.getElementsByClassName("solution-overlay")[0].innerHTML = 
-                '<math>\
+                '<math style="font-size:0.9rem">\
                     <mtext>Infinite Solutions:&nbsp;</mtext>\
-                </math>\
-                <math style="font-size:0.8rem">\
                     <mo>[</mo>'
                     + solution[0] + 
                     '<mo>,</mo>' 
@@ -1453,13 +1449,13 @@ class GaussianElimStepsHTMLModel {
 
 
         if (this.colorSettingsOpen == true) {
-            colorSettingsDiv.style    = "display: none;"
+            colorSettingsDiv.style    = "visibility:hidden;"//"display: none;"
             colorSettingsbutton.style = ""
 
 
             this.colorSettingsOpen = false
         } else {
-            colorSettingsDiv.style = "display: ;"
+            colorSettingsDiv.style = "visibility: visible;"//"display: ;"
             colorSettingsbutton.style = "background-color: lightgray; height: 37px; border-radius: 0px;"
 
             this.colorSettingsOpen = true
@@ -1806,9 +1802,11 @@ document.addEventListener("mouseover", function(event) {
         case "undo-operation-button":
             title.innerHTML = `Undo last:`
             infoContainer.innerHTML  = '<div>Undos the previous row operation</div>';
+            break
         case "fps-container":
             title.innerHTML = `FPS:`
             infoContainer.innerHTML  = 'FPS determines the number times the planes are drawn per second. Increase FPS for a smoother experience, decrease FPS to get better preformance.</div>';
+            break
         default:
     }
     //test_graph.draw()
