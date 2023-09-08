@@ -4,10 +4,10 @@ let yInput = document.getElementById("y")
 let zInput = document.getElementById("z")
 let vectorColors = document.getElementById("vector colors")
 
-linearTransformation = new LinearTransformation([[1,0,0],[0,1,0],[0,0,1]])
+let linearTransformation = new LinearTransformation([[1,0,0],[0,1,0],[0,0,1]])
 
-displayWidth  = window.innerWidth - document.getElementsByClassName('graph-inputs')[0].offsetWidth - 50//700
-displayHeight = window.innerHeight - document.getElementsByClassName("topnav")[0].offsetHeight - 100 //600
+let displayWidth  = window.innerWidth - document.getElementsByClassName('graph-inputs')[0].offsetWidth - 50//700
+let displayHeight = window.innerHeight - document.getElementsByClassName("topnav")[0].offsetHeight - 100 //600
 
 canvas.style.width = displayWidth + "px"
 canvas.style.height = displayHeight + "px"
@@ -41,6 +41,53 @@ let delta_x = 0
 let delta_y = 0
 
 let drawGraph = false;
+
+//resize canvas dynamically when adjusting window zoom level
+window.addEventListener('resize', (event) => {
+    debugger
+
+    displayWidth  = window.innerWidth - document.getElementsByClassName('graph-inputs')[0].offsetWidth - 50//700
+    displayHeight = window.innerHeight - document.getElementsByClassName("topnav")[0].offsetHeight - 100 //600
+
+    canvas.style.width = displayWidth + "px"
+    canvas.style.height = displayHeight + "px"
+
+    const factor = 2//1400 / Math.max(displayHeight, displayWidth)
+
+
+    canvas.width = displayWidth * factor
+    canvas.height = displayHeight * factor
+
+    test_graph.centerX = canvas.width/2
+    test_graph.centerY = canvas.height/2
+
+    test_graph.draw()
+}, false);
+// function resizeCanvas(ev) {
+//     debugger
+
+//     displayWidth  = window.innerWidth - document.getElementsByClassName('graph-inputs')[0].offsetWidth - 50//700
+//     displayHeight = window.innerHeight - document.getElementsByClassName("topnav")[0].offsetHeight - 100 //600
+
+//     canvas.style.width = displayWidth + "px"
+//     canvas.style.height = displayHeight + "px"
+
+//     const factor = 1400 / Math.max(displayHeight, displayWidth)
+
+
+//     canvas.width = displayWidth * factor
+//     canvas.height = displayHeight * factor
+
+//     test_graph.centerX = canvas.width/2
+//     test_graph.centerY = canvas.height/2
+
+//     test_graph.draw()
+// }
+// resizeCanvas();
+
+
+
+
 
 const defaultColors = ["#990F0F","#85B22C","#51A3CC","#260F99"]
 // const defaultColors = ["#39f4eaff", "#f51485ff", "#1515b4ff", "orange"]
@@ -205,8 +252,8 @@ canvas.addEventListener('mousemove', function(e) {    // return null
         //these two checks ensure that the z axis has only 180 rotation instead of 360.
         if (y > 0) {
             y = 0
-        } else if (y < -300) {
-            y = -300
+        } else if (y < -displayHeight/2) {
+            y = -displayHeight/2
         }
 
         drawGraph = true;
