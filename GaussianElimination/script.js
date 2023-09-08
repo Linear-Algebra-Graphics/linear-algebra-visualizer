@@ -6,13 +6,13 @@ let vectorColors = document.getElementById("vector colors")
 
 let linearTransformation = new LinearTransformation([[1,0,0],[0,1,0],[0,0,1]])
 
-let displayWidth  = window.innerWidth - document.getElementsByClassName('graph-inputs')[0].offsetWidth - 50//700
-let displayHeight = window.innerHeight - document.getElementsByClassName("topnav")[0].offsetHeight - 100 //600
+let displayWidth  = window.innerWidth - document.getElementsByClassName('graph-inputs')[0].offsetWidth//700
+let displayHeight = window.innerHeight - document.getElementsByClassName("topnav")[0].offsetHeight//600
 
-canvas.style.width = displayWidth + "px"
-canvas.style.height = displayHeight + "px"
-canvas.width = displayWidth * 2
-canvas.height = displayHeight * 2
+canvas.style.width = (displayWidth-40) + "px"
+canvas.style.height = (displayHeight-100) + "px"
+canvas.width = (displayWidth * 2) - 40
+canvas.height = (displayHeight * 2) - 100
 
 // canvas.width = displayWidth 
 // canvas.height = displayHeight
@@ -44,19 +44,20 @@ let drawGraph = false;
 
 //resize canvas dynamically when adjusting window zoom level
 window.addEventListener('resize', (event) => {
-    debugger
+    //debugger
 
-    displayWidth  = window.innerWidth - document.getElementsByClassName('graph-inputs')[0].offsetWidth - 50//700
-    displayHeight = window.innerHeight - document.getElementsByClassName("topnav")[0].offsetHeight - 100 //600
+    displayWidth  = window.innerWidth - document.getElementsByClassName('graph-inputs')[0].offsetWidth//700
+    displayHeight = window.innerHeight - document.getElementsByClassName("topnav")[0].offsetHeight //600
 
-    canvas.style.width = displayWidth + "px"
-    canvas.style.height = displayHeight + "px"
+    canvas.style.width = (displayWidth-40) + "px"
+    canvas.style.height = (displayHeight-100) + "px"
+    console.log(displayWidth + ", " + displayHeight)
 
     const factor = 2//1400 / Math.max(displayHeight, displayWidth)
 
 
-    canvas.width = displayWidth * factor
-    canvas.height = displayHeight * factor
+    canvas.width = (displayWidth * factor)-40
+    canvas.height = (displayHeight * factor)-100
 
     test_graph.centerX = canvas.width/2
     test_graph.centerY = canvas.height/2
