@@ -1276,8 +1276,8 @@ class Line {
         let point2GraphCoord = [this.graph.centerX + scaledPoint2[0], this.graph.centerY - scaledPoint2[1]]
         //just finite line case for now
         this.graph.ctx.beginPath()
-        this.graph.ctx.moveTo(point1GraphCoord[0], point1GraphCoord[1])
-        this.graph.ctx.lineTo(point2GraphCoord[0], point2GraphCoord[1])
+        this.graph.ctx.moveTo(parseInt(point1GraphCoord[0].toFixed(0)), parseInt(point1GraphCoord[1].toFixed(0)))
+        this.graph.ctx.lineTo(parseInt(point2GraphCoord[0].toFixed(0)), parseInt(point2GraphCoord[1].toFixed(0)))
         this.graph.ctx.closePath()
         this.graph.ctx.strokeStyle = this.color
         this.graph.ctx.lineWidth = this.lineWdith

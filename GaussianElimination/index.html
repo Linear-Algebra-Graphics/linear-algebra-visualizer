@@ -123,282 +123,283 @@
                         </div>
 
                     </div>
-
+                    <button type="button" class="solve-button">solve</button>
                     <div class="bottom-right-container">
                         <button class="animate-steps-button"><div class="emoji">🎥</div> Animate steps</button>
                     </div>
                 </div>
 
-                <div class="button-container">
+                <!-- <div class="button-container">
                     <button type="button" class="solve-button">solve</button>
-                    <!-- <label>Show Grid</label>
+                    <label>Show Grid</label>
                     <input type="checkbox" class="show-grid-checkbox" checked></input> -->
-                </div>
+                <!-- </div> --> 
 
             </div>
 
-            <div class="matrix-outer-wraper box">
-                <div class="box-label steps-extra">
-                    <a>Steps</a>
-                    <div class="clear-button-container">
-                        <button class="clear-all-steps" >Clear All</button>
+            <div class="graph-inputs">
+                <div class="matrix-outer-wraper box">
+                    <div class="box-label steps-extra">
+                        <a>Steps</a>
+                        <div class="clear-button-container">
+                            <button class="clear-all-steps" >Clear All</button>
+                        </div>
+                    </div>
+                    <div class="matrix-container">
+                        <div class="matrix selected" id="matrix0">
+                            <div class="name-bar">
+                                <button type="button" class="">-</button> 
+                                <div class="label">🔢 Input Matrix</div>
+                                <button type="button" class="clear-default-matrix-button">clear</button> 
+                                <button type="button" class="select-button matrix0">graph</button> 
+                            </div>
+                            <div class="values">
+                            
+                                <div class="color-column">
+                                    <div class="color-box row0">
+                                        <input class="color-checkbox" type="checkbox" checked>
+                                    </div>
+                                    <div class="color-box row1">
+                                        <input class="color-checkbox" type="checkbox" checked>
+                                    </div>
+                                    <div class="color-box row2">
+                                        <input class="color-checkbox" type="checkbox" checked>
+                                    </div>
+                                </div>
+                            
+                                <div class="line"></div>
+                                <div class="column">
+                                    <input class="matrix-value" type="text" value="1">
+                                    <input class="matrix-value" type="text" value="0">
+                                    <input class="matrix-value" type="text" value="5">
+                                </div>
+                                <div class="column">
+                                    <input class="matrix-value" type="text" value="3">
+                                    <input class="matrix-value" type="text" value="0">
+                                    <input class="matrix-value" type="text" value="0">
+                                </div>
+                                <div class="column">
+                                    <input class="matrix-value" type="text" value="0">
+                                    <input class="matrix-value" type="text" value="1">
+                                    <input class="matrix-value" type="text" value="0">
+                                </div>
+                                <div class="line-gray"></div>
+                                <div class="column">
+                                    <input class="matrix-value" type="text" value="5">
+                                    <input class="matrix-value" type="text" value="4">
+                                    <input class="matrix-value" type="text" value="0">
+                                </div>
+                            
+                                <div class="line"></div>
+                            </div>
+                        </div>
+                        <div class="new-operation">
+                            <div style="display: flex; flex-direction: row;">
+                                <button class="new-operation-button closed">➕ Apply row operation</button>
+                                <button class="undo-operation-button" style="width: 5rem;">➖ Undo</button>
+                            </div>
+                            <div class="settings-container" style="display: none;">
+                                <div class="settings">
+                                    <label for="operations">Row Operation:</label>
+                                    <select name="operations" class="operation-dropdown">
+                                        <option value="" selected hidden>Select operation..</option>
+                                        <option value="swap">🔄 Swap</option>
+                                        <option value="combine">🧬 Combine</option>
+                                        <option value="scale">📏 Scale</option>
+                                    </select>
+
+                                    <div class="swap specific-settings">
+                                        <select class="row swap-1" style="width: fit-content;">
+                                            <option value="" selected disabled hidden>...</option>
+                                            <option value="R0">R1</option>
+                                            <option value="R1">R2</option>
+                                            <option value="R2">R3</option>
+                                        </select>
+                                
+                                        <math><mo stretchy="false">⟺</mo></math>
+                                
+                                        <select class="row swap-2" style="width: fit-content;">
+                                            <option value="" selected disabled hidden>...</option>
+                                            <option value="R0">R1</option>
+                                            <option value="R1">R2</option>
+                                            <option value="R2">R3</option>
+                                        </select>
+                                    </div>
+                                    <div class="combine specific-settings">
+                                        <select class="row combine-1" style="width: fit-content;">
+                                            <option value="" selected disabled hidden>...</option>
+                                            <option value="R0">R1</option>
+                                            <option value="R1">R2</option>
+                                            <option value="R2">R3</option>
+                                        </select>
+                                
+                                        <select class="combine-2" style="width: fit-content;">
+                                            <option value="" selected disabled hidden>...</option>
+                                            <option value="+">+</option>
+                                            <option value="-">-</option>
+                                        </select>
+                                
+                                        <input class="combine-3" type="text" id="fname" name="fname" style="width: 20px;">
+
+                                        <math><mo>&times;</mo></math>
+
+                                        <select class="row combine-4" style="width: fit-content;">
+                                            <option value="" selected disabled hidden>...</option>
+                                            <option value="R0">R1</option>
+                                            <option value="R1">R2</option>
+                                            <option value="R2">R3</option>
+                                        </select>
+
+                                        <math><mo stretchy="false">⇒</mo></math>
+
+                                        <select class="row combine-5" class="" style="width: fit-content;">
+                                            <option value="" selected disabled hidden>...</option>
+                                            <option value="R0">R1</option>
+                                            <option value="R1">R2</option>
+                                            <option value="R2">R3</option>
+                                        </select>
+                                    </div>
+                                    <div class="scale specific-settings">
+
+                                        <input class="row scale-1" type="text" id="fname" name="fname" style="width: 20px;">
+
+                                        <math><mo>&times;</mo></math>
+
+                                        <select class="row scale-2" style="width: fit-content;">
+                                            <option value="" selected disabled hidden>...</option>
+                                            <option value="R0">R1</option>
+                                            <option value="R1">R2</option>
+                                            <option value="R2">R3</option>
+                                        </select>
+
+                                        <math><mo stretchy="false">⇒</mo></math>
+
+                                        <select class="row scale-3" style="width: fit-content;">
+                                            <option value="" selected disabled hidden>...</option>
+                                            <option value="R0">R1</option>
+                                            <option value="R1">R2</option>
+                                            <option value="R2">R3</option>
+                                        </select>
+
+                                    </div>
+
+                                </div>
+
+                                <button class="apply-new-operation-button" style="display: none;">✅ Apply</button>
+                                <!-- <button class="invalid-operation">❌ Invalid operation</button> -->
+
+                            </div>
+                        </div>
+
                     </div>
                 </div>
-                <div class="matrix-container">
-                    <div class="matrix selected" id="matrix0">
-                        <div class="name-bar">
-                            <button type="button" class="">-</button> 
-                            <div class="label">🔢 Input Matrix</div>
-                            <button type="button" class="clear-default-matrix-button">clear</button> 
-                            <button type="button" class="select-button matrix0">graph</button> 
-                        </div>
-                        <div class="values">
-                        
-                            <div class="color-column">
-                                <div class="color-box row0">
-                                    <input class="color-checkbox" type="checkbox" checked>
+
+                <div class="trying-to-be-vertical">
+                    <div class="solution-and-settings-container box">
+                        <div class="matrix-outer-wraper">
+                            <div class="box-label">Reduced Echelon Form</div>
+                            <div class="matrix-solution">
+                                <div class="matrix">
+                                    <div class="name-bar">
+                                        <button type="button" class="">-</button> 
+                                        <div class="label">Matrix</div>
+                                        <!-- <button type="button" class="select-button">graph</button>  -->
+                                    </div>
+                                    <div class="values">
+                                        
+                                        <div class="warning-overlay">
+                                            <div class="warning-overlay-text">INVALID MATRIX</div>
+                                        </div>
+                                        
+                                        <div class="color-column">
+                                            <div class="color-box row0">
+                                                <input class="color-checkbox" type="checkbox" checked>
+                                            </div>
+                                            <div class="color-box row1">
+                                                <input class="color-checkbox" type="checkbox" checked>
+                                            </div>
+                                            <div class="color-box row2">
+                                                <input class="color-checkbox" type="checkbox" checked>
+                                            </div>
+                                        </div>
+                                    
+                                        <div class="line"></div>
+                                    
+                                        <div class="column">
+                                            <input class="matrix-value" type="text" value="" readonly>
+                                            <input class="matrix-value" type="text" value="" readonly>
+                                            <input class="matrix-value" type="text" value="" readonly>
+                                        </div>
+                                        <div class="column">
+                                            <input class="matrix-value" type="text" value="" readonly>
+                                            <input class="matrix-value" type="text" value="" readonly>
+                                            <input class="matrix-value" type="text" value="" readonly>
+                                        </div>
+                                        <div class="column">
+                                            <input class="matrix-value" type="text" value="" readonly>
+                                            <input class="matrix-value" type="text" value="" readonly>
+                                            <input class="matrix-value" type="text" value="" readonly>
+                                        </div>
+                                        <div class="line-gray"></div>
+                                        <div class="column">
+                                            <input class="matrix-value" type="text" value="" readonly>
+                                            <input class="matrix-value" type="text" value="" readonly>
+                                            <input class="matrix-value" type="text" value="" readonly>
+                                        </div>
+                                    
+                                        <div class="line"></div>
+                                    </div>
                                 </div>
-                                <div class="color-box row1">
-                                    <input class="color-checkbox" type="checkbox" checked>
-                                </div>
-                                <div class="color-box row2">
-                                    <input class="color-checkbox" type="checkbox" checked>
-                                </div>
+                                <div style="width: 300px; margin-top: 10px;"> &#8203;</div>
                             </div>
-                        
-                            <div class="line"></div>
-                            <div class="column">
-                                <input class="matrix-value" type="text" value="1">
-                                <input class="matrix-value" type="text" value="0">
-                                <input class="matrix-value" type="text" value="0">
-                            </div>
-                            <div class="column">
-                                <input class="matrix-value" type="text" value="3">
-                                <input class="matrix-value" type="text" value="0">
-                                <input class="matrix-value" type="text" value="0">
-                            </div>
-                            <div class="column">
-                                <input class="matrix-value" type="text" value="0">
-                                <input class="matrix-value" type="text" value="1">
-                                <input class="matrix-value" type="text" value="0">
-                            </div>
-                            <div class="line-gray"></div>
-                            <div class="column">
-                                <input class="matrix-value" type="text" value="5">
-                                <input class="matrix-value" type="text" value="4">
-                                <input class="matrix-value" type="text" value="0">
-                            </div>
-                        
-                            <div class="line"></div>
                         </div>
                     </div>
-                    <div class="new-operation">
-                        <div style="display: flex; flex-direction: row;">
-                            <button class="new-operation-button closed">➕ Apply row operation</button>
-                            <button class="undo-operation-button" style="width: 5rem;">➖ Undo</button>
-                        </div>
-                        <div class="settings-container" style="display: none;">
-                            <div class="settings">
-                                <label for="operations">Row Operation:</label>
-                                <select name="operations" class="operation-dropdown">
-                                    <option value="" selected hidden>Select operation..</option>
-                                    <option value="swap">🔄 Swap</option>
-                                    <option value="combine">🧬 Combine</option>
-                                    <option value="scale">📏 Scale</option>
+
+
+                    <div class="color-settings-container box" style="visibility: hidden;">
+                        <div class="box-label">Color Settings</div>
+                        <div class="color-settings-wrapper">
+                            <div class="free-color-selection">
+                                Default colors: 
+                                <div style="display: flex; align-items: baseline; gap: 5px;">
+                                    <button class="color-button" id="row-1-color">Row 1</button>
+                                    <button class="color-button-1">Change</button>
+                                </div>
+                                <div style="display: flex; align-items: baseline; gap: 5px;">
+                                    <button class="color-button" id="row-2-color">Row 2</button>
+                                    <button class="color-button-2">Change</button>
+                                </div>
+                                <div style="display: flex; align-items: baseline; gap: 5px;">
+                                    <button class="color-button" id="row-3-color">Row 3</button>
+                                    <button class="color-button-3">Change</button>
+                                </div>
+                            </div>
+                            
+                            <div class="default colors">
+                                <select class="color-blind-settings">
+                                    <option value="" selected disabled hidden>Color Blind Defaults</option>
+                                    <option value="default">Default</option>
+                                    <option value="deuteranomaly">Deuteranomaly</option>
+                                    <option value="protanomaly">Protanomaly</option>
+                                    <option value="protanopia">Protanopia</option>
+                                    <option value="deuteranopia">Deuteranopia</option>
+                                    <option value="tritanopia">Tritanopia</option>
+                                    <option value="tritanomaly">Tritanomaly</option>
                                 </select>
-
-                                <div class="swap specific-settings">
-                                    <select class="row swap-1" style="width: fit-content;">
-                                        <option value="" selected disabled hidden>...</option>
-                                        <option value="R0">R1</option>
-                                        <option value="R1">R2</option>
-                                        <option value="R2">R3</option>
-                                    </select>
-                            
-                                    <math><mo stretchy="false">⟺</mo></math>
-                            
-                                    <select class="row swap-2" style="width: fit-content;">
-                                        <option value="" selected disabled hidden>...</option>
-                                        <option value="R0">R1</option>
-                                        <option value="R1">R2</option>
-                                        <option value="R2">R3</option>
-                                    </select>
-                                </div>
-                                <div class="combine specific-settings">
-                                    <select class="row combine-1" style="width: fit-content;">
-                                        <option value="" selected disabled hidden>...</option>
-                                        <option value="R0">R1</option>
-                                        <option value="R1">R2</option>
-                                        <option value="R2">R3</option>
-                                    </select>
-                            
-                                    <select class="combine-2" style="width: fit-content;">
-                                        <option value="" selected disabled hidden>...</option>
-                                        <option value="+">+</option>
-                                        <option value="-">-</option>
-                                    </select>
-                            
-                                    <input class="combine-3" type="text" id="fname" name="fname" style="width: 20px;">
-
-                                    <math><mo>&times;</mo></math>
-
-                                    <select class="row combine-4" style="width: fit-content;">
-                                        <option value="" selected disabled hidden>...</option>
-                                        <option value="R0">R1</option>
-                                        <option value="R1">R2</option>
-                                        <option value="R2">R3</option>
-                                    </select>
-
-                                    <math><mo stretchy="false">⇒</mo></math>
-
-                                    <select class="row combine-5" class="" style="width: fit-content;">
-                                        <option value="" selected disabled hidden>...</option>
-                                        <option value="R0">R1</option>
-                                        <option value="R1">R2</option>
-                                        <option value="R2">R3</option>
-                                    </select>
-                                </div>
-                                <div class="scale specific-settings">
-
-                                    <input class="row scale-1" type="text" id="fname" name="fname" style="width: 20px;">
-
-                                    <math><mo>&times;</mo></math>
-
-                                    <select class="row scale-2" style="width: fit-content;">
-                                        <option value="" selected disabled hidden>...</option>
-                                        <option value="R0">R1</option>
-                                        <option value="R1">R2</option>
-                                        <option value="R2">R3</option>
-                                    </select>
-
-                                    <math><mo stretchy="false">⇒</mo></math>
-
-                                    <select class="row scale-3" style="width: fit-content;">
-                                        <option value="" selected disabled hidden>...</option>
-                                        <option value="R0">R1</option>
-                                        <option value="R1">R2</option>
-                                        <option value="R2">R3</option>
-                                    </select>
-
-                                </div>
-
                             </div>
-
-                            <button class="apply-new-operation-button" style="display: none;">✅ Apply</button>
-                            <!-- <button class="invalid-operation">❌ Invalid operation</button> -->
-
                         </div>
                     </div>
 
+                    <div class="info box">
+                        <div class="box-label">Info:</div>
+                        <div class="info-container">
+                            
+                        </div>
+                    </div>
+                    
                 </div>
+
             </div>
-
-            <div class="trying-to-be-vertical">
-                <div class="solution-and-settings-container box">
-                    <div class="matrix-outer-wraper">
-                        <div class="box-label">Reduced Echelon Form</div>
-                        <div class="matrix-solution">
-                            <div class="matrix">
-                                <div class="name-bar">
-                                    <button type="button" class="">-</button> 
-                                    <div class="label">Matrix</div>
-                                    <!-- <button type="button" class="select-button">graph</button>  -->
-                                </div>
-                                <div class="values">
-                                    
-                                    <div class="warning-overlay">
-                                        <div class="warning-overlay-text">INVALID MATRIX</div>
-                                    </div>
-                                    
-                                    <div class="color-column">
-                                        <div class="color-box row0">
-                                            <input class="color-checkbox" type="checkbox" checked>
-                                        </div>
-                                        <div class="color-box row1">
-                                            <input class="color-checkbox" type="checkbox" checked>
-                                        </div>
-                                        <div class="color-box row2">
-                                            <input class="color-checkbox" type="checkbox" checked>
-                                        </div>
-                                    </div>
-                                
-                                    <div class="line"></div>
-                                
-                                    <div class="column">
-                                        <input class="matrix-value" type="text" value="" readonly>
-                                        <input class="matrix-value" type="text" value="" readonly>
-                                        <input class="matrix-value" type="text" value="" readonly>
-                                    </div>
-                                    <div class="column">
-                                        <input class="matrix-value" type="text" value="" readonly>
-                                        <input class="matrix-value" type="text" value="" readonly>
-                                        <input class="matrix-value" type="text" value="" readonly>
-                                    </div>
-                                    <div class="column">
-                                        <input class="matrix-value" type="text" value="" readonly>
-                                        <input class="matrix-value" type="text" value="" readonly>
-                                        <input class="matrix-value" type="text" value="" readonly>
-                                    </div>
-                                    <div class="line-gray"></div>
-                                    <div class="column">
-                                        <input class="matrix-value" type="text" value="" readonly>
-                                        <input class="matrix-value" type="text" value="" readonly>
-                                        <input class="matrix-value" type="text" value="" readonly>
-                                    </div>
-                                
-                                    <div class="line"></div>
-                                </div>
-                            </div>
-                            <div style="width: 300px; margin-top: 10px;">If there is an unique solution, it will be graphed as a pink dot.</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="info box">
-                    <div class="box-label">Info:</div>
-                    <div class="info-container">
-                        
-                    </div>
-                </div>
-
-                <div class="color-settings-container box" style="display: none;">
-                    <div class="box-label">Color Settings</div>
-                    <div class="color-settings-wrapper">
-                        <div class="free-color-selection">
-                            Default colors: 
-                            <div style="display: flex; align-items: baseline; gap: 5px;">
-                                <button class="color-button" id="row-1-color">Row 1</button>
-                                <button class="color-button-1">Change</button>
-                            </div>
-                            <div style="display: flex; align-items: baseline; gap: 5px;">
-                                <button class="color-button" id="row-2-color">Row 2</button>
-                                <button class="color-button-2">Change</button>
-                            </div>
-                            <div style="display: flex; align-items: baseline; gap: 5px;">
-                                <button class="color-button" id="row-3-color">Row 3</button>
-                                <button class="color-button-3">Change</button>
-                            </div>
-                        </div>
-                        
-                        <div class="default colors">
-                            <select class="color-blind-settings">
-                                <option value="" selected disabled hidden>Color Blind Defaults</option>
-                                <option value="default">Default</option>
-                                <option value="deuteranomaly">Deuteranomaly</option>
-                                <option value="protanomaly">Protanomaly</option>
-                                <option value="protanopia">Protanopia</option>
-                                <option value="deuteranopia">Deuteranopia</option>
-                                <option value="tritanopia">Tritanopia</option>
-                                <option value="tritanomaly">Tritanomaly</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                
-            </div>
-
-            
 
             
         </div>

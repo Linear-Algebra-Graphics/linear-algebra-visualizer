@@ -458,9 +458,21 @@ class Graph {
         this.ctx.lineWidth = lineWidth
         this.ctx.strokeStyle = color
 
+        let x1 = point1[0]
+        let y1 = point1[1]
+        let x2 = point2[0]
+        let y2 = point2[1]
+
+        try {
+            x1.toFixed(0)
+        } catch (e) {
+            console.log(e)
+            debugger
+        }
+
         this.ctx.beginPath()
-            this.ctx.moveTo(point1[0], point1[1])
-            this.ctx.lineTo(point2[0], point2[1])
+            this.ctx.moveTo(parseInt(x1.toFixed(0)), parseInt(y1.toFixed(0)))
+            this.ctx.lineTo(parseInt(x2.toFixed(0)), parseInt(y2.toFixed(0)))
         this.ctx.stroke()
     }
 
@@ -501,7 +513,7 @@ class Graph {
         //     // }
         // }
 
-        this.drawLine([startX, startY],[endX, endY], color, lineWidth)
+        this.drawLine([parseInt(startX.toFixed(0)), parseInt(startY.toFixed(0))],[parseInt(endX.toFixed(0)), parseInt(endY.toFixed(0))], color, lineWidth)
     }
 
     
@@ -522,7 +534,7 @@ class Graph {
         this.ctx.lineWidth = 4;
         this.ctx.strokeStyle = outlineColor
         this.ctx.beginPath();
-            this.ctx.arc(vecX, vecY, size, 0, 2 * Math.PI);
+            this.ctx.arc(parseInt(vecX.toFixed(0)), parseInt(vecY.toFixed(0)), size, 0, 2 * Math.PI);
             this.ctx.fill();
         this.ctx.stroke();
     }

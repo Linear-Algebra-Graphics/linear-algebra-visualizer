@@ -102,7 +102,7 @@ class Axis {
             this.graph.ctx.fillStyle   = this.zeroZeroDotColor
             this.graph.ctx.strokeStyle = this.zeroZeroDotColor
             this.graph.ctx.beginPath();
-                this.graph.ctx.arc(this.graph.centerX, this.graph.centerY, this.zeroZeroDotSize, 0, 2 * Math.PI);
+                this.graph.ctx.arc(parseInt(this.graph.centerX.toFixed(0)), parseInt(this.graph.centerY.toFixed(0)), this.zeroZeroDotSize, 0, 2 * Math.PI);
                 this.graph.ctx.fill();
             this.graph.ctx.stroke();
         }

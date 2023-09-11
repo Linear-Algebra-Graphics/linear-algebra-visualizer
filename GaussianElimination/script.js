@@ -4,15 +4,15 @@ let yInput = document.getElementById("y")
 let zInput = document.getElementById("z")
 let vectorColors = document.getElementById("vector colors")
 
-linearTransformation = new LinearTransformation([[1,0,0],[0,1,0],[0,0,1]])
+let linearTransformation = new LinearTransformation([[1,0,0],[0,1,0],[0,0,1]])
 
-displayWidth  = 700
-displayHeight = 600
+let displayWidth  = window.innerWidth - document.getElementsByClassName('graph-inputs')[0].offsetWidth//700
+let displayHeight = window.innerHeight - document.getElementsByClassName("topnav")[0].offsetHeight//600
 
-canvas.style.width = displayWidth + "px"
-canvas.style.height = displayHeight + "px"
-canvas.width = displayWidth * 2
-canvas.height = displayHeight * 2
+canvas.style.width = (displayWidth-40) + "px"
+canvas.style.height = (displayHeight-100) + "px"
+canvas.width = (displayWidth * 2) - 40
+canvas.height = (displayHeight * 2) - 100
 
 // canvas.width = displayWidth 
 // canvas.height = displayHeight
@@ -41,6 +41,54 @@ let delta_x = 0
 let delta_y = 0
 
 let drawGraph = false;
+
+//resize canvas dynamically when adjusting window zoom level
+window.addEventListener('resize', (event) => {
+    //debugger
+
+    displayWidth  = window.innerWidth - document.getElementsByClassName('graph-inputs')[0].offsetWidth//700
+    displayHeight = window.innerHeight - document.getElementsByClassName("topnav")[0].offsetHeight //600
+
+    canvas.style.width = (displayWidth-40) + "px"
+    canvas.style.height = (displayHeight-100) + "px"
+    console.log(displayWidth + ", " + displayHeight)
+
+    const factor = 2//1400 / Math.max(displayHeight, displayWidth)
+
+
+    canvas.width = (displayWidth * factor)-40
+    canvas.height = (displayHeight * factor)-100
+
+    test_graph.centerX = canvas.width/2
+    test_graph.centerY = canvas.height/2
+
+    test_graph.draw()
+}, false);
+// function resizeCanvas(ev) {
+//     debugger
+
+//     displayWidth  = window.innerWidth - document.getElementsByClassName('graph-inputs')[0].offsetWidth - 50//700
+//     displayHeight = window.innerHeight - document.getElementsByClassName("topnav")[0].offsetHeight - 100 //600
+
+//     canvas.style.width = displayWidth + "px"
+//     canvas.style.height = displayHeight + "px"
+
+//     const factor = 1400 / Math.max(displayHeight, displayWidth)
+
+
+//     canvas.width = displayWidth * factor
+//     canvas.height = displayHeight * factor
+
+//     test_graph.centerX = canvas.width/2
+//     test_graph.centerY = canvas.height/2
+
+//     test_graph.draw()
+// }
+// resizeCanvas();
+
+
+
+
 
 const defaultColors = ["#990F0F","#85B22C","#51A3CC","#260F99"]
 // const defaultColors = ["#39f4eaff", "#f51485ff", "#1515b4ff", "orange"]
@@ -205,8 +253,8 @@ canvas.addEventListener('mousemove', function(e) {    // return null
         //these two checks ensure that the z axis has only 180 rotation instead of 360.
         if (y > 0) {
             y = 0
-        } else if (y < -300) {
-            y = -300
+        } else if (y < -displayHeight/2) {
+            y = -displayHeight/2
         }
 
         drawGraph = true;
@@ -500,10 +548,8 @@ class GaussianElimStepsHTMLModel {
             // }
             
             document.getElementsByClassName("solution-overlay")[0].innerHTML =   
-                '<math>\
+                '<math style="font-size:0.9rem">\
                     <mtext>One Solution:&nbsp;</mtext>\
-                </math>\
-                <math style="font-size:0.8rem">\
                     <mo>(</mo>'
                     + solution[0] +
                     '<mo>,</mo>'
@@ -523,10 +569,8 @@ class GaussianElimStepsHTMLModel {
             // let math = document.createElement("math")
             // math.innerHTML = '<mo>[</mo>'+ solution[0] + '<mo>,</mo>' + solution[1] + '<mo>,</mo>' + solution[2] +'<mo>]</mo>'
             document.getElementsByClassName("solution-overlay")[0].innerHTML = 
-                '<math>\
+                '<math style="font-size:0.9rem">\
                     <mtext>Infinite Solutions:&nbsp;</mtext>\
-                </math>\
-                <math style="font-size:0.8rem">\
                     <mo>[</mo>'
                     + solution[0] + 
                     '<mo>,</mo>' 
@@ -1453,13 +1497,13 @@ class GaussianElimStepsHTMLModel {
 
 
         if (this.colorSettingsOpen == true) {
-            colorSettingsDiv.style    = "display: none;"
+            colorSettingsDiv.style    = "visibility:hidden;"//"display: none;"
             colorSettingsbutton.style = ""
 
 
             this.colorSettingsOpen = false
         } else {
-            colorSettingsDiv.style = "display: ;"
+            colorSettingsDiv.style = "visibility: visible;"//"display: ;"
             colorSettingsbutton.style = "background-color: lightgray; height: 37px; border-radius: 0px;"
 
             this.colorSettingsOpen = true
@@ -1806,9 +1850,11 @@ document.addEventListener("mouseover", function(event) {
         case "undo-operation-button":
             title.innerHTML = `Undo last:`
             infoContainer.innerHTML  = '<div>Undos the previous row operation</div>';
+            break
         case "fps-container":
             title.innerHTML = `FPS:`
             infoContainer.innerHTML  = 'FPS determines the number times the planes are drawn per second. Increase FPS for a smoother experience, decrease FPS to get better preformance.</div>';
+            break
         default:
     }
     //test_graph.draw()
