@@ -3,7 +3,7 @@
     position:relative;
     display: flex;
     flex-direction: column;
-    gap: 10px
+    /* gap: 10px */
 }
 
 .free-color-selection {
@@ -862,7 +862,7 @@ button.new-operation-button {
 }
 
 .info.box {
-    position:absolute;
+    /* position:absolute; */
     bottom:-2px;
     right:1px;
     /* margin-bottom: 10px;
