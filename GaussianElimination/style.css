@@ -176,12 +176,12 @@ canvas:active {
     justify-content: left;
     align-content: flex-start;
     gap: 10px 2px;
-    overflow: auto;
+    /* overflow: auto; */
     /* flex: 1 1 1px; */
     max-height: 650px;
     margin-bottom: auto;
 
-    /* overflow-y: scroll; */
+    overflow-y: scroll;
     /* align-items: stretch; */
 
     /* scrollbar-width: thick; */
