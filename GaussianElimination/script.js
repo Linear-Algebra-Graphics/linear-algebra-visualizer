@@ -1264,7 +1264,7 @@ class GaussianElimStepsHTMLModel {
         
         if (this.newOperationOpen == false) {
             let button = document.querySelectorAll(".new-operation .new-operation-button")[0]
-            button.innerHTML = "➖ Close"
+            button.innerHTML = "Close"//"➖ Close"
             button.classList.remove("closed")
             button.classList.add("open")
 
@@ -1831,31 +1831,35 @@ document.addEventListener("mouseover", function(event) {
     switch(event.target.className) {
         case "view-button view-1":
             title.innerHTML = 'View 1:'
-            infoContainer.innerHTML  = '<div>Shows graph of the planes defined by the selected system of equations. The infinite plane defined by each row is represented by a 12x12 plane.</div>';
+            infoContainer.innerHTML  = '<div>Shows graph of the planes defined by the selected system of equations. Each infinite plane is represented by a fixed size square plane typically centered about a solution to the associated system of equations.</div>';
             break
         case "view-button view-2":
             title.innerHTML = 'View 2:'
-            infoContainer.innerHTML  = '<div>Shows graph of the planes defined by the selected system of equations. The infinite plane defined by each row is bounded by a cube.</div>';
+            infoContainer.innerHTML  = '<div>Shows graph of the planes defined by the selected system of equations. A visible region is defined by a cube around the origin, such that only the sections of the infinite planes visible within this cube are graphed.</div>';
             break
         case "animate-steps-button": 
             title.innerHTML = 'Animate steps:'
-            infoContainer.innerHTML  = '<div>Automatically graphs each step in sequence</div>';
+            infoContainer.innerHTML  = '<div>Automatically graphs each step in sequence.</div>';
             break
         case "clear-default-matrix-button":
             title.innerHTML = 'clear:'
-            infoContainer.innerHTML  = '<div>Clears all inputs to the input matrix</div>';
+            infoContainer.innerHTML  = '<div>Clears all inputs to the input matrix.</div>';
             break
         case "clear-all-steps":
             title.innerHTML = `Clear All:`
-            infoContainer.innerHTML  = '<div>Clears all row operations</div>';
+            infoContainer.innerHTML  = '<div>Removes all augmented matrices except for the Input Matrix.</div>';
             break
         case "undo-operation-button":
             title.innerHTML = `Undo last:`
-            infoContainer.innerHTML  = '<div>Undos the previous row operation</div>';
+            infoContainer.innerHTML  = '<div>Undos the previous row operation.</div>';
             break
         case "fps-container":
             title.innerHTML = `FPS:`
-            infoContainer.innerHTML  = 'FPS determines the number times the planes are drawn per second. Increase FPS for a smoother experience, decrease FPS to get better preformance.</div>';
+            infoContainer.innerHTML  = '<div>The frames per second at which the 3D graph is drawn.</div>';
+            break
+        case "new-operation-button closed":
+            title.innerHTML = 'Apply new row operation';
+            infoContainer.innerHTML = '<div>Applies row operation to previous augmented matrix in the steps column.</div>';
             break
         default:
     }
