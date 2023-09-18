@@ -92,9 +92,9 @@ window.addEventListener('resize', (event) => {
 
 
 
-const defaultColors = ["#990F0F","#85B22C","#51A3CC","#260F99"]
+const defaultColors = ["#000000","#99540F","#3b7bdc","#260F99"]//["#990F0F","#85B22C","#51A3CC","#260F99"]
 // const defaultColors = ["#39f4eaff", "#f51485ff", "#1515b4ff", "orange"]
-let rowColors = ["#990F0F","#85B22C","#51A3CC","#260F99"]
+let rowColors = ["#000000","#99540F","#3b7bdc","#260F99"]//["#990F0F","#85B22C","#51A3CC","#260F99"]
 // let rowColors = ["#39f4eaff", "#f51485ff", "#1515b4ff", "orange"]
 
 const parentBasic1 = document.getElementById("row-1-color"),
