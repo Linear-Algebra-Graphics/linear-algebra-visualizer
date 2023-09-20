@@ -1,1 +1,1 @@
-document.location.href = "LinearTransformation/index.html";
+document.location.href = "GaussianElimination/index.html";
