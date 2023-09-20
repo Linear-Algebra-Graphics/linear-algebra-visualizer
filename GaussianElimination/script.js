@@ -91,7 +91,6 @@ window.addEventListener('resize', (event) => {
 
 
 
-
 const defaultColors = ["#000000","#99540F","#3b7bdc","#260F99"]//["#990F0F","#85B22C","#51A3CC","#260F99"]
 // const defaultColors = ["#39f4eaff", "#f51485ff", "#1515b4ff", "orange"]
 let rowColors = ["#000000","#99540F","#3b7bdc","#260F99"]//["#990F0F","#85B22C","#51A3CC","#260F99"]
@@ -1769,10 +1768,10 @@ document.addEventListener("change", function() {
 
     if(current.classList.contains("color-blind-settings")) {
         if(current.value == "default") {
-            rowColors[0] = parentBasic1.style.backgroundColor
-            rowColors[1] = parentBasic2.style.backgroundColor
-            rowColors[2] = parentBasic3.style.backgroundColor
-            rowColors[3] = "orange" //thats right, just orange
+            rowColors[0] = defaultColors[0]
+            rowColors[1] = defaultColors[1]
+            rowColors[2] = defaultColors[2]
+            rowColors[3] = defaultColors[3]
         }
         if(current.value == "deuteranomaly") {
             rowColors[0] = "#990F0F"
@@ -1810,6 +1809,10 @@ document.addEventListener("change", function() {
             rowColors[2] = "#51A3CC"
             rowColors[3] = "#260F99"
         }
+        parentBasic1.style.backgroundColor = rowColors[0]
+        parentBasic2.style.backgroundColor = rowColors[1]
+        parentBasic3.style.backgroundColor = rowColors[2]
+
         gaussSteps.updateColors()
         test_graph.draw()
     }
