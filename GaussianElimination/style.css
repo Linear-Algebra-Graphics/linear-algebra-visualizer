@@ -708,7 +708,9 @@ div.bar button.bug-button:hover {
     width: 100%;
     font-size: 1.25rem;
     border-bottom: 1px solid black;
-    border-radius: 10px;
+    /* border-radius: 10px; */
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
     height: 36px;
     background-color: white;
     /* padding: 7px 0px 7px 0px; */
