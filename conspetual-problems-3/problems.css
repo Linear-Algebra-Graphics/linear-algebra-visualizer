@@ -1,12 +1,17 @@
 .question-container {
     font-family: monospace;
     font-size: 1rem;
-    margin-left: 10px;
+    margin-left: 15px;
     display: flex;
     flex-direction: column;
     gap: 5px;
     /* background-color: gray; */
-    padding: 5px;
+    padding: 10px;
+    border: 2px solid black;
+    height: min-content;
+    border-radius: 10px;
+    /* background-color: lightsalmon; */
+    margin-top: 5px;
 }
 
 .question {
@@ -41,8 +46,10 @@
     justify-content: left;
     align-content: flex-start;
     gap: 10px 20px;
-    margin: 10px;
-    background-color: #CCDDD3;
+    margin: 0px;
+    margin-left: 10px;
+    margin-top: 5px;
+    /* background-color: #CCDDD3; */
 }
 
 .matrix {
@@ -140,4 +147,8 @@ table {
 
 .locked:hover {
     cursor: not-allowed;
+}
+
+.question {
+
 }
