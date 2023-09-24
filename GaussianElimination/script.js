@@ -106,9 +106,9 @@ window.addEventListener('resize', (event) => {
 // #38BD38
 
 
-const defaultColors = ["#5050FF","#FF5050","#38BD38","#260F99"]// ["#000000","#99540F","#3b7bdc","#260F99"]//["#990F0F","#85B22C","#51A3CC","#260F99"]
+const defaultColors = ["cyan","yellow","magenta","black"]// ["#000000","#99540F","#3b7bdc","#260F99"]//["#990F0F","#85B22C","#51A3CC","#260F99"]
 // const defaultColors = ["#39f4eaff", "#f51485ff", "#1515b4ff", "orange"]
-let rowColors = ["#5050FF","#FF5050","#38BD38","#260F99"]//["#990F0F","#85B22C","#51A3CC","#260F99"]
+let rowColors = ["cyan","yellow","magenta","black"]//["#990F0F","#85B22C","#51A3CC","#260F99"]
 // let rowColors = ["#39f4eaff", "#f51485ff", "#1515b4ff", "orange"]
 
 
@@ -532,7 +532,7 @@ class GaussianElimStepsHTMLModel {
             // button.innerHTML = "<div class='emoji'>🥳</div> Playing..."
             button.innerHTML = "Stop animation ❌"
             button.style = "background-color: white; height: 37px; border-radius:0px;"
-            button.getElementsByClassName("emoji")[0].classList.add("full-rotate-emoji");
+            // button.getElementsByClassName("emoji")[0].classList.add("full-rotate-emoji");
         }
     }
 
@@ -921,7 +921,7 @@ class GaussianElimStepsHTMLModel {
 
     solve() {
         // debugger
-        this._updateInputMatrix()
+        // this._updateInputMatrix()
 
         let lastMatrix         = this.matrixList[this.matrixList.length-1]
         let gaussianElimResult = gaussianEliminationV3(lastMatrix, true, true)
