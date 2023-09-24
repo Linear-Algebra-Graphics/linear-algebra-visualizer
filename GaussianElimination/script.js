@@ -90,11 +90,32 @@ window.addEventListener('resize', (event) => {
 
 
 
+// .row0 {
+//     background-color: rgb(80, 80, 255);
+// }
 
-const defaultColors = ["#990F0F","#85B22C","#51A3CC","#260F99"]// ["#000000","#99540F","#3b7bdc","#260F99"]//["#990F0F","#85B22C","#51A3CC","#260F99"]
+// .row1 {
+//     background-color: rgb(255, 80, 80);
+// }
+
+// .row2 {
+//     background-color: rgb(56, 189, 56);
+// }
+// #5050FF
+// #FF5050
+// #38BD38
+
+
+const defaultColors = ["#5050FF","#FF5050","#38BD38","#260F99"]// ["#000000","#99540F","#3b7bdc","#260F99"]//["#990F0F","#85B22C","#51A3CC","#260F99"]
 // const defaultColors = ["#39f4eaff", "#f51485ff", "#1515b4ff", "orange"]
-let rowColors = ["#990F0F","#85B22C","#51A3CC","#260F99"]//["#990F0F","#85B22C","#51A3CC","#260F99"]
+let rowColors = ["#5050FF","#FF5050","#38BD38","#260F99"]//["#990F0F","#85B22C","#51A3CC","#260F99"]
 // let rowColors = ["#39f4eaff", "#f51485ff", "#1515b4ff", "orange"]
+
+
+// const defaultColors = ["#990F0F","#85B22C","#51A3CC","#260F99"]// ["#000000","#99540F","#3b7bdc","#260F99"]//["#990F0F","#85B22C","#51A3CC","#260F99"]
+// // const defaultColors = ["#39f4eaff", "#f51485ff", "#1515b4ff", "orange"]
+// let rowColors = ["#990F0F","#85B22C","#51A3CC","#260F99"]//["#990F0F","#85B22C","#51A3CC","#260F99"]
+// // let rowColors = ["#39f4eaff", "#f51485ff", "#1515b4ff", "orange"]
 
 const parentBasic1 = document.getElementById("row-1-color"),
 popupBasic1 = new Picker({parent: parentBasic1, color: rowColors[0]});
@@ -508,8 +529,9 @@ class GaussianElimStepsHTMLModel {
             this.animate();
             let button = document.getElementsByClassName("animate-steps-button")[0];
 
-            button.innerHTML = "<div class='emoji'>📀</div> Animating..."
-            button.style = "background-color: #9b9b9b; height: 37px; border-radius:0px;"
+            // button.innerHTML = "<div class='emoji'>🥳</div> Playing..."
+            button.innerHTML = "Stop animation ❌"
+            button.style = "background-color: white; height: 37px; border-radius:0px;"
             button.getElementsByClassName("emoji")[0].classList.add("full-rotate-emoji");
         }
     }
@@ -1263,7 +1285,7 @@ class GaussianElimStepsHTMLModel {
         
         if (this.newOperationOpen == false) {
             let button = document.querySelectorAll(".new-operation .new-operation-button")[0]
-            button.innerHTML = "Close"//"➖ Close"
+            button.innerHTML = "❌ Close"
             button.classList.remove("closed")
             button.classList.add("open")
 
