@@ -117,84 +117,84 @@ let rowColors = ["#5050FF","#FF5050","#38BD38","#260F99"]//["#990F0F","#85B22C",
 // let rowColors = ["#990F0F","#85B22C","#51A3CC","#260F99"]//["#990F0F","#85B22C","#51A3CC","#260F99"]
 // // let rowColors = ["#39f4eaff", "#f51485ff", "#1515b4ff", "orange"]
 
-// const parentBasic1 = document.getElementById("row-1-color"),
-// popupBasic1 = new Picker({parent: parentBasic1, color: rowColors[0]});
-// parentBasic1.style.backgroundColor = rowColors[0]
-// document.getElementsByClassName("color-box row0").backgroundColor = rowColors[0]
-// if (popupBasic1.color.hsla[2] > 0.5) {
-//     parentBasic1.style.color = "black"
-// }
-// let matrixColorSquares1 = document.getElementsByClassName("row0")
-// for (let i = 0; i < matrixColorSquares1.length; i++) {
-//     matrixColorSquares1[i].style = "background-color: " + rowColors[0] + ";"
-// }
+const parentBasic1 = document.getElementById("row-1-color"),
+popupBasic1 = new Picker({parent: parentBasic1, color: rowColors[0]});
+parentBasic1.style.backgroundColor = rowColors[0]
+document.getElementsByClassName("color-box row0").backgroundColor = rowColors[0]
+if (popupBasic1.color.hsla[2] > 0.5) {
+    parentBasic1.style.color = "black"
+}
+let matrixColorSquares1 = document.getElementsByClassName("row0")
+for (let i = 0; i < matrixColorSquares1.length; i++) {
+    matrixColorSquares1[i].style = "background-color: " + rowColors[0] + ";"
+}
 
-// popupBasic1.onChange = function(color) {
-//     parentBasic1.style.backgroundColor = color.rgbaString;
-//     rowColors[0] = color.rgbaString;
-//     if (popupBasic1.color.hsla[2] > 0.5) {
-//         parentBasic1.style.color = "black"
-//     } else {
-//         parentBasic1.style.color = "white"
-//     }
-//     gaussSteps.updateColors()
+popupBasic1.onChange = function(color) {
+    parentBasic1.style.backgroundColor = color.rgbaString;
+    rowColors[0] = color.rgbaString;
+    if (popupBasic1.color.hsla[2] > 0.5) {
+        parentBasic1.style.color = "black"
+    } else {
+        parentBasic1.style.color = "white"
+    }
+    gaussSteps.updateColors()
 
-//     test_graph.draw()
-// };
-// //Open the popup manually:
-// //popupBasic1.openHandler();
+    test_graph.draw()
+};
+//Open the popup manually:
+//popupBasic1.openHandler();
 
-// const parentBasic2 = document.getElementById("row-2-color"),
-// popupBasic2 = new Picker({parent: parentBasic2, color: rowColors[1]});
-// parentBasic2.style.backgroundColor = rowColors[1]
-// if (popupBasic2.color.hsla[2] > 0.5) {
-//     parentBasic2.style.color = "black"
-// }
-// let matrixColorSquares2 = document.getElementsByClassName("row1")
-// for (let i=0; i<matrixColorSquares2.length; i++) {
-//     matrixColorSquares2[i].style = "background-color: " + rowColors[1] + ";"
-// }
+const parentBasic2 = document.getElementById("row-2-color"),
+popupBasic2 = new Picker({parent: parentBasic2, color: rowColors[1]});
+parentBasic2.style.backgroundColor = rowColors[1]
+if (popupBasic2.color.hsla[2] > 0.5) {
+    parentBasic2.style.color = "black"
+}
+let matrixColorSquares2 = document.getElementsByClassName("row1")
+for (let i=0; i<matrixColorSquares2.length; i++) {
+    matrixColorSquares2[i].style = "background-color: " + rowColors[1] + ";"
+}
     
-// popupBasic2.onChange = function(color) {
-//     parentBasic2.style.backgroundColor = color.rgbaString;
-//     rowColors[1] = color.rgbaString;
-//     if (popupBasic2.color.hsla[2] > 0.5) {
-//         parentBasic2.style.color = "black"
-//     } else {
-//         parentBasic2.style.color = "white"
-//     }
-//     gaussSteps.updateColors()
+popupBasic2.onChange = function(color) {
+    parentBasic2.style.backgroundColor = color.rgbaString;
+    rowColors[1] = color.rgbaString;
+    if (popupBasic2.color.hsla[2] > 0.5) {
+        parentBasic2.style.color = "black"
+    } else {
+        parentBasic2.style.color = "white"
+    }
+    gaussSteps.updateColors()
 
-//     test_graph.draw()
-// };
-// //Open the popup manually:
-// //popupBasic2.openHandler();
+    test_graph.draw()
+};
+//Open the popup manually:
+//popupBasic2.openHandler();
 
-// const parentBasic3 = document.getElementById("row-3-color"),
-// popupBasic3 = new Picker({parent: parentBasic3, color: rowColors[2]});
-// parentBasic3.style.backgroundColor = rowColors[2]
-// if (popupBasic3.color.hsla[2] > 0.5) {
-//     parentBasic3.style.color = "black"
-// }
-// let matrixColorSquares3 = document.getElementsByClassName("row2")
-// for (let i=0; i<matrixColorSquares3.length; i++) {
-//     matrixColorSquares3[i].style = "background-color: " + rowColors[2] + ";"
-// }
+const parentBasic3 = document.getElementById("row-3-color"),
+popupBasic3 = new Picker({parent: parentBasic3, color: rowColors[2]});
+parentBasic3.style.backgroundColor = rowColors[2]
+if (popupBasic3.color.hsla[2] > 0.5) {
+    parentBasic3.style.color = "black"
+}
+let matrixColorSquares3 = document.getElementsByClassName("row2")
+for (let i=0; i<matrixColorSquares3.length; i++) {
+    matrixColorSquares3[i].style = "background-color: " + rowColors[2] + ";"
+}
     
-// popupBasic3.onChange = function(color) {
-//     parentBasic3.style.backgroundColor = color.rgbaString;
-//     rowColors[2] = color.rgbaString;
-//     if (popupBasic3.color.hsla[2] > 0.5) {
-//         parentBasic3.style.color = "black"
-//     } else {
-//         parentBasic3.style.color = "white"
-//     }
-//     gaussSteps.updateColors()
+popupBasic3.onChange = function(color) {
+    parentBasic3.style.backgroundColor = color.rgbaString;
+    rowColors[2] = color.rgbaString;
+    if (popupBasic3.color.hsla[2] > 0.5) {
+        parentBasic3.style.color = "black"
+    } else {
+        parentBasic3.style.color = "white"
+    }
+    gaussSteps.updateColors()
 
-//     test_graph.draw()
-// };
-// //Open the popup manually:
-// //popupBasic3.openHandler();
+    test_graph.draw()
+};
+//Open the popup manually:
+//popupBasic3.openHandler();
 
 
 
