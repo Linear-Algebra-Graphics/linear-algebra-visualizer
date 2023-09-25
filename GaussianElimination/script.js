@@ -570,8 +570,8 @@ class GaussianElimStepsHTMLModel {
             //     }
             // }
             
-            document.getElementsByClassName("solution-overlay")[0].innerHTML =   
-                '<math style="font-size:0.9rem">\
+            document.getElementsByClassName("solution-overlay")[0].innerHTML =
+                '<div style="display: flex; flex-direction: column;"><math display="inline">\
                     <mtext>One Solution:&nbsp;</mtext>\
                     <mo>(</mo>'
                     + solution[0] +
@@ -580,8 +580,8 @@ class GaussianElimStepsHTMLModel {
                     '<mo>,</mo>' 
                     + solution[2] + 
                     '<mo>)</mo>\
-                </math>'
-            document.getElementsByClassName("solution-overlay")[0].style = "background: lightgreen;"
+                </math> <div>Solution is white dot.</div></div>'
+            document.getElementsByClassName("solution-overlay")[0].style = "background: lightgreen; height: 35px;"
 
         } else if (solutions == "infinite") {
             let solution = getInfiniteSolutionFrac(transpose(matrix))
