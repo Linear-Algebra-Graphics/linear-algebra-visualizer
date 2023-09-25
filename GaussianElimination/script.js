@@ -66,44 +66,9 @@ window.addEventListener('resize', (event) => {
 
     test_graph.draw()
 }, false);
-// function resizeCanvas(ev) {
-//     debugger
-
-//     displayWidth  = window.innerWidth - document.getElementsByClassName('graph-inputs')[0].offsetWidth - 50//700
-//     displayHeight = window.innerHeight - document.getElementsByClassName("topnav")[0].offsetHeight - 100 //600
-
-//     canvas.style.width = displayWidth + "px"
-//     canvas.style.height = displayHeight + "px"
-
-//     const factor = 1400 / Math.max(displayHeight, displayWidth)
-
-
-//     canvas.width = displayWidth * factor
-//     canvas.height = displayHeight * factor
-
-//     test_graph.centerX = canvas.width/2
-//     test_graph.centerY = canvas.height/2
-
-//     test_graph.draw()
-// }
-// resizeCanvas();
 
 
 
-// .row0 {
-//     background-color: rgb(80, 80, 255);
-// }
-
-// .row1 {
-//     background-color: rgb(255, 80, 80);
-// }
-
-// .row2 {
-//     background-color: rgb(56, 189, 56);
-// }
-// #5050FF
-// #FF5050
-// #38BD38
 
 
 const defaultColors = ["cyan","yellow","magenta","black"]// ["#000000","#99540F","#3b7bdc","#260F99"]//["#990F0F","#85B22C","#51A3CC","#260F99"]
@@ -117,7 +82,7 @@ let rowColors = ["cyan","yellow","magenta","black"]//["#990F0F","#85B22C","#51A3
 // let rowColors = ["#990F0F","#85B22C","#51A3CC","#260F99"]//["#990F0F","#85B22C","#51A3CC","#260F99"]
 // // let rowColors = ["#39f4eaff", "#f51485ff", "#1515b4ff", "orange"]
 
-const parentBasic1 = document.getElementById("row-1-color"),
+const parentBasic1 = document.getElementById("row-1-color")
 popupBasic1 = new Picker({parent: parentBasic1, color: rowColors[0]});
 parentBasic1.style.backgroundColor = rowColors[0]
 document.getElementsByClassName("color-box row0").backgroundColor = rowColors[0]
@@ -144,7 +109,7 @@ popupBasic1.onChange = function(color) {
 //Open the popup manually:
 //popupBasic1.openHandler();
 
-const parentBasic2 = document.getElementById("row-2-color"),
+const parentBasic2 = document.getElementById("row-2-color")
 popupBasic2 = new Picker({parent: parentBasic2, color: rowColors[1]});
 parentBasic2.style.backgroundColor = rowColors[1]
 if (popupBasic2.color.hsla[2] > 0.5) {
@@ -170,7 +135,7 @@ popupBasic2.onChange = function(color) {
 //Open the popup manually:
 //popupBasic2.openHandler();
 
-const parentBasic3 = document.getElementById("row-3-color"),
+const parentBasic3 = document.getElementById("row-3-color")
 popupBasic3 = new Picker({parent: parentBasic3, color: rowColors[2]});
 parentBasic3.style.backgroundColor = rowColors[2]
 if (popupBasic3.color.hsla[2] > 0.5) {
@@ -1793,47 +1758,54 @@ document.addEventListener("change", function() {
             rowColors[0] = defaultColors[0]
             rowColors[1] = defaultColors[1]
             rowColors[2] = defaultColors[2]
-            rowColors[3] = defaultColors[3]
+            //rowColors[3] = defaultColors[3]
         }
         if(current.value == "deuteranomaly") {
             rowColors[0] = "#990F0F"
             rowColors[1] = "#6B990F"
             rowColors[2] = "#0F6B99"
-            rowColors[3] = "#260F99"
+            //rowColors[3] = "#260F99"
         }
         if(current.value == "protanomaly") {
             rowColors[0] = "#ffff6d"
             rowColors[1] = "#b66dff"
             rowColors[2] = "#24ff24"
-            rowColors[3] = "#490092"
+            //rowColors[3] = "#490092"
         }
         if(current.value == "protanopia") {
             rowColors[0] = "#990F0F"
             rowColors[1] = "#85B22C"
             rowColors[2] = "#2C85B2"
-            rowColors[3] = "#260F99"
+            //rowColors[3] = "#260F99"
         }
         if(current.value == "deuteranopia") {
             rowColors[0] = "#FFFF32"
             rowColors[1] = "#32FF00"
             rowColors[2] = "#CCBFFF"
-            rowColors[3] = "#654CFF"
+            //rowColors[3] = "#654CFF"
         }
         if(current.value == "tritanopia") {
             rowColors[0] = "#990F0F"
             rowColors[1] = "#99540F"
             rowColors[2] = "#51A3CC"
-            rowColors[3] = "#260F99"
+            //rowColors[3] = "#260F99"
         }
         if(current.value == "tritanomaly") {
             rowColors[0] = "#990F0F"
             rowColors[1] = "#85B22C"
             rowColors[2] = "#51A3CC"
-            rowColors[3] = "#260F99"
+            //rowColors[3] = "#260F99"
         }
-        parentBasic1.style.backgroundColor = rowColors[0]
-        parentBasic2.style.backgroundColor = rowColors[1]
-        parentBasic3.style.backgroundColor = rowColors[2]
+        // popupBasic1.color.hsla = hexToHSLA(rowColors[0])
+        // popupBasic2.color.hsla = hexToHSLA(rowColors[1])
+        // popupBasic3.color.hsla = hexToHSLA(rowColors[2])
+        popupBasic1 = new Picker({parent: parentBasic1, color: rowColors[0]});
+        popupBasic2 = new Picker({parent: parentBasic2, color: rowColors[1]});
+        popupBasic3 = new Picker({parent: parentBasic3, color: rowColors[2]});
+        parentBasic1.style.backgroundColor = rowColors[0]//.rgbaString
+        parentBasic2.style.backgroundColor = rowColors[1]//.rgbaString
+        parentBasic3.style.backgroundColor = rowColors[2]//.rgbaString
+
 
         gaussSteps.updateColors()
         test_graph.draw()
@@ -1845,6 +1817,38 @@ document.addEventListener("change", function() {
     }
 
 })
+
+/**
+ * converts hex color to hsl, used for popupbasic????, A is always 1 for our purposes
+ * @param {*} hex 
+ * @returns 
+ */
+function hexToHSLA(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      r = parseInt(result[1], 16);
+      g = parseInt(result[2], 16);
+      b = parseInt(result[3], 16);
+      r /= 255, g /= 255, b /= 255;
+      var max = Math.max(r, g, b), min = Math.min(r, g, b);
+      var h, s, l = (max + min) / 2;
+      if(max == min){
+        h = s = 0; // achromatic
+      }else{
+        var d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch(max){
+          case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+          case g: h = (b - r) / d + 2; break;
+          case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+      }
+    // var HSL = new Object();
+    // HSL['h']=h;
+    // HSL['s']=s;
+    // HSL['l']=l;
+    return [h, s, l, 1];
+  }
 
 
 document.addEventListener("mouseover", function(event) {
