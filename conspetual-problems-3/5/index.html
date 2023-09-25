@@ -23,39 +23,36 @@
         <script src="script.js" defer></script>
 
         <!-- CSS imports -->
-        <link rel="stylesheet" href="../../style.css">
+        <!-- <link rel="stylesheet" href="../../style.css"> -->
         <link rel="stylesheet" href="../../navigationBar.css">
         <link rel="stylesheet" href="../problems.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     </head>
     <body>
-        <div class="topnav">
-            <a href="../../LinearTransformation/index.html">Linear Transformation</a>
-            <a href="../../Problems/index.html">Problems</a>
-            <a href="../../GaussianElimination/index.html">Gaussian Elimination</a>
-        </div>
+
         <div class="container">
 
             <div class="canvas-and-settings">
                 <canvas id="graph" style="border:1px solid #000000;"></canvas>
-                <div>
-                    <label>Infinite Axis</label>
-                    <input type="checkbox" id="infiniteAxis" ></input>
-                    <label>Show Grid</label>
-                    <input type="checkbox" id="showGrid" checked=""></input>
-                    <label> zoom: </label>
-                    <button id="zoomIn" marginLeft="10px">+</button>
-                    <button id="zoomOut" marginLeft="10px"> - </button>
-                    <button id="defaultZoom" marginLeft="10px"> default zoom </button>
-                    <button id="darkMode">Dark Mode!</button>
+            </div>
+
+            <div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; width: 330px;">
+                <div class="matrix-container">
+                    <div style="font-size: 1.5rem; display: flex; border: 1px solid black; justify-content: center; align-items: center; gap: 5px; width: fit-content; padding: 8px;">
+                        <div>Purple area:</div>
+                        <div id="area-number" style="font-size: 1.5rem; color: black;">1</div>
+                    </div>
+                    <div >
+                        * Matrix is applied to the purple area.
+                    </div>
                 </div>
+                
+                <img src="question5.png" alt="question5" width="760" height="296" style="padding-top: 80px;">
             </div>
-
-            <div class="matrix-container">
-                <div>Area: <div id="area-number" style="font-size: 3rem; color: red;">1</div></div>
-            </div>
-
             <div class="question-container">
                 <div class="question">
                     <div class="hidden" >&raquo;</div>

@@ -37,53 +37,6 @@ canvas.addEventListener("wheel", event => {
     }
 });
 
-document.getElementById("zoomIn").addEventListener("click", function() {
-    test_graph.zoomIn()
-})
-
-document.getElementById("zoomOut").addEventListener("click", function() {
-    test_graph.zoomOut()
-})
-
-document.getElementById("defaultZoom").addEventListener("click", function() {
-    test_graph.setDefaultZoom()
-})
-
-document.getElementById("infiniteAxis").addEventListener("click", function() {
-    test_graph.infiniteAxis = document.getElementById("infiniteAxis").checked
-})
-
-document.getElementById("showGrid").addEventListener("click", function() {
-    test_graph.showGrid = document.getElementById("showGrid").checked
-})
-
-darkMode = false
-document.getElementById("darkMode").addEventListener("click", function() {
-    if(darkMode == false ) {
-        test_graph.backgroundColor = "black"
-        document.getElementsByTagName("body")[0].style.backgroundColor = "black"
-        document.getElementsByTagName("body")[0].style.color = "white"
-        
-        test_graph.Grid.colorDark = "#6F7378"
-        test_graph.Grid.colorLight = "#292C33"
-        test_graph.Axis.zeroZeroDotColor = "#292C33"
-        
-        darkMode = true
-        document.getElementById("darkMode").innerText = "Light Mode!"
-    } else {
-        test_graph.backgroundColor = "white"
-        document.getElementsByTagName("body")[0].style.backgroundColor = "white"
-        document.getElementsByTagName("body")[0].style.color = "black"
-        
-        test_graph.Grid.colorDark = "#BFBFBD"
-        test_graph.Grid.colorLight = "#E6E6E3"
-        test_graph.Axis.zeroZeroDotColor = "black"
-    
-        darkMode = false
-        document.getElementById("darkMode").innerText = "Dark Mode!"
-    }
-})
-
 test_graph.draw()
 
 setInterval(function() {
@@ -161,18 +114,18 @@ function selectCorrectProblem(input, link) {
 let defaultMatrix = document.createElement("div")
 
 defaultMatrix.innerHTML = `
-<div class="name-bar">
+<div class="name-bar" style="padding-right: 10px; background-color: #9bd3f4; font-size: larger;">
     <button type="button" class="apply-button">Apply</button> 
-    <div class="label"></div>
+    <div class="label" style="padding-left: 5px;"></div>
 </div>
-<div class="values">
+<div class="values" style="justify-content: center; padding: 10px; border: 1px solid black; gap: 5px;">
     <div class="line"></div>
 
-    <div class="column">
+    <div class="column" style="gap: 5px;">
         <input class="matrix-value" type="text" value="1">
         <input class="matrix-value" type="text" value="0">
     </div>
-    <div class="column">
+    <div class="column" style="gap: 5px;">
         <input class="matrix-value" type="text" value="0">
         <input class="matrix-value" type="text" value="1">
     </div>
@@ -182,11 +135,11 @@ defaultMatrix.innerHTML = `
 `
 
 defaultMatrix.className = "matrix"
-
+defaultMatrix.style = "width: fit-content;"
 let origonalMatrix = defaultMatrix.cloneNode(true)
-origonalMatrix.getElementsByClassName("label")[0].innerHTML  = "Transformation:"
+origonalMatrix.getElementsByClassName("label")[0].innerHTML  = "Transformation matrix *:"
 
-document.getElementsByClassName("matrix-container")[0].appendChild(origonalMatrix)
+document.getElementsByClassName("matrix-container")[0].prepend(origonalMatrix)
 
 
 document.getElementsByClassName("apply-button")[0].addEventListener("click", function() {
