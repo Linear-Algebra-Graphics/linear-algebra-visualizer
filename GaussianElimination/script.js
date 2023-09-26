@@ -6,16 +6,14 @@ let vectorColors = document.getElementById("vector colors")
 
 let linearTransformation = new LinearTransformation([[1,0,0],[0,1,0],[0,0,1]])
 
-let displayWidth  = window.innerWidth - document.getElementsByClassName('graph-inputs')[0].offsetWidth//700
+let displayWidth  = document.getElementById("graph").offsetWidth//document.getElementsByClassName('bar')[0].offsetWidth//window.innerWidth - document.getElementsByClassName('graph-inputs')[0].offsetWidth//700
 let displayHeight = window.innerHeight - document.getElementsByClassName("topnav")[0].offsetHeight//600
 
-canvas.style.width = (displayWidth-50) + "px"
+// canvas.style.width = displayWidth + "px"
 canvas.style.height = (displayHeight-100) + "px"
-canvas.width = (displayWidth * 2) - 50
-canvas.height = (displayHeight * 2) - 100
+canvas.width = (displayWidth * 2)
+canvas.height = ((displayHeight-100) * 2)
 
-// canvas.width = displayWidth 
-// canvas.height = displayHeight
 
 let test_graph = new Graph(canvas);
 test_graph.Axis = new Axis(test_graph, "black", "black", "black", "black", 10)
@@ -44,26 +42,18 @@ let drawGraph = false;
 
 //resize canvas dynamically when adjusting window zoom level
 window.addEventListener('resize', (event) => {
-    //debugger
-
-    displayWidth  = window.innerWidth - document.getElementsByClassName('graph-inputs')[0].offsetWidth//700
+    // displayWidth  = document.getElementsByClassName('bar')[0].offsetWidth//window.innerWidth - document.getElementsByClassName('graph-inputs')[0].offsetWidth//700
+    displayWidth  = document.getElementById("graph").offsetWidth
     displayHeight = window.innerHeight - document.getElementsByClassName("topnav")[0].offsetHeight //600
 
-
-    canvas.style.width = (displayWidth-50) + "px"
     canvas.style.height = (displayHeight-100) + "px"
+    canvas.width = (displayWidth * 2)
+    canvas.height = ((displayHeight-100) * 2)
 
-    console.log(document.getElementsByClassName('graph-inputs')[0].offsetWidth + ", " + document.getElementsByClassName("topnav")[0].offsetHeight)
+    test_graph.centerX = test_graph.canvas.width/2
+    test_graph.centerY = test_graph.canvas.height/2
 
-    const factor = 2//1400 / Math.max(displayHeight, displayWidth)
-
-
-    canvas.width = (displayWidth * factor)-50
-    canvas.height = (displayHeight * factor)-100
-
-    test_graph.centerX = canvas.width/2
-    test_graph.centerY = canvas.height/2
-
+    test_graph.draw()
     test_graph.draw()
 }, false);
 
@@ -82,7 +72,7 @@ let rowColors = ["cyan","yellow","magenta","black"]//["#990F0F","#85B22C","#51A3
 // let rowColors = ["#990F0F","#85B22C","#51A3CC","#260F99"]//["#990F0F","#85B22C","#51A3CC","#260F99"]
 // // let rowColors = ["#39f4eaff", "#f51485ff", "#1515b4ff", "orange"]
 
-const parentBasic1 = document.getElementById("row-1-color")
+const parentBasic1 = document.getElementById("row-1-color"),
 popupBasic1 = new Picker({parent: parentBasic1, color: rowColors[0]});
 parentBasic1.style.backgroundColor = rowColors[0]
 document.getElementsByClassName("color-box row0").backgroundColor = rowColors[0]
@@ -109,7 +99,7 @@ popupBasic1.onChange = function(color) {
 //Open the popup manually:
 //popupBasic1.openHandler();
 
-const parentBasic2 = document.getElementById("row-2-color")
+const parentBasic2 = document.getElementById("row-2-color"),
 popupBasic2 = new Picker({parent: parentBasic2, color: rowColors[1]});
 parentBasic2.style.backgroundColor = rowColors[1]
 if (popupBasic2.color.hsla[2] > 0.5) {
@@ -135,7 +125,7 @@ popupBasic2.onChange = function(color) {
 //Open the popup manually:
 //popupBasic2.openHandler();
 
-const parentBasic3 = document.getElementById("row-3-color")
+const parentBasic3 = document.getElementById("row-3-color"),
 popupBasic3 = new Picker({parent: parentBasic3, color: rowColors[2]});
 parentBasic3.style.backgroundColor = rowColors[2]
 if (popupBasic3.color.hsla[2] > 0.5) {
@@ -1796,15 +1786,15 @@ document.addEventListener("change", function() {
             rowColors[2] = "#51A3CC"
             //rowColors[3] = "#260F99"
         }
-        // popupBasic1.color.hsla = hexToHSLA(rowColors[0])
-        // popupBasic2.color.hsla = hexToHSLA(rowColors[1])
-        // popupBasic3.color.hsla = hexToHSLA(rowColors[2])
-        popupBasic1 = new Picker({parent: parentBasic1, color: rowColors[0]});
-        popupBasic2 = new Picker({parent: parentBasic2, color: rowColors[1]});
-        popupBasic3 = new Picker({parent: parentBasic3, color: rowColors[2]});
+
         parentBasic1.style.backgroundColor = rowColors[0]//.rgbaString
         parentBasic2.style.backgroundColor = rowColors[1]//.rgbaString
         parentBasic3.style.backgroundColor = rowColors[2]//.rgbaString
+
+        popupBasic1.setColor(rowColors[0])
+        popupBasic2.setColor(rowColors[1])
+        popupBasic3.setColor(rowColors[2])
+
 
 
         gaussSteps.updateColors()

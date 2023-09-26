@@ -1,3 +1,11 @@
+#graph {
+    width: 100%;
+}
+
+html {
+    min-height: 100%;
+}
+
 .trying-to-be-vertical {
     position:relative;
     display: flex;
@@ -57,6 +65,7 @@
 body {
     margin: 0px;
     font-family: "Computer Modern", sans-serif !important;
+    min-height:100%;
 }
 
 p {
@@ -156,12 +165,15 @@ canvas:active {
     padding: 10px;
     display: flex;
     /* gap: 10px; */
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .canvas-and-settings {
     /* margin: 10px; */
     display: flex;
     flex-direction: column;
+    width:100%;
 }
 
 .matrix-container {
@@ -329,6 +341,7 @@ table {
     justify-content: space-between;
     align-items: flex-end;
     height: 36px;
+    width:100%;
 }
 
 .view-button-container {
@@ -374,6 +387,7 @@ div.bar button:active {
     justify-content: space-between;
     align-items: flex-start;
     height: 36px;
+    width:100%;
 }
 
 div.bar-bottom button {
@@ -629,6 +643,7 @@ div.bar button.bug-button:hover {
 .canvas-container {
     position: relative;
     display: flex;
+    min-width: 100%;
 }
 
 .solution-overlay {
@@ -876,5 +891,5 @@ button.new-operation-button {
     /* top: 38px;
     right: -10px;
     bottom:-0px; */
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255,0);
 }
