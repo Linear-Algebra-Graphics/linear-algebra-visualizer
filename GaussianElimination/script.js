@@ -6,16 +6,14 @@ let vectorColors = document.getElementById("vector colors")
 
 let linearTransformation = new LinearTransformation([[1,0,0],[0,1,0],[0,0,1]])
 
-let displayWidth  = window.innerWidth - document.getElementsByClassName('graph-inputs')[0].offsetWidth//700
+let displayWidth  = document.getElementById("graph").offsetWidth//document.getElementsByClassName('bar')[0].offsetWidth//window.innerWidth - document.getElementsByClassName('graph-inputs')[0].offsetWidth//700
 let displayHeight = window.innerHeight - document.getElementsByClassName("topnav")[0].offsetHeight//600
 
-canvas.style.width = (displayWidth-50) + "px"
+// canvas.style.width = displayWidth + "px"
 canvas.style.height = (displayHeight-100) + "px"
-canvas.width = (displayWidth * 2) - 50
-canvas.height = (displayHeight * 2) - 100
+canvas.width = (displayWidth * 2)
+canvas.height = ((displayHeight-100) * 2)
 
-// canvas.width = displayWidth 
-// canvas.height = displayHeight
 
 let test_graph = new Graph(canvas);
 test_graph.Axis = new Axis(test_graph, "black", "black", "black", "black", 10)
@@ -44,66 +42,23 @@ let drawGraph = false;
 
 //resize canvas dynamically when adjusting window zoom level
 window.addEventListener('resize', (event) => {
-    //debugger
-
-    displayWidth  = window.innerWidth - document.getElementsByClassName('graph-inputs')[0].offsetWidth//700
+    // displayWidth  = document.getElementsByClassName('bar')[0].offsetWidth//window.innerWidth - document.getElementsByClassName('graph-inputs')[0].offsetWidth//700
+    displayWidth  = document.getElementById("graph").offsetWidth
     displayHeight = window.innerHeight - document.getElementsByClassName("topnav")[0].offsetHeight //600
 
-
-    canvas.style.width = (displayWidth-50) + "px"
     canvas.style.height = (displayHeight-100) + "px"
+    canvas.width = (displayWidth * 2)
+    canvas.height = ((displayHeight-100) * 2)
 
-    console.log(document.getElementsByClassName('graph-inputs')[0].offsetWidth + ", " + document.getElementsByClassName("topnav")[0].offsetHeight)
-
-    const factor = 2//1400 / Math.max(displayHeight, displayWidth)
-
-
-    canvas.width = (displayWidth * factor)-50
-    canvas.height = (displayHeight * factor)-100
-
-    test_graph.centerX = canvas.width/2
-    test_graph.centerY = canvas.height/2
+    test_graph.centerX = test_graph.canvas.width/2
+    test_graph.centerY = test_graph.canvas.height/2
 
     test_graph.draw()
+    test_graph.draw()
 }, false);
-// function resizeCanvas(ev) {
-//     debugger
-
-//     displayWidth  = window.innerWidth - document.getElementsByClassName('graph-inputs')[0].offsetWidth - 50//700
-//     displayHeight = window.innerHeight - document.getElementsByClassName("topnav")[0].offsetHeight - 100 //600
-
-//     canvas.style.width = displayWidth + "px"
-//     canvas.style.height = displayHeight + "px"
-
-//     const factor = 1400 / Math.max(displayHeight, displayWidth)
-
-
-//     canvas.width = displayWidth * factor
-//     canvas.height = displayHeight * factor
-
-//     test_graph.centerX = canvas.width/2
-//     test_graph.centerY = canvas.height/2
-
-//     test_graph.draw()
-// }
-// resizeCanvas();
 
 
 
-// .row0 {
-//     background-color: rgb(80, 80, 255);
-// }
-
-// .row1 {
-//     background-color: rgb(255, 80, 80);
-// }
-
-// .row2 {
-//     background-color: rgb(56, 189, 56);
-// }
-// #5050FF
-// #FF5050
-// #38BD38
 
 
 const defaultColors = ["cyan","yellow","magenta","black"]// ["#000000","#99540F","#3b7bdc","#260F99"]//["#990F0F","#85B22C","#51A3CC","#260F99"]
@@ -121,7 +76,7 @@ const parentBasic1 = document.getElementById("row-1-color"),
 popupBasic1 = new Picker({parent: parentBasic1, color: rowColors[0]});
 parentBasic1.style.backgroundColor = rowColors[0]
 document.getElementsByClassName("color-box row0").backgroundColor = rowColors[0]
-if (popupBasic1.color.hsla[2] > 0.5) {
+if (popupBasic1.color.hsla[2] >= 0.5) {
     parentBasic1.style.color = "black"
 }
 let matrixColorSquares1 = document.getElementsByClassName("row0")
@@ -132,7 +87,7 @@ for (let i = 0; i < matrixColorSquares1.length; i++) {
 popupBasic1.onChange = function(color) {
     parentBasic1.style.backgroundColor = color.rgbaString;
     rowColors[0] = color.rgbaString;
-    if (popupBasic1.color.hsla[2] > 0.5) {
+    if (popupBasic1.color.hsla[2] >= 0.5) {
         parentBasic1.style.color = "black"
     } else {
         parentBasic1.style.color = "white"
@@ -147,7 +102,7 @@ popupBasic1.onChange = function(color) {
 const parentBasic2 = document.getElementById("row-2-color"),
 popupBasic2 = new Picker({parent: parentBasic2, color: rowColors[1]});
 parentBasic2.style.backgroundColor = rowColors[1]
-if (popupBasic2.color.hsla[2] > 0.5) {
+if (popupBasic2.color.hsla[2] >= 0.5) {
     parentBasic2.style.color = "black"
 }
 let matrixColorSquares2 = document.getElementsByClassName("row1")
@@ -158,7 +113,7 @@ for (let i=0; i<matrixColorSquares2.length; i++) {
 popupBasic2.onChange = function(color) {
     parentBasic2.style.backgroundColor = color.rgbaString;
     rowColors[1] = color.rgbaString;
-    if (popupBasic2.color.hsla[2] > 0.5) {
+    if (popupBasic2.color.hsla[2] >= 0.5) {
         parentBasic2.style.color = "black"
     } else {
         parentBasic2.style.color = "white"
@@ -173,7 +128,7 @@ popupBasic2.onChange = function(color) {
 const parentBasic3 = document.getElementById("row-3-color"),
 popupBasic3 = new Picker({parent: parentBasic3, color: rowColors[2]});
 parentBasic3.style.backgroundColor = rowColors[2]
-if (popupBasic3.color.hsla[2] > 0.5) {
+if (popupBasic3.color.hsla[2] >= 0.5) {
     parentBasic3.style.color = "black"
 }
 let matrixColorSquares3 = document.getElementsByClassName("row2")
@@ -184,7 +139,7 @@ for (let i=0; i<matrixColorSquares3.length; i++) {
 popupBasic3.onChange = function(color) {
     parentBasic3.style.backgroundColor = color.rgbaString;
     rowColors[2] = color.rgbaString;
-    if (popupBasic3.color.hsla[2] > 0.5) {
+    if (popupBasic3.color.hsla[2] >= 0.5) {
         parentBasic3.style.color = "black"
     } else {
         parentBasic3.style.color = "white"
@@ -1793,47 +1748,73 @@ document.addEventListener("change", function() {
             rowColors[0] = defaultColors[0]
             rowColors[1] = defaultColors[1]
             rowColors[2] = defaultColors[2]
-            rowColors[3] = defaultColors[3]
+            //rowColors[3] = defaultColors[3]
         }
         if(current.value == "deuteranomaly") {
             rowColors[0] = "#990F0F"
             rowColors[1] = "#6B990F"
             rowColors[2] = "#0F6B99"
-            rowColors[3] = "#260F99"
+            //rowColors[3] = "#260F99"
         }
         if(current.value == "protanomaly") {
             rowColors[0] = "#ffff6d"
             rowColors[1] = "#b66dff"
             rowColors[2] = "#24ff24"
-            rowColors[3] = "#490092"
+            //rowColors[3] = "#490092"
         }
         if(current.value == "protanopia") {
             rowColors[0] = "#990F0F"
             rowColors[1] = "#85B22C"
             rowColors[2] = "#2C85B2"
-            rowColors[3] = "#260F99"
+            //rowColors[3] = "#260F99"
         }
         if(current.value == "deuteranopia") {
             rowColors[0] = "#FFFF32"
             rowColors[1] = "#32FF00"
             rowColors[2] = "#CCBFFF"
-            rowColors[3] = "#654CFF"
+            //rowColors[3] = "#654CFF"
         }
         if(current.value == "tritanopia") {
             rowColors[0] = "#990F0F"
             rowColors[1] = "#99540F"
             rowColors[2] = "#51A3CC"
-            rowColors[3] = "#260F99"
+            //rowColors[3] = "#260F99"
         }
         if(current.value == "tritanomaly") {
             rowColors[0] = "#990F0F"
             rowColors[1] = "#85B22C"
             rowColors[2] = "#51A3CC"
-            rowColors[3] = "#260F99"
+            //rowColors[3] = "#260F99"
         }
-        parentBasic1.style.backgroundColor = rowColors[0]
-        parentBasic2.style.backgroundColor = rowColors[1]
-        parentBasic3.style.backgroundColor = rowColors[2]
+
+        parentBasic1.style.backgroundColor = rowColors[0]//.rgbaString
+        parentBasic2.style.backgroundColor = rowColors[1]//.rgbaString
+        parentBasic3.style.backgroundColor = rowColors[2]//.rgbaString
+
+        popupBasic1.setColor(rowColors[0])
+        popupBasic2.setColor(rowColors[1])
+        popupBasic3.setColor(rowColors[2])
+
+        //adjust text colors
+        if (popupBasic1.color.hsla[2] >= 0.5) {
+            parentBasic1.style.color = "black"
+        } else {
+            parentBasic1.style.color = "white"
+        }
+
+        if (popupBasic2.color.hsla[2] >= 0.5) {
+            parentBasic2.style.color = "black"
+        } else {
+            parentBasic2.style.color = "white"
+        }
+
+        if (popupBasic3.color.hsla[2] >= 0.5) {
+            parentBasic3.style.color = "black"
+        } else {
+            parentBasic3.style.color = "white"
+        }
+
+
 
         gaussSteps.updateColors()
         test_graph.draw()
@@ -1845,6 +1826,38 @@ document.addEventListener("change", function() {
     }
 
 })
+
+/**
+ * converts hex color to hsl, used for popupbasic????, A is always 1 for our purposes
+ * @param {*} hex 
+ * @returns 
+ */
+function hexToHSLA(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      r = parseInt(result[1], 16);
+      g = parseInt(result[2], 16);
+      b = parseInt(result[3], 16);
+      r /= 255, g /= 255, b /= 255;
+      var max = Math.max(r, g, b), min = Math.min(r, g, b);
+      var h, s, l = (max + min) / 2;
+      if(max == min){
+        h = s = 0; // achromatic
+      }else{
+        var d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch(max){
+          case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+          case g: h = (b - r) / d + 2; break;
+          case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+      }
+    // var HSL = new Object();
+    // HSL['h']=h;
+    // HSL['s']=s;
+    // HSL['l']=l;
+    return [h, s, l, 1];
+  }
 
 
 document.addEventListener("mouseover", function(event) {

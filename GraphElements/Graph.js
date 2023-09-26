@@ -434,7 +434,30 @@ class Graph {
 
         if (this.gaussianPlanes != undefined) {
             this.gaussianPlanes.draw()
+
+            if (this.gaussianPlanes.hasSingleSolution) {
+                // let vector = [130,122,0]//([-1*(this.canvas.width/(2 *this.scale * this.currentZoom)) + (20/(this.scale*this.currentZoom)), 
+                                        //(this.canvas.height/(2 *this.scale * this.currentZoom)) - (120/(this.scale*this.currentZoom)), 0], 
+                                        //this.currentZoom)
+                let vecX = 20
+                let vecY = 122
+
+                // Draw the dot
+                this.ctx.fillStyle = "white"
+                this.ctx.lineWidth = 4;
+                this.ctx.strokeStyle = "black"
+                this.ctx.beginPath();
+                    this.ctx.arc(parseInt(vecX.toFixed(0)), parseInt(vecY.toFixed(0)), 8, 0, 2 * Math.PI);
+                    this.ctx.fill();
+                this.ctx.stroke();
+
+                this.ctx.font = "30px Arial";
+                this.ctx.fillStyle = "black"
+                this.ctx.textAlign = "center"
+                this.ctx.fillText("Solution point", 130, 124);
+            }
         }
+
         if (this.showAxis) {
             this.Axis.draw()
         }
