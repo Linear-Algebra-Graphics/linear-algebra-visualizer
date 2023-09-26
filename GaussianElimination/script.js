@@ -76,7 +76,7 @@ const parentBasic1 = document.getElementById("row-1-color"),
 popupBasic1 = new Picker({parent: parentBasic1, color: rowColors[0]});
 parentBasic1.style.backgroundColor = rowColors[0]
 document.getElementsByClassName("color-box row0").backgroundColor = rowColors[0]
-if (popupBasic1.color.hsla[2] > 0.5) {
+if (popupBasic1.color.hsla[2] >= 0.5) {
     parentBasic1.style.color = "black"
 }
 let matrixColorSquares1 = document.getElementsByClassName("row0")
@@ -87,7 +87,7 @@ for (let i = 0; i < matrixColorSquares1.length; i++) {
 popupBasic1.onChange = function(color) {
     parentBasic1.style.backgroundColor = color.rgbaString;
     rowColors[0] = color.rgbaString;
-    if (popupBasic1.color.hsla[2] > 0.5) {
+    if (popupBasic1.color.hsla[2] >= 0.5) {
         parentBasic1.style.color = "black"
     } else {
         parentBasic1.style.color = "white"
@@ -102,7 +102,7 @@ popupBasic1.onChange = function(color) {
 const parentBasic2 = document.getElementById("row-2-color"),
 popupBasic2 = new Picker({parent: parentBasic2, color: rowColors[1]});
 parentBasic2.style.backgroundColor = rowColors[1]
-if (popupBasic2.color.hsla[2] > 0.5) {
+if (popupBasic2.color.hsla[2] >= 0.5) {
     parentBasic2.style.color = "black"
 }
 let matrixColorSquares2 = document.getElementsByClassName("row1")
@@ -113,7 +113,7 @@ for (let i=0; i<matrixColorSquares2.length; i++) {
 popupBasic2.onChange = function(color) {
     parentBasic2.style.backgroundColor = color.rgbaString;
     rowColors[1] = color.rgbaString;
-    if (popupBasic2.color.hsla[2] > 0.5) {
+    if (popupBasic2.color.hsla[2] >= 0.5) {
         parentBasic2.style.color = "black"
     } else {
         parentBasic2.style.color = "white"
@@ -128,7 +128,7 @@ popupBasic2.onChange = function(color) {
 const parentBasic3 = document.getElementById("row-3-color"),
 popupBasic3 = new Picker({parent: parentBasic3, color: rowColors[2]});
 parentBasic3.style.backgroundColor = rowColors[2]
-if (popupBasic3.color.hsla[2] > 0.5) {
+if (popupBasic3.color.hsla[2] >= 0.5) {
     parentBasic3.style.color = "black"
 }
 let matrixColorSquares3 = document.getElementsByClassName("row2")
@@ -139,7 +139,7 @@ for (let i=0; i<matrixColorSquares3.length; i++) {
 popupBasic3.onChange = function(color) {
     parentBasic3.style.backgroundColor = color.rgbaString;
     rowColors[2] = color.rgbaString;
-    if (popupBasic3.color.hsla[2] > 0.5) {
+    if (popupBasic3.color.hsla[2] >= 0.5) {
         parentBasic3.style.color = "black"
     } else {
         parentBasic3.style.color = "white"
@@ -1794,6 +1794,25 @@ document.addEventListener("change", function() {
         popupBasic1.setColor(rowColors[0])
         popupBasic2.setColor(rowColors[1])
         popupBasic3.setColor(rowColors[2])
+
+        //adjust text colors
+        if (popupBasic1.color.hsla[2] >= 0.5) {
+            parentBasic1.style.color = "black"
+        } else {
+            parentBasic1.style.color = "white"
+        }
+
+        if (popupBasic2.color.hsla[2] >= 0.5) {
+            parentBasic2.style.color = "black"
+        } else {
+            parentBasic2.style.color = "white"
+        }
+
+        if (popupBasic3.color.hsla[2] >= 0.5) {
+            parentBasic3.style.color = "black"
+        } else {
+            parentBasic3.style.color = "white"
+        }
 
 
 
