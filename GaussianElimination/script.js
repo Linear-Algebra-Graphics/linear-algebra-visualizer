@@ -958,6 +958,7 @@ class GaussianElimStepsHTMLModel {
      * @param {*} operation 
      */
     addRowOperation(operation) {
+        
         this.operationList.push(operation)
         let index = this.operationList.length - 1
         let operationStr = ""
@@ -1025,6 +1026,7 @@ class GaussianElimStepsHTMLModel {
 
 
         } else if (operation.type == "combine") {
+            debugger
             let value = operation.value
             let numerator   = value.getNumerator()
             let denominator = value.getDenominator()
@@ -1032,7 +1034,7 @@ class GaussianElimStepsHTMLModel {
             let row2 = operation.row2 + 1
 
             let sign = '<mo>+</mo>'
-            if (value.getNumericalValue() < 0) {
+            if (operation.sign == "-") {
                 sign = '<mo>-</mo>'
             }
             let absValue = '<mn></mn>'
@@ -1047,7 +1049,7 @@ class GaussianElimStepsHTMLModel {
                     <msub>\
                         <mi>R</mi><mn>'+row1+'</mn>\
                     </msub>\
-                    <mo>+</mo>'+
+                    '+ sign +
                     absValue +
                     '<msub>\
                         <mi>R</mi><mn>'+row2+'</mn>\
