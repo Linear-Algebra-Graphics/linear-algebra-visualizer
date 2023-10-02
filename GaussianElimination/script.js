@@ -535,7 +535,7 @@ class GaussianElimStepsHTMLModel {
                     '<mo>,</mo>' 
                     + solution[2] + 
                     '<mo>)</mo>\
-                </math> <div>Solution is white dot.</div></div>'
+                </math></div>'
             document.getElementsByClassName("solution-overlay")[0].style = "background: lightgreen; height: 35px;"
 
         } else if (solutions == "infinite") {
