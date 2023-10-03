@@ -1026,7 +1026,7 @@ class GaussianElimStepsHTMLModel {
 
 
         } else if (operation.type == "combine") {
-            debugger
+            //debugger
             let value = operation.value
             let numerator   = value.getNumerator()
             let denominator = value.getDenominator()
@@ -1034,7 +1034,8 @@ class GaussianElimStepsHTMLModel {
             let row2 = operation.row2 + 1
 
             let sign = '<mo>+</mo>'
-            if (operation.sign == "-") {
+            //switch to negative in +-,-+ cases, stay positive in --,++
+            if (!(operation.sign == "-" && Math.sign(numerator) == -1) && (operation.sign == "-" || Math.sign(numerator) == -1)) {
                 sign = '<mo>-</mo>'
             }
             let absValue = '<mn></mn>'
@@ -1075,7 +1076,7 @@ class GaussianElimStepsHTMLModel {
                         <msub>\
                             <mi>R</mi><mn>'+row1+'</mn>\
                         </msub>\
-                        <mo>+</mo>'+
+                        ' + sign +
                         absValue+
                         '<msub>\
                             <mi>R</mi><mn>'+row2+'</mn>\

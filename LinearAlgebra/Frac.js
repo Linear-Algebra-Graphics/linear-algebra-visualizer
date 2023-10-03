@@ -5,8 +5,8 @@
 class Frac {
     /**
      * creates a new instance of a fraction that is numerator / denominator
-     * @param {Number} numerator 
-     * @param {Number} denominator 
+     * @param {Number} numerator the sign of the fraction is always on the numerator
+     * @param {Number} denominator the positive denominator value
      */
     constructor(numerator, denominator) {
 
